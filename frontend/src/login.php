@@ -1,7 +1,8 @@
 <?php
 
 require_once('includes/common/rabbitMQLib.inc.php');
-require_once('includes/common/types.inc.php');
+require_once('includes/common/messages.inc.php');
+require_once('includes/common/parse_config.inc.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
@@ -9,15 +10,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   function attemptLogin($email, $password) {
     $client = new rabbitMQClient("includes/rabbitmq.ini");
-    $request = new JAND\FrontendRequest(JAND\FrontendRequests::login);
-    $request->set_email($email);
-    $request->set_password($password);
-    echo(serialize($request));
-    $response = $client->send_request(serialize($request), 'application/php-serialized');
-    echo($response);
+    $request = new JAND\Frontend\LoginRequest($email, password_hash($password, PASSWORD_DEFAULT));
+    $response = $request->send_request($client);
+    if ($response instanceof JAND\Frontend\LoginResponse) {
+      if ($response->get_result()) {
+        return $response;
+      }
+    } else {
+      return false;
+    }
   }
 
-  attemptLogin($email, $password);
+  try {
+    $result = attemptLogin($email, $password);
+    if ($result) {
+      setcookie('SESSION',
+      $result->get_session_token(),
+      $result->get_expiration(),
+      '/',
+      $_SERVER['SERVER_NAME'],
+      !$config['dev_mode']['enabled'] // Only make secure if dev mode is disabled.
+    );
+    } else {
+      echo 'Incorrect username or password.';
+    }
+  } catch (Throwable $error) {
+    echo ('An error has occured.');
+    exit();
+  }
+  
 }
 
 ?>
