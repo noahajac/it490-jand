@@ -22,21 +22,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 
   try {
-    $result = attemptLogin($email, $password);
-    if ($result) {
-      setcookie('SESSION',
-      $result->get_session_token(),
-      $result->get_expiration(),
-      '/',
-      $_SERVER['SERVER_NAME'],
-      !$config['dev_mode']['enabled'] // Only make secure if dev mode is disabled.
-    );
-    } else {
-      echo 'Incorrect username or password.';
-    }
-  } catch (Throwable $error) {
-    echo ('An error has occured.');
-    exit();
+        $result = attemptLogin($email, $password);
+
+        if ($result && $result->get_result()) {
+            // Assuming get_result() checks if login was successful and get_session_token() exists
+            setcookie('SESSION', $result->get_session_token(), [
+                'expires' => $result->get_expiration(),
+                'path' => '/',
+                'domain' => $_SERVER['SERVER_NAME'],
+                'secure' => true, // Ensures cookies are sent over HTTPS
+ 		 !$config['dev_mode']['enabled'], // Only make secure if dev mode is disabled.
+                'httponly' => true, // Prevents JavaScript access to the session cookie
+                'samesite' => 'Lax' // Mitigates CSRF attacks
+            ]);
+            echo 'Login successful.';
+            // Consider redirecting the user to a different page upon successful login
+        } else {
+            echo 'Incorrect username or password.';
+        }
+    } catch (Throwable $error) {
+        echo 'An error has occurred.';
+        exit();
   }
   
 }
@@ -45,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!DOCTYPE html>
 <html>
   <head>
-    <title>JAND Travel</title>
+    <title>JAND Travel- Login</title>
   </head>
   <body>
     <form method="post">
@@ -54,10 +60,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <th><label for="email">Email:</label></th>
           <td><input type="email" name="email" id="email" required></td>
         </tr>
+
         <tr>
           <th><label for="password">Password:</label></th>
           <td><input type="password" name="password" id="password" required></td>
         </tr>
+
         <tr>
           <td colspan="2"><input type="submit"></td>
         </tr>
