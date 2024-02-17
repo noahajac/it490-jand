@@ -8,7 +8,7 @@ $server = new rabbitMQServer('includes/rabbitmq.ini');
 
 $server->process_requests(function (string $request_string) {
   return serialize(
-    request_processor(unserialize($request_string))
+    requestProcessor(unserialize($request_string))
   );
 });
 
@@ -18,17 +18,21 @@ $server->process_requests(function (string $request_string) {
  * @param mixed $request The request.
  * @return mixed Request response, false if unknown.
 */
-function request_processor(mixed $request) {
+function requestProcessor(mixed $request) {
   if ($request instanceof JAND\Frontend\LoginRequest) {
     // Request is to login.
-    $email = $request->get_email();
-    $password_hash = $request->get_password_hash();
-    return new JAND\Frontend\LoginResponse(true, 'IamAsessionTOKEN', time()+60);
+    $email = $request->getEmail();
+    $password_hash = $request->getPasswordHash();
+    if ($email === 'test@test.com') {
+      return new JAND\Frontend\LoginResponse(true, 'IamAsessionTOKEN', time()+60);
+    } else {
+      return new JAND\Frontend\LoginResponse(false, null, null);
+    }
   } else if ($request instanceof JAND\Frontend\RegisterRequest) {
-    $email = $request->get_email();
-    $password_hash = $request->get_password_hash();
-    $first_name = $request->get_first_name();
-    $last_name = $request->get_last_name(); 
+    $email = $request->getEmail();
+    $password_hash = $request->getPasswordHash();
+    $first_name = $request->getFirstName();
+    $last_name = $request->getLastName(); 
   } else {
     return false;
   }

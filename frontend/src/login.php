@@ -11,9 +11,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   function attemptLogin($email, $password) {
     $client = new rabbitMQClient("includes/rabbitmq.ini");
     $request = new JAND\Frontend\LoginRequest($email, password_hash($password, PASSWORD_DEFAULT));
-    $response = $request->send_request($client);
+    $response = $request->sendRequest($client);
     if ($response instanceof JAND\Frontend\LoginResponse) {
-      if ($response->get_result()) {
+      if ($response->getResult()) {
         return $response;
       }
     } else {
@@ -24,10 +24,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   try {
         $result = attemptLogin($email, $password);
 
-        if ($result && $result->get_result()) {
+        if ($result && $result->getResult()) {
             // Assuming get_result() checks if login was successful and get_session_token() exists
-            setcookie('SESSION', $result->get_session_token(), [
-                'expires' => $result->get_expiration(),
+            setcookie('SESSION', $result->getSessionToken(), [
+                'expires' => $result->getExpiration(),
                 'path' => '/',
                 'domain' => $_SERVER['SERVER_NAME'],
                 'secure' => true, // Ensures cookies are sent over HTTPS
