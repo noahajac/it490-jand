@@ -1,5 +1,5 @@
 <IfModule mod_ssl.c>
-	<Directory /opt/jand-frontend>
+	<Directory /srv/jand-frontend>
 		Options Indexes FollowSymLinks
 		AllowOverride None
 		Require all granted
@@ -10,7 +10,7 @@
     ServerName it490-frontend
                 
 
-		DocumentRoot /opt/jand-frontend
+		DocumentRoot /srv/jand-frontend
 
 		# Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
 		# error, crit, alert, emerg.

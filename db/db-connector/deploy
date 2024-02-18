@@ -8,7 +8,7 @@ if [ $EUID -ne 0 ]; then
 fi
 
 script_dir=$(dirname -- "$(readlink -f -- "$0")")
-deploy_dir=/opt/jand-db-connector
+deploy_dir=/srv/jand-db-connector
 
 if [ ! -f $script_dir/rabbitmq.ini ]; then
   echo 'rabbitmq.ini does not exist.'
