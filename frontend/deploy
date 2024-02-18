@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+# Deploys frontend files.
+
+if [ $EUID -ne 0 ]; then
+  echo 'Script must be run as root.'
+  exit 1
+fi
+
+script_dir=$(dirname -- "$(readlink -f -- "$0")")
+deploy_dir=/opt/jand-frontend
+
+if [ ! -f $script_dir/rabbitmq.ini ]; then
+  echo 'rabbitmq.ini does not exist.'
+  exit 1
+fi
+
+if [ ! -f $script_dir/jand-frontend.conf ]; then
+  echo 'jand-frontend.conf does not exist.'
+  exit 1
+fi
+
+echo "Copying frontend files."
+rm -rf $deploy_dir/{..?*,.[!.]*,*}
+cp -RTL $script_dir/src $deploy_dir
+cp $script_dir/rabbitmq.ini $deploy_dir/.
+
+echo "Copying Apache config file."
+cp $script_dir/jand-frontend.conf /etc/apache2/sites-available/.
+
+echo "Enabling Apache site file."
+a2ensite jand-frontend
+
+echo "Reloading Apache."
+systemctl reload apache2.service

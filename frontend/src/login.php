@@ -1,18 +1,19 @@
 <?php
 
-require_once('includes/common/rabbitMQLib.inc.php');
-require_once('includes/common/messages.inc.php');
-require_once('includes/common/parse_config.inc.php');
+namespace JAND\Frontend;
+
+require_once(__DIR__ . '/common/autoload/autoload.inc.php');
+\JAND\Common\Autoload\Autoload::register();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
   $password = filter_input(INPUT_POST, 'password');
 
   function attemptLogin($email, $password) {
-    $client = new rabbitMQClient("includes/rabbitmq.ini");
-    $request = new JAND\Frontend\LoginRequest($email, password_hash($password, PASSWORD_DEFAULT));
+    $client = new \JAND\Common\RabbitMq\RabbitMqClient("rabbitmq.ini");
+    $request = new \JAND\Common\Messages\Frontend\LoginRequest($email, password_hash($password, PASSWORD_DEFAULT));
     $response = $request->sendRequest($client);
-    if ($response instanceof JAND\Frontend\LoginResponse) {
+    if ($response instanceof \JAND\Common\Messages\Frontend\LoginResponse) {
       if ($response->getResult()) {
         return $response;
       }
@@ -30,8 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'expires' => $result->getExpiration(),
                 'path' => '/',
                 'domain' => $_SERVER['SERVER_NAME'],
-                'secure' => true, // Ensures cookies are sent over HTTPS
- 		 !$config['dev_mode']['enabled'], // Only make secure if dev mode is disabled.
+                'secure' => !(\JAND\Common\Config\Config::getConfig()->getDevMode()), // Only make secure if dev mode is disabled.
                 'httponly' => true, // Prevents JavaScript access to the session cookie
                 'samesite' => 'Lax' // Mitigates CSRF attacks
             ]);
@@ -40,7 +40,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             echo 'Incorrect username or password.';
         }
-    } catch (Throwable $error) {
+    } catch (\Throwable $error) {
+      echo $error->getMessage();
         echo 'An error has occurred.';
         exit();
   }
