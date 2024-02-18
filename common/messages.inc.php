@@ -5,7 +5,7 @@
  * This page contains the classes and enums used for messaging.
  */
 
-namespace JAND {
+namespace JAND\Common {
   require_once('rabbitMQLib.inc.php');
 
   /** Base class for all requests. */
@@ -16,7 +16,7 @@ namespace JAND {
      * @param \rabbitMQClient $client RabbitMQ library client.
      * @return mixed Response from message broker.
      */
-    public function send_request(\rabbitMQClient $client)
+    public function sendRequest(\rabbitMQClient $client)
     {
       return unserialize(
         $client->send_request(serialize($this), 'application/php-serialized')
@@ -26,10 +26,11 @@ namespace JAND {
 }
 
 namespace JAND\Frontend {
+
   /**
    * A request from the frontend to login.
    */
-  class LoginRequest extends \JAND\Request
+  class LoginRequest extends \JAND\Common\Request
   {
     /** User's email. */
     private string $email;
@@ -52,7 +53,7 @@ namespace JAND\Frontend {
      * Gets the user's email.
      * @return string User's email.
      */
-    function get_email()
+    function getEmail()
     {
       return $this->email;
     }
@@ -61,7 +62,7 @@ namespace JAND\Frontend {
      * Gets the user's password hash.
      * @return string User's password hash.
      */
-    function get_password_hash()
+    function getPasswordHash()
     {
       return $this->password_hash;
     }
@@ -73,10 +74,10 @@ namespace JAND\Frontend {
     private bool $result;
 
     /** Session token. */
-    private string $session_token;
+    private ?string $session_token;
 
     /** Unix timestamp of when the session expires. */
-    private int $expiration;
+    private ?int $expiration;
 
     /**
      * Creates a new login response.
@@ -84,7 +85,7 @@ namespace JAND\Frontend {
      * @param string $session_token The session token.
      * @param int $expiration Unix timestamp of the session expiration. 
      */
-    public function __construct(bool $result, string $session_token, int $expiration)
+    public function __construct(bool $result, ?string $session_token, ?int $expiration)
     {
       $this->result = $result;
       $this->session_token = $session_token;
@@ -95,7 +96,7 @@ namespace JAND\Frontend {
      * Gets login result.
      * @return bool True if success
      */
-    function get_result()
+    function getResult()
     {
       return $this->result;
     }
@@ -104,7 +105,7 @@ namespace JAND\Frontend {
      * Gets session token.
      * @return string Session token.
      */
-    function get_session_token()
+    function getSessionToken()
     {
       return $this->session_token;
     }
@@ -113,7 +114,7 @@ namespace JAND\Frontend {
      * Gets session expiration.
      * @return int Expiration unix timestamp.
      */
-    function get_expiration()
+    function getExpiration()
     {
       return $this->expiration;
     }
@@ -134,14 +135,30 @@ namespace JAND\Frontend {
       $this->last_name = $last_name;
     }
 
-    public function get_first_name()
+    public function getFirstName()
     {
       return $this->first_name;
     }
 
-    public function get_last_name()
+    public function getLastName()
     {
       return $this->last_name;
+    }
+  }
+
+  class RegisterError extends \Exception {}
+
+  class RegisterResponse extends LoginResponse {
+    private ?RegisterError $error;
+
+    public function __construct(bool $result, ?string $session_token, ?int $expiration, ?RegisterError $error)
+    {
+      parent::__construct($result, $session_token, $expiration);
+      $this->error = $error;
+    }
+
+    public function getError() {
+      return $this->error;
     }
   }
 }
