@@ -1,0 +1,13 @@
+[Unit]
+Description=JAND database connector.
+After=network-online.target
+Requires=network-online.target
+
+[Service]
+ExecStart=/opt/jand-db-connector/connector.php
+Restart=on-failure
+RestartSec=30s
+
+[Install]
+WantedBy=default.target
+RequiredBy=network.target
