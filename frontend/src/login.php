@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </tr>
 
         <tr>
-          <td colspan="2"><input type="submit"></td>
+          <td colspan="2"><input type="submit" value= "Submit"></td>
         </tr>
       </table>      
     </form>
