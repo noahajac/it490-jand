@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Contains request base class.
+ */
+
 namespace JAND\Common\Messages;
 
 /** Base class for all requests. */

@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Contains message for frontend to request login.
+ */
+
+
 namespace JAND\Common\Messages\Frontend;
 
 /**
@@ -11,17 +16,17 @@ class LoginRequest extends \JAND\Common\Messages\Request
   private string $email;
 
   /** User's password hash. */
-  private string $password_hash;
+  private string $passwordHash;
 
   /**
    * Creates a new login request.
    * @param string $email User's email.
-   * @param string $password User's password hash.
+   * @param string $passwordHash User's password hash.
    * */
-  public function __construct(string $email, string $password_hash)
+  public function __construct(string $email, string $passwordHash)
   {
     $this->email = $email;
-    $this->password_hash = $password_hash;
+    $this->passwordHash = $passwordHash;
   }
 
   /**
@@ -39,6 +44,6 @@ class LoginRequest extends \JAND\Common\Messages\Request
    */
   function getPasswordHash()
   {
-    return $this->password_hash;
+    return $this->passwordHash;
   }
 }

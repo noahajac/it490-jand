@@ -7,14 +7,14 @@ require_once('includes/common/parse_config.inc.php');
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
   $password = filter_input(INPUT_POST, 'password');
-  $first_name = filter_input(INPUT_POST, 'first_name');
-  $last_name - filter_input(INPUT_POST, 'last_name');
+  $firstName = filter_input(INPUT_POST, 'first_name');
+  $lastName - filter_input(INPUT_POST, 'last_name');
 
 
 
-  function attemptRegistration($email, $password, $first_name, $last_name) {
+  function attemptRegistration($email, $password, $firstName, $lastName) {
     $client = new rabbitMQClient("includes/rabbitmq.ini");
-    $request = new JAND\Frontend\RegisterRequest($email, password_hash($password, PASSWORD_DEFAULT), $first_name, $last_name);
+    $request = new JAND\Frontend\RegisterRequest($email, password_hash($password, PASSWORD_DEFAULT), $firstName, $lastName);
     $response = $request->sendRequest($client);
     if ($response instanceof JAND\Frontend\RequestResponse) {
       if ($response->getResult()) {
@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 
   try {
-        $result = attemptRegisteration($email, $password, $first_name, $last_name);
+        $result = attemptRegisteration($email, $password, $firstName, $lastName);
 
         if ($result && $result->getResult()) {
             setcookie('SESSION', $result->getSessionToken(), [

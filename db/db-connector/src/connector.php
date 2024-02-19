@@ -26,7 +26,7 @@ class Connector
     if ($request instanceof \JAND\Common\Messages\Frontend\LoginRequest) {
       // Request is to login.
       $email = $request->getEmail();
-      $password_hash = $request->getPasswordHash();
+      $passwordHash = $request->getPasswordHash();
       if ($email === 'test@test.com') {
         return new \JAND\Common\Messages\Frontend\LoginResponse(true, 'IamAsessionTOKEN', time() + 60);
       } else {
@@ -34,18 +34,18 @@ class Connector
       }
     } else if ($request instanceof \JAND\Common\Messages\Frontend\RegisterRequest) {
       $email = $request->getEmail();
-      $password_hash = $request->getPasswordHash();
-      $first_name = $request->getFirstName();
-      $last_name = $request->getLastName();
+      $passwordHash = $request->getPasswordHash();
+      $firstName = $request->getFirstName();
+      $lastName = $request->getLastName();
     } else {
       return false;
     }
   }
 
   function listen() {
-    $this->server->process_requests(function (string $request_string) {
+    $this->server->process_requests(function (string $requestString) {
       return serialize(
-        static::requestProcessor(unserialize($request_string))
+        static::requestProcessor(unserialize($requestString))
       );
     });
   }
