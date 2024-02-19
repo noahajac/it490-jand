@@ -1,8 +1,9 @@
 <?php
 
-require_once('includes/common/rabbitMQLib.inc.php');
-require_once('includes/common/messages.inc.php');
-require_once('includes/common/parse_config.inc.php');
+namespace JAND\Frontend;
+
+require_once(__DIR__ . '/common/autoload/autoload.inc.php');
+\JAND\Common\Autoload\Autoload::register();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
@@ -13,10 +14,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
   function attemptRegistration($email, $password, $firstName, $lastName) {
-    $client = new rabbitMQClient("includes/rabbitmq.ini");
-    $request = new JAND\Frontend\RegisterRequest($email, password_hash($password, PASSWORD_DEFAULT), $firstName, $lastName);
+    $client = new \JAND\Common\RabbitMq\RabbitMqClient("includes/rabbitmq.ini");
+    $request = new \JAND\Common\Messages\Frontend\RegisterRequest($email, password_hash($password, PASSWORD_DEFAULT), $firstName, $lastName);
     $response = $request->sendRequest($client);
-    if ($response instanceof JAND\Frontend\RequestResponse) {
+    if ($response instanceof \JAND\Common\Messages\Frontend\RegisterResponse) {
       if ($response->getResult()) {
         return $response;
       }
@@ -26,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 
   try {
-        $result = attemptRegisteration($email, $password, $firstName, $lastName);
+        $result = attemptRegistration($email, $password, $firstName, $lastName);
 
         if ($result && $result->getResult()) {
             setcookie('SESSION', $result->getSessionToken(), [
@@ -44,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             echo 'Invalid input.';
         }
-    } catch (Throwable $error) {
+    } catch (\Throwable $error) {
         echo 'An error has occurred.';
         exit();
   }
