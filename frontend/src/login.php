@@ -9,7 +9,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
   $password = filter_input(INPUT_POST, 'password');
 
-  function attemptLogin($email, $password) {
+  function attemptLogin($email, $password)
+  {
     $client = new \JAND\Common\RabbitMq\RabbitMqClient(__DIR__ . '/rabbitmq.ini', 'db-frontend_frontend.client');
     $request = new \JAND\Common\Messages\Frontend\LoginRequest($email, password_hash($password, PASSWORD_DEFAULT));
     $response = $request->sendRequest($client);
@@ -23,38 +24,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 
   try {
-        $result = attemptLogin($email, $password);
+    $result = attemptLogin($email, $password);
 
-        if ($result && $result->getResult()) {
-            // Assuming get_result() checks if login was successful and get_session_token() exists
-            setcookie('SESSION', $result->getSessionToken(), [
-                'expires' => $result->getExpiration(),
-                'path' => '/',
-                'domain' => $_SERVER['SERVER_NAME'],
-                'secure' => !(\JAND\Common\Config\Config::getConfig()->getDevMode()), // Only make secure if dev mode is disabled.
-                'httponly' => true, // Prevents JavaScript access to the session cookie
-                'samesite' => 'Lax' // Mitigates CSRF attacks
-            ]);
-            echo 'Login successful.';
-            // Consider redirecting the user to a different page upon successful login
-        } else {
-            echo 'Incorrect username or password.';
-        }
-    } catch (\Throwable $error) {
-      echo $error->getMessage();
-        echo 'An error has occurred.';
-        exit();
+    if ($result && $result->getResult()) {
+      // Assuming get_result() checks if login was successful and get_session_token() exists
+      setcookie('SESSION', $result->getSessionToken(), [
+        'expires' => $result->getExpiration(),
+        'path' => '/',
+        'domain' => $_SERVER['SERVER_NAME'],
+        'secure' => !(\JAND\Common\Config\Config::getConfig()->getDevMode()), // Only make secure if dev mode is disabled.
+        'httponly' => true, // Prevents JavaScript access to the session cookie
+        'samesite' => 'Lax' // Mitigates CSRF attacks
+      ]);
+      echo 'Login successful.';
+      // Consider redirecting the user to a different page upon successful login
+    } else {
+      echo 'Incorrect username or password.';
+    }
+  } catch (\Throwable $error) {
+    echo $error->getMessage();
+    echo 'An error has occurred.';
+    exit();
   }
-  
 }
 
 ?>
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>JAND Travel- Login</title>
-  </head>
-  <body>
+<html lang="en">
+
+<head>
+  <?= Elements\Head::head(); ?>
+</head>
+
+<body>
+  <?= Elements\Nav::nav(); ?>
+  <main>
     <form method="post">
       <table>
         <tr>
@@ -68,9 +72,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </tr>
 
         <tr>
-          <td colspan="2"><input type="submit" value= "Submit"></td>
+          <td colspan="2"><input type="submit" value="Submit"></td>
         </tr>
-      </table>      
+      </table>
     </form>
-  </body>
+  </main>
+  <?= Elements\Footer::footer(); ?>
+</body>
+
 </html>
