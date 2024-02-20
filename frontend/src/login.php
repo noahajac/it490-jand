@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $password = filter_input(INPUT_POST, 'password');
 
   function attemptLogin($email, $password) {
-    $client = new \JAND\Common\RabbitMq\RabbitMqClient("rabbitmq.ini");
+    $client = new \JAND\Common\RabbitMq\RabbitMqClient(__DIR__ . '/rabbitmq.ini', 'db-frontend_frontend.client');
     $request = new \JAND\Common\Messages\Frontend\LoginRequest($email, password_hash($password, PASSWORD_DEFAULT));
     $response = $request->sendRequest($client);
     if ($response instanceof \JAND\Common\Messages\Frontend\LoginResponse) {

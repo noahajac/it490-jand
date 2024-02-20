@@ -12,7 +12,7 @@ class Connector
 
   function __construct()
   {
-    $this->server = new \JAND\Common\RabbitMq\RabbitMqServer(__DIR__ . '/rabbitmq.ini');
+    $this->server = new \JAND\Common\RabbitMq\RabbitMqServer(__DIR__ . '/rabbitmq.ini', 'db-frontend_db.server');
   }
 
   /**

@@ -10,8 +10,9 @@ class RabbitMqServer
 	private $USER;
 	private $PASSWORD;
 	private $VHOST;
-	private $exchange;
-	private $queue;
+	private $clientExchangeName;
+	private $serverQueue;
+	private $serverQueueName;
 	private $routing_key = '*';
 	private $exchange_type = "topic";
 	private $auto_delete = false;
@@ -24,14 +25,14 @@ class RabbitMqServer
 		$this->USER     = $this->machine[$server]["USER"];
 		$this->PASSWORD = $this->machine[$server]["PASSWORD"];
 		$this->VHOST = $this->machine[$server]["VHOST"];
-		if (isset($this->machine[$server]["EXCHANGE_TYPE"])) {
-			$this->exchange_type = $this->machine[$server]["EXCHANGE_TYPE"];
-		}
-		if (isset($this->machine[$server]["AUTO_DELETE"])) {
-			$this->auto_delete = $this->machine[$server]["AUTO_DELETE"];
-		}
-		$this->exchange = $this->machine[$server]["EXCHANGE"];
-		$this->queue = $this->machine[$server]["QUEUE"];
+		//if (isset($this->machine[$server]["EXCHANGE_TYPE"])) {
+		//	$this->exchange_type = $this->machine[$server]["EXCHANGE_TYPE"];
+		//}
+		//if (isset($this->machine[$server]["AUTO_DELETE"])) {
+		//	$this->auto_delete = $this->machine[$server]["AUTO_DELETE"];
+		//}
+		$this->clientExchangeName = $this->machine[$server]["CLIENT_EXCHANGE"];
+		$this->serverQueueName = $this->machine[$server]["SERVER_QUEUE"];
 	}
 
 	function process_message($msg)
@@ -40,7 +41,7 @@ class RabbitMqServer
 		if ($msg->getRoutingKey() !== "*") {
 			return;
 		}
-		$this->conn_queue->ack($msg->getDeliveryTag());
+		$this->serverQueue->ack($msg->getDeliveryTag());
 		try {
 			if ($msg->getReplyTo()) {
 				// message wants a response
@@ -63,15 +64,15 @@ class RabbitMqServer
 				$conn->connect();
 				$channel = new \AMQPChannel($conn);
 				$exchange = new \AMQPExchange($channel);
-				$exchange->setName($this->exchange);
-				$exchange->setType($this->exchange_type);
+				$exchange->setName($this->clientExchangeName);
+				//$exchange->setType($this->exchange_type);
 
-				$conn_queue = new \AMQPQueue($channel);
-				$conn_queue->setName($msg->getReplyTo());
-				$replykey = $this->routing_key . ".response";
-				$conn_queue->bind($exchange->getName(), $replykey);
+				//$conn_queue = new \AMQPQueue($channel);
+				//$conn_queue->setName($msg->getReplyTo());
+				//$replykey = $this->routing_key . ".response." . $msg->getCorrelationId();
+				//$conn_queue->bind($exchange->getName(), $replykey);
 				//$exchange->publish(json_encode($response),$replykey,AMQP_NOPARAM,array('correlation_id'=>$msg->getCorrelationId()));
-				$exchange->publish($response, $replykey, \AMQP_NOPARAM, array('correlation_id' => $msg->getCorrelationId(), 'content_type' => $msg->getContentType()));
+				$exchange->publish($response, $msg->getReplyTo(), \AMQP_NOPARAM, array('correlation_id' => $msg->getCorrelationId(), 'content_type' => $msg->getContentType()));
 
 				return;
 			}
@@ -104,15 +105,15 @@ class RabbitMqServer
 
 			$channel = new \AMQPChannel($conn);
 
-			$exchange = new \AMQPExchange($channel);
-			$exchange->setName($this->exchange);
-			$exchange->setType($this->exchange_type);
+			//$exchange = new \AMQPExchange($channel);
+			//$exchange->setName($this->exchange);
+			//$exchange->setType($this->exchange_type);
 
-			$this->conn_queue = new \AMQPQueue($channel);
-			$this->conn_queue->setName($this->queue);
-			$this->conn_queue->bind($exchange->getName(), $this->routing_key);
+			$this->serverQueue = new \AMQPQueue($channel);
+			$this->serverQueue->setName($this->serverQueueName);
+			//$this->conn_queue->bind($exchange->getName(), $this->routing_key);
 
-			$this->conn_queue->consume(array($this, 'process_message'));
+			$this->serverQueue->consume(array($this, 'process_message'));
 
 			// Loop as long as the channel has callbacks registered
 			while (count($channel->callbacks)) {
