@@ -12,7 +12,7 @@ abstract class Register
   /**
    * @var string[] Array of errors.
    */
-  private static array $errors;
+  private static array $errors = [];
 
   private static function processRegistration()
   {
@@ -28,8 +28,8 @@ abstract class Register
       $password = filter_input(INPUT_POST, 'password', FILTER_CALLBACK, ['options' => function (string $value) {
         return (strlen($value) > 7) ? $value : false;
       }]);
-      $firstName = filter_input(INPUT_POST, 'first-name');
-      $lastName = filter_input(INPUT_POST, 'last-name');
+      $firstName = filter_input(INPUT_POST, 'first-name', FILTER_SANITIZE_SPECIAL_CHARS, ['flags' => FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_BACKTICK]);
+      $lastName = filter_input(INPUT_POST, 'last-name', FILTER_SANITIZE_SPECIAL_CHARS, ['flags' => FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_BACKTICK]);
 
       if (empty($email)) {
         array_push(static::$errors, 'Please enter a valid email address.');
