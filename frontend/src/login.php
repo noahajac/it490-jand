@@ -1,19 +1,24 @@
 <?php
 
+/** Contains the login frontend page. */
+
 namespace JAND\Frontend;
 
 require_once(__DIR__ . '/common/autoload/autoload.inc.php');
 \JAND\Common\Autoload\Autoload::register();
 
+/** Login frontend page. */
 abstract class Login
 {
+  /** @var false|\JAND\Common\Utilities\Session $session Session object, or false if there is none. */
   private static false|\JAND\Common\Utilities\Session $session;
   
   /**
-   * @var string[] Array of errors.
+   * @var string[] $errors Array of errors.
    */
   private static array $errors = [];
 
+  /** Performs login form logic. */
   private static function processLogin()
   {
     static::$session = Utilities\SessionManager::getSession();
@@ -49,6 +54,7 @@ abstract class Login
       }
     }
   }
+  /** Echoes login page. */
   static function login()
   {
     self::processLogin();

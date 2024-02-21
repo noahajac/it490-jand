@@ -1,12 +1,19 @@
 <?php
 
+/** Contains the register frontend page. */
+
 namespace JAND\Frontend;
 
 require_once(__DIR__ . '/common/autoload/autoload.inc.php');
 \JAND\Common\Autoload\Autoload::register();
 
+/** Frontend register page. */
 abstract class Register
 {
+  /** 
+   * Session object, error object, or false if nothing else.
+   * @var false|\JAND\Common\Utilities\Session|\JAND\Common\Messages\Frontend\RegisterError $session 
+   */
   private static false|\JAND\Common\Utilities\Session|\JAND\Common\Messages\Frontend\RegisterError $session;
   
   /**
@@ -14,6 +21,7 @@ abstract class Register
    */
   private static array $errors = [];
 
+  /** Performs registration logic. */
   private static function processRegistration()
   {
     static::$session = Utilities\SessionManager::getSession();
@@ -62,6 +70,7 @@ abstract class Register
     }
   }
 
+  /** Echoes registration page. */
   static function register()
   {
     static::processRegistration();
