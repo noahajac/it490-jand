@@ -23,12 +23,14 @@ abstract class Nav
               <a class="nav-link active" href="index.php">Home</a>
             </li>
             <li class="nav-item dropdown">
-              <a class="nav-link active dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown"> Account </a>
-              <ul class="dropdown-menu">
-                <?php
-                $session = \JAND\Frontend\Utilities\SessionManager::getSession();
-
-                if ($session) { ?>
+              <?php $session = \JAND\Frontend\Utilities\SessionManager::getSession(); ?>
+              <a class="nav-link active dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown"> <?php
+                                                                                                                              if ($session) {
+                                                                                                                                echo (htmlspecialchars($session->getFirstName() . ' ' . $session->getLastName()));
+                                                                                                                              } else { ?>
+                  Account <?php } ?></a>
+              <ul class="dropdown-menu"><?php
+                                        if ($session) { ?>
                   <li><a class="dropdown-item" href="logout.php">Logout</a></li>
                 <?php } else {
                 ?>

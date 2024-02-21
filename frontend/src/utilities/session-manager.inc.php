@@ -11,7 +11,7 @@ namespace JAND\Frontend\Utilities;
 abstract class SessionManager
 {
   /** The session object that has been previously fetched. */
-  private static \JAND\Common\Utilities\Session $session;
+  private static ?\JAND\Common\Utilities\Session $session;
 
   /**
    * Gets the session object.
@@ -151,6 +151,9 @@ abstract class SessionManager
             $cookieName,
             '',
             -1,
+            '/',
+            $_SERVER['SERVER_NAME'],
+            !(\JAND\Common\Config\Config::getConfig()->getDevMode()), // Only make secure if dev mode is disabled.
           );
           static::$session = null;
           return $result;

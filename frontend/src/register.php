@@ -57,7 +57,7 @@ abstract class Register
         return;
       }
 
-      static::$session = Utilities\SessionManager::register($email, password_hash($password, PASSWORD_DEFAULT), $firstName, $lastName);
+      static::$session = Utilities\SessionManager::register($email, $password, $firstName, $lastName);
 
       if (static::$session instanceof \JAND\Common\Utilities\Session) {
         header('Location: index.php');

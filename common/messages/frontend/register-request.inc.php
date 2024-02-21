@@ -9,7 +9,7 @@ namespace JAND\Common\Messages\Frontend;
 /**
  * A request from the frontend to register a new user.
  */
-class RegisterRequest extends LoginRequest
+class RegisterRequest extends AccountRequest
 {
   /** User's first name. */
   private string $firstName;
@@ -20,13 +20,13 @@ class RegisterRequest extends LoginRequest
   /**
    * Creates a new register request.
    * @param string $email User's email.
-   * @param string $passwordHash User's password hash.
+   * @param string $password User's password.
    * @param string $firstName User's first name.
    * @param string $lastName User's last name.
    */
-  public function __construct(string $email, string $passwordHash, string $firstName, string $lastName)
+  public function __construct(string $email, string $password, string $firstName, string $lastName)
   {
-    parent::__construct($email, $passwordHash);
+    parent::__construct($email, $password);
     $this->firstName = $firstName;
     $this->lastName = $lastName;
   }

@@ -44,7 +44,7 @@ abstract class Login
         return;
       }
 
-      static::$session = Utilities\SessionManager::login($email, password_hash($password, PASSWORD_DEFAULT));
+      static::$session = Utilities\SessionManager::login($email, $password);
 
       if (static::$session) {
         header('Location: index.php');

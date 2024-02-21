@@ -9,7 +9,7 @@ namespace JAND\Common\Messages\Frontend;
 /**
  * DB connector response to a register request.
  */
-class RegisterResponse extends LoginResponse {
+class RegisterResponse extends AccountResponse {
   /** Error when there is a failure. */
   private ?RegisterError $error;
 
@@ -19,7 +19,7 @@ class RegisterResponse extends LoginResponse {
    * @param ?\JAND\Common\Utilities\Session $session The session object on success.
    * @param ?RegisterError $error Error when registration is rejected.
    * */
-  public function __construct(bool $result, ?\JAND\Common\Utilities\Session $session, ?RegisterError $error)
+  public function __construct(bool $result, ?\JAND\Common\Utilities\Session $session, ?RegisterError $error = null)
   {
     parent::__construct($result, $session);
     $this->error = $error;

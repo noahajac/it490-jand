@@ -34,3 +34,5 @@ abstract class Index
 <?php
   }
 }
+
+Index::index();
