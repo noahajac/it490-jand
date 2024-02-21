@@ -14,6 +14,16 @@ abstract class SessionResponse
   /** True for successful validation or invalidation, false if not valid or there is an error. */
   private bool $result;
 
+
+  /**
+   * Create new session response.
+   * @param bool $result True for successful validation or invalidation, false if not valid or there is an error.
+   */
+  function __construct(bool $result)
+  {
+    $this->result = $result;
+  }
+
   /**
    * Gets result.
    * @return bool True for successful validation or invalidation, false if not valid or there is an error.

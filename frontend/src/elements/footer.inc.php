@@ -1,9 +1,13 @@
 <?php
 
+/** Contains last elements of body for the site. */
+
 namespace JAND\Frontend\Elements;
 
+/** Footer for site, last elements within body. */
 abstract class Footer
 {
+  /** Echoes site footer HTML. */
   static function footer()
   {
 ?>

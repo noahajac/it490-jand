@@ -14,23 +14,18 @@ class LoginResponse
   /** True for success, false for fail. */
   private bool $result;
 
-  /** Session token. Null on failure. */
-  private ?string $session_token;
-
-  /** Unix timestamp of when the session expires. Null on failure. */
-  private ?int $expiration;
+  /** Session object. */
+  private ?\JAND\Common\Utilities\Session $session;
 
   /**
    * Creates a new login response.
    * @param bool $result True if succesfully logged in, otherwise false.
-   * @param string $session_token The session token.
-   * @param int $expiration Unix timestamp of the session expiration. 
+   * @param \JAND\Common\Utilities\Session $session The session object.
    */
-  public function __construct(bool $result, ?string $session_token, ?int $expiration)
+  public function __construct(bool $result, ?\JAND\Common\Utilities\Session $session)
   {
     $this->result = $result;
-    $this->session_token = $session_token;
-    $this->expiration = $expiration;
+    $this->session = $session;
   }
 
   /**
@@ -43,20 +38,11 @@ class LoginResponse
   }
 
   /**
-   * Gets session token.
-   * @return string Session token.
+   * Gets session.
+   * @return ?\JAND\Common\Utilities\Session Session object.
    */
-  function getSessionToken()
+  function getSession()
   {
-    return $this->session_token;
-  }
-
-  /**
-   * Gets session expiration.
-   * @return int Expiration unix timestamp.
-   */
-  function getExpiration()
-  {
-    return $this->expiration;
+    return $this->session;
   }
 }

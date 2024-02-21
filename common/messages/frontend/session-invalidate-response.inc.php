@@ -9,5 +9,5 @@ namespace JAND\Common\Messages\Frontend;
 /**
  * Response from DB connector when invalidating a session.
  */
-class SessionValidateResponse extends SessionResponse
+class SessionInvalidateResponse extends SessionResponse
 {}

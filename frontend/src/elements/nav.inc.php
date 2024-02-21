@@ -1,9 +1,13 @@
 <?php
 
+/** Contains the nav bar element used throughout the site. */
+
 namespace JAND\Frontend\Elements;
 
+/** Navigation bar. */
 abstract class Nav
 {
+  /** Echoes navigation bar HTML. */
   static function nav()
   {
 ?>
@@ -21,8 +25,16 @@ abstract class Nav
             <li class="nav-item dropdown">
               <a class="nav-link active dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown"> Account </a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="login.php">Login</a></li>
-                <li><a class="dropdown-item" href="register.php">Register</a></li>
+                <?php
+                $session = \JAND\Frontend\Utilities\SessionManager::getSession();
+
+                if ($session) { ?>
+                  <li><a class="dropdown-item" href="logout.php">Logout</a></li>
+                <?php } else {
+                ?>
+                  <li><a class="dropdown-item" href="login.php">Login</a></li>
+                  <li><a class="dropdown-item" href="register.php">Register</a></li>
+                <?php } ?>
               </ul>
             </li>
           </ul>

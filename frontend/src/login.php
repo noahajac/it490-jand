@@ -5,46 +5,26 @@ namespace JAND\Frontend;
 require_once(__DIR__ . '/common/autoload/autoload.inc.php');
 \JAND\Common\Autoload\Autoload::register();
 
+
+$error;
+$session = Utilities\SessionManager::getSession();
+
+if ($session) { // User already has a valid session.
+  header('Location: index.php');
+  exit();
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
   $password = filter_input(INPUT_POST, 'password');
 
-  function attemptLogin($email, $password)
-  {
-    $client = new \JAND\Common\RabbitMq\RabbitMqClient(__DIR__ . '/rabbitmq.ini', 'db-frontend_frontend.client');
-    $request = new \JAND\Common\Messages\Frontend\LoginRequest($email, password_hash($password, PASSWORD_DEFAULT));
-    $response = $request->sendRequest($client);
-    if ($response instanceof \JAND\Common\Messages\Frontend\LoginResponse) {
-      if ($response->getResult()) {
-        return $response;
-      }
-    } else {
-      return false;
-    }
-  }
+  $session = Utilities\SessionManager::login($email, password_hash($password, PASSWORD_DEFAULT));
 
-  try {
-    $result = attemptLogin($email, $password);
-
-    if ($result && $result->getResult()) {
-      // Assuming get_result() checks if login was successful and get_session_token() exists
-      setcookie('SESSION', $result->getSessionToken(), [
-        'expires' => $result->getExpiration(),
-        'path' => '/',
-        'domain' => $_SERVER['SERVER_NAME'],
-        'secure' => !(\JAND\Common\Config\Config::getConfig()->getDevMode()), // Only make secure if dev mode is disabled.
-        'httponly' => true, // Prevents JavaScript access to the session cookie
-        'samesite' => 'Lax' // Mitigates CSRF attacks
-      ]);
-      echo 'Login successful.';
-      // Consider redirecting the user to a different page upon successful login
-    } else {
-      echo 'Incorrect username or password.';
-    }
-  } catch (\Throwable $error) {
-    echo $error->getMessage();
-    echo 'An error has occurred.';
+  if ($session) {
+    header('Location: index.php');
     exit();
+  } else {
+    $error = 'Incorrect username or password.';
   }
 }
 
@@ -59,6 +39,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
   <?= Elements\Nav::nav(); ?>
   <main>
+    <?php if (isset($error)) { ?>
+      <p class="error"><?= $error; ?></p>
+    <?php } ?>
+    <h2>Login</h2>
     <form method="post">
       <table>
         <tr>
@@ -72,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </tr>
 
         <tr>
-          <td colspan="2"><input type="submit" value="Submit"></td>
+          <td colspan="2"><input type="submit" value="Log in"></td>
         </tr>
       </table>
     </form>

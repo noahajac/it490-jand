@@ -1,9 +1,13 @@
 <?php
 
+/** Contains the head element contents used throughout the site. */
+
 namespace JAND\Frontend\Elements;
 
+/** Head element contents. */
 abstract class Head
 {
+  /** Echoes the head element content HTML. */
   static function head()
   {
 ?>

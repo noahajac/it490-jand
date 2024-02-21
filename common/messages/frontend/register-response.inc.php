@@ -16,19 +16,18 @@ class RegisterResponse extends LoginResponse {
   /**
    * Create a new register response.
    * @param bool $result True on success, otherwise false.
-   * @param string $sessionToken Session token when successful.
-   * @param int $expiration Session expiration unix time when successful.
-   * @param RegisterError $error Error when registration is rejected.
+   * @param ?\JAND\Common\Utilities\Session $session The session object on success.
+   * @param ?RegisterError $error Error when registration is rejected.
    * */
-  public function __construct(bool $result, ?string $sessionToken, ?int $expiration, ?RegisterError $error)
+  public function __construct(bool $result, ?\JAND\Common\Utilities\Session $session, ?RegisterError $error)
   {
-    parent::__construct($result, $sessionToken, $expiration);
+    parent::__construct($result, $session);
     $this->error = $error;
   }
 
   /**
    * Gets registration error.
-   * @return RegistrationError Registration error.
+   * @return ?RegistrationError Registration error.
    */
   public function getError() {
     return $this->error;

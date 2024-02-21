@@ -17,6 +17,9 @@ class Config
   /** Whether dev mode is enabled. */
   private bool $devMode;
 
+  /** Name of session cookie. */
+  private string $sessionCookieName;
+
   /**
    * Create instance of Config class.
    * Read config.ini into class properties.
@@ -28,11 +31,15 @@ class Config
     if (!($this->devMode = $ini['jand']['devMode'] ?? null)) {
       $this->devMode = false;
     }
+
+    if (!($this->sessionCookieName = $ini['jand']['sessionCookieName'] ?? null)) {
+      $this->sessionCookieName = 'SESSION';
+    }
   }
 
   /**
    * Get config instance.
-   * @return Program config.
+   * @return \JAND\Common\Config Program config.
    * */
   static function getConfig()
   {
@@ -50,5 +57,14 @@ class Config
   function getDevMode()
   {
     return $this->devMode;
+  }
+
+  /**
+   * Get session cookie name.
+   * @return string Session cookie name.
+   */
+  function getSessionCookieName()
+  {
+    return $this->sessionCookieName;
   }
 }
