@@ -40,7 +40,10 @@ class Connector
       if ($user) {
         //generate session token
         $sessionToken = bin2hex(random_bytes(16)); // Generate a random token of 32 characters (16 bytes)
-        return new \JAND\Common\Messages\Frontend\LoginResponse(true, $sessionToken, time() + 60);
+        // Insert session into SQL table
+        $stmt = $this->pdo->prepare("INSERT INTO sessions (user_id, session_token, expires_at) VALUES (:userId, :sessionToken, :expiresAt)");
+        $stmt->execute(['userId' => $user['id'], 'sessionToken' => $sessionToken, 'expiresAt' => time() + 60]); // Set expiration time to 60 seconds from now
+        return new \JAND\Common\Messages\Frontend\LoginResponse(true, new\JAND\Common\Utilities\Session($sessionToken, time() + 60, $firstName, $lastName);
       } else {
         return new \JAND\Common\Messages\Frontend\LoginResponse(false, null, null);
       }
