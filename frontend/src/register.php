@@ -44,6 +44,7 @@ abstract class Register
         array_push(static::$errors, 'Password must be at least 8 characters.');
       }
 
+      // If there are any errors, go back to form.
       if (static::$errors) {
         return;
       }
