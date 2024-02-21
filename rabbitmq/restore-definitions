@@ -11,6 +11,15 @@ script_dir=$(dirname -- "$(readlink -f -- "$0")")
 temp_definition_name=definitions$(date +%s).json
 definition_name=definitions.json
 
+echo "Stopping rabbitmq."
+rabbitmqctl stop_app
+
+echo "Resetting rabbitmq."
+rabbitmqctl reset
+
+echo "Starting rabbitmq."
+rabbitmqctl start_app
+
 # Must put in place where rabbitmq user has access.
 cp $script_dir/$definition_name /tmp/$temp_definition_name
 chmod 664 /tmp/$temp_definition_name
