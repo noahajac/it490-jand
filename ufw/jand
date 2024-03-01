@@ -1,0 +1,19 @@
+[RabbitMQ]
+title=RabbitMQ
+description=Messaging through RabbitMQ.
+ports=5672/tcp
+
+[RabbitMQ Management]
+title=RabbitMQ Management
+description=Management console for RabbitMQ.
+ports=15671/tcp
+
+[MySQL]
+title=MySQL
+description=MySQL database port.
+ports=3306/tcp
+
+[Frontend]
+title=Apache
+description=Apache web server.
+ports=80,443/tcp
