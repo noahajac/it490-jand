@@ -89,17 +89,6 @@ CREATE TABLE `user_vacation_preferences` (
     FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`)
 );
 
-CREATE TABLE `poi_reviews` (
-    `review_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `poi_id` INT NOT NULL,
-    `user_id` INT NOT NULL,
-    `rating` DECIMAL(3, 1) NOT NULL,
-    `comment` TEXT,
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (`poi_id`) REFERENCES `poi_cache`(`poi_id`),
-    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`)
-);
-
 CREATE TABLE `hotel_cache` (
     `hotel_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `hotel_name` VARCHAR(255) NOT NULL,
@@ -126,4 +115,15 @@ CREATE TABLE `poi_cache` (
     `location` VARCHAR(255) NOT NULL,
     `rating` DECIMAL(3, 1),
     `last_updated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE `poi_reviews` (
+    `review_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `poi_id` INT NOT NULL,
+    `user_id` INT NOT NULL,
+    `rating` DECIMAL(3, 1) NOT NULL,
+    `comment` TEXT,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (`poi_id`) REFERENCES `poi_cache`(`poi_id`),
+    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`)
 );
