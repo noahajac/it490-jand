@@ -20,7 +20,7 @@ echo "Checking for "$deploy_user" user."
 if id "$deploy_user" &>/dev/null; then
     echo "Found $deploy_user user."
 else
-    echo 'User not found. Creating "$deploy_user" user.'
+    echo "User not found. Creating $deploy_user user."
     useradd -r -s $(which nologin) -d /nonexistent -M -c "JAND DB Connector" "$deploy_user"
 fi
 
