@@ -1,12 +1,24 @@
-CREATE TABLE `users`(
+/*
+Run and import the following for time functions to work correctly:
+mysql_tzinfo_to_sql /usr/share/zoneinfo
+*/
+
+CREATE DATABASE jand;
+USE jand;
+
+CREATE USER 'jand'@'localhost' IDENTIFIED WITH auth_socket;
+GRANT SELECT, INSERT, UPDATE, DELETE ON jand.* TO 'jand'@'localhost';
+
+CREATE TABLE users (
     `user_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `password` VARCHAR(255) NOT NULL,
     `email` VARCHAR(255) NOT NULL,
     `first_name` VARCHAR(255) NOT NULL,
-    `last_name` VARCHAR(255) NOT NULL
+    `last_name` VARCHAR(255) NOT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
-CREATE TABLE `sessions`(
+
+CREATE TABLE sessions (
     `session_token` VARCHAR(255) NOT NULL PRIMARY KEY,
     `user_id` INT NOT NULL,
     `expires_at` TIMESTAMP NOT NULL,
