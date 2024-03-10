@@ -9,6 +9,7 @@
 		ServerAdmin it490-jand@njit.edu
     ServerName it490-frontend
                 
+		#SetEnv JAND_DEV_MODE true
 
 		DocumentRoot /srv/jand-frontend
 

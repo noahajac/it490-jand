@@ -4,7 +4,9 @@ After=network-online.target
 Requires=network-online.target
 
 [Service]
-ExecStart=/srv/jand-db-connector/connector.php
+ExecStart=/srv/jand-db-connector/jand-db-connector.php
+User=jand
+Group=jand
 Restart=on-failure
 RestartSec=30s
 
