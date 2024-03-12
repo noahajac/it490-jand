@@ -48,6 +48,12 @@ class Connector
             return Responders\SessionInvalidateResponder::respondToRequest($request, static::$pdo);
         } else if ($request instanceof \JAND\Common\Messages\Shared\AirportCitySearchRequest) {
             return Responders\AirportCitySearchResponder::respondToRequest($request, static::$pdo);
+        } else if ($request instanceof \JAND\Common\Messages\Frontend\GetUserTripsRequest) {
+            return Responders\GetUserTripsResponder::respondToRequest($request, static::$pdo);
+        } else if ($request instanceof \JAND\Common\Messages\Frontend\DeleteUserTripRequest) {
+            return Responders\DeleteUserTripResponder::respondToRequest($request, static::$pdo);
+        } else if ($request instanceof \JAND\Common\Messages\Frontend\CreateUserTripRequest) {
+            return Responders\CreateUserTripResponder::respondToRequest($request, static::$pdo);
         } else {
             return false;
         }//end if

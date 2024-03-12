@@ -21,6 +21,17 @@ abstract class UserTrips
      */
     public static function echoUserTrips()
     {
+        $session = \JAND\Frontend\Includes\SessionManager::getSession();
+
+        if (!$session) {
+            http_response_code(401);
+            exit();
+        }
+
+        $request  = new \JAND\Common\Messages\Frontend\GetUserTripsRequest(
+            \JAND\Frontend\Includes\SessionManager::getSession()->getSessionToken()
+        );
+        $response = $request->sendRequest(\JAND\Frontend\Includes\RabbitClientManager::getClient());
         ?>
 
     <!DOCTYPE html>
@@ -33,13 +44,37 @@ abstract class UserTrips
     <body>
         <?php echo \JAND\Frontend\Includes\Elements\Nav::echoNav(); ?>
       <main>
-        <form>
-            <input type="text" id="destination" name="destination">
-        </form>
+        <a href="./create">Create new trip</a>
+        <?php
+        $trips = $response->getUserTrips();
+
+        if (count($trips) < 1) {
+            ?>
+            <h2>You have no trips.</h2> 
+            <?php
+        } else {
+            ?>
+            <table class="table-borders">
+                <tr>
+                    <th>Destination</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                </tr>
+                <?php foreach ($trips as &$trip) { ?>
+                    <tr>
+                        <td><?= $trip->getTripDestination()->getName(); ?></td>
+                        <td><?= $trip->getTripStart()->format('M j, Y'); ?></td>
+                        <td><?= $trip->getTripEnd()->format('M j, Y'); ?></td>
+                        <td><a href="./create/?id=<?= $trip->getTripId(); ?>">Edit</a></td>
+                    </tr>
+                <?php } ?>
+            </table>
+                <?php
+        }//end if
+        ?>
+
       </main>
         <?php echo \JAND\Frontend\Includes\Elements\Footer::echoFooter(); ?>
-        <script src="/scripts/airport-autocomplete.js"></script>
-        <script src="./scripts/register-autocompletes.js"></script>
     </body>
 
     </html>

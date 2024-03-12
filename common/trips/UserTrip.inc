@@ -10,36 +10,24 @@ namespace JAND\Common\Trips;
 /**
  * A user's trip.
  */
-class Trip
+class UserTrip
 {
 
     /**
-     * Trip's name.
+     * Unique trip ID.
      *
-     * @var string $tripName Trip name.
+     * May not be set for new trips from frontend.
+     *
+     * @var integer $tripId Unique trip ID.
      */
-    private string $tripName;
+    private ?int $tripId;
 
     /**
-     * List of flights.
+     * Trip destination.
      *
-     * @var Flight[] $flights List of flights.
+     * @var string $tripDestination Trip destination.
      */
-    private array $flights;
-
-    /**
-     * List of hotels.
-     *
-     * @var Hotel[] $hotels List of hotels.
-     */
-    private array $hotels;
-
-    /**
-     * List of POIs.
-     *
-     * @var Poi[] $hotels List of POIs.
-     */
-    private array $pois;
+    private AirportCity $tripDestination;
 
     /**
      * Trip start date.
@@ -54,4 +42,76 @@ class Trip
      * @var \DateTime $endDate Trip end date.
      */
     private \DateTime $endDate;
+
+
+    /**
+     * Creates a new user trip.
+     *
+     * @param integer     $tripId          Unique trip ID.
+     * @param AirportCity $tripDestination Trip destination.
+     * @param \DateTime   $startDate       Trip start date.
+     * @param \DateTime   $endDate         Trip end date.
+     */
+    public function __construct(
+        ?int $tripId=null,
+        AirportCity $tripDestination,
+        \DateTime $startDate,
+        \DateTime $endDate
+    ) {
+        $this->tripId          = $tripId;
+        $this->tripDestination = $tripDestination;
+        $this->startDate       = $startDate;
+        $this->endDate         = $endDate;
+
+    }//end __construct()
+
+
+    /**
+     * Gets trip ID.
+     *
+     * @return integer Unique trip ID.
+     */
+    public function getTripId()
+    {
+        return $this->tripId;
+
+    }//end getTripId()
+
+
+    /**
+     * Gets trip destination.
+     *
+     * @return AirportCity Trip destination.
+     */
+    public function getTripDestination()
+    {
+        return $this->tripDestination;
+
+    }//end getTripDestination()
+
+
+    /**
+     * Gets trip start date.
+     *
+     * @return \DateTime Trip start date.
+     */
+    public function getTripStart()
+    {
+        return $this->startDate;
+
+    }//end getTripStart()
+
+
+    /**
+     * Gets trip end date.
+     *
+     * @return \DateTime Trip end date.
+     */
+    public function getTripEnd()
+    {
+        return $this->endDate;
+
+    }//end getTripEnd()
+
+
 }//end class

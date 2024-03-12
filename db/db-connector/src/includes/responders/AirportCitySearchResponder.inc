@@ -24,7 +24,10 @@ abstract class AirportCitySearchResponder
      */
     public static function respondToRequest(\JAND\Common\Messages\Shared\AirportCitySearchRequest $request, \PDO $pdo)
     {
-        $stmt = $pdo->prepare('SELECT * FROM airport_cities WHERE LOWER(name) LIKE LOWER(:query) OR iata_code LIKE UPPER(:query)');
+        $stmt = $pdo->prepare(
+            'SELECT * FROM airport_cities 
+WHERE LOWER(name) LIKE LOWER(:query) OR iata_code LIKE UPPER(:query)'
+        );
         $stmt->execute(['query' => '%'.$request->getSearchString().'%']);
         $results = $stmt->fetchAll();
         $stmt->closeCursor();
@@ -51,22 +54,26 @@ abstract class AirportCitySearchResponder
 
             foreach ($response->getResults() as &$airportCity) {
                 // Add to db.
-                $stmt = $pdo->prepare(
-                    'INSERT INTO airport_cities VALUES 
-    (:iataCode, :name, :latitude, :longitude, :stateCode, :countryCode, DEFAULT)'
-                );
-                $stmt->execute(
-                    [
-                        'iataCode'    => $airportCity->getCode(),
-                        'name'        => $airportCity->getName(),
-                        'latitude'    => $airportCity->getLatitude(),
-                        'longitude'   => $airportCity->getLongitude(),
-                        'stateCode'   => $airportCity->getStateCode(),
-                        'countryCode' => $airportCity->getCountryCode(),
-                    ]
-                );
-                $stmt->closeCursor();
-            }
+                try {
+                    $stmt = $pdo->prepare(
+                        'INSERT INTO airport_cities VALUES 
+        (:iataCode, :name, :latitude, :longitude, :stateCode, :countryCode, DEFAULT)'
+                    );
+                    $stmt->execute(
+                        [
+                            'iataCode'    => $airportCity->getCode(),
+                            'name'        => $airportCity->getName(),
+                            'latitude'    => $airportCity->getLatitude(),
+                            'longitude'   => $airportCity->getLongitude(),
+                            'stateCode'   => $airportCity->getStateCode(),
+                            'countryCode' => $airportCity->getCountryCode(),
+                        ]
+                    );
+                    $stmt->closeCursor();
+                } catch (\PDOException $e) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+                    // May already be in DB.
+                }
+            }//end foreach
 
             $airportCityList = array_merge($airportCityList, $response->getResults());
         }//end if

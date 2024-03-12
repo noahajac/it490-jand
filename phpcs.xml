@@ -10,6 +10,7 @@
         <exclude name="Squiz.Operators.ComparisonOperatorUsage.NotAllowed" />
         <exclude name="Squiz.PHP.EmbeddedPhp.Indent" />
         <exclude name="Squiz.PHP.DisallowInlineIf.Found" />
+        <exclude name="Generic.PHP.DisallowShortOpenTag.EchoFound" />
     </rule>
 
     <rule ref="PSR1.Files.SideEffects.FoundWithSymbols" />

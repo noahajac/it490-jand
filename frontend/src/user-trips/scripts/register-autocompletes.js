@@ -1,1 +1,0 @@
-registerAirportField(document.getElementById('destination'));

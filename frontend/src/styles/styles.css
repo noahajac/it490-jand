@@ -9,3 +9,10 @@ main {
 .error {
   color: red;
 }
+
+table.table-borders,
+table.table-borders th,
+table.table-borders td {
+  border: .1em solid black;
+  padding: .5em;
+}

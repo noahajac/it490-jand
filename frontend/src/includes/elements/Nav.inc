@@ -33,8 +33,15 @@ abstract class Nav
             <li class="nav-item">
               <a class="nav-link active" href="/landing">Home</a>
             </li>
-            <li class="nav-item dropdown">
-              <?php $session = \JAND\Frontend\Includes\SessionManager::getSession(); ?>
+            <?php
+            $session = \JAND\Frontend\Includes\SessionManager::getSession();
+            if ($session) {
+                ?>
+            <li>
+              <a class="nav-link active" href="/user-trips">My Trips</a>
+            </li>
+            <?php } ?>
+            <li class="nav-item dropdown account-nav">
               <a class="nav-link active dropdown-toggle"
               id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown"> 
               <?php
@@ -56,7 +63,7 @@ abstract class Nav
                   <li><a class="dropdown-item" href="/register">Register</a></li>
                 <?php } ?>
               </ul>
-            </li>
+            </li class="nav-item">
           </ul>
         </div>
       </div>

@@ -36,6 +36,26 @@ class AirportCitySearchResponse extends SearchResponse
 
 
     /**
+     * Check if an IATA code is valid.
+     *
+     * @param string $iataCode Code to check.
+     *
+     * @return false|\JAND\Common\Trips\AirportCity The city for the code, or false.
+     */
+    public function checkCode(string $iataCode)
+    {
+        foreach ($this->results as &$city) {
+            if ($city->getCode() === $iataCode) {
+                return $city;
+            }
+        }
+
+        return false;
+
+    }//end checkCode()
+
+
+    /**
      * Gets the results.
      *
      * @return ?AirportCity[] Search results.

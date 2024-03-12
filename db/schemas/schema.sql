@@ -40,10 +40,11 @@ CREATE TABLE airport_cities (
 CREATE TABLE `user_trips` (
     `trip_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `user_id` INT NOT NULL,
-    `destination` VARCHAR(255) NOT NULL,
+    `iata_code` CHAR(3) NOT NULL,
     `start_date` DATE NOT NULL,
     `end_date` DATE NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (iata_code) REFERENCES airport_cities(iata_code)
 );
 
 CREATE TABLE `hotel_bookings` (

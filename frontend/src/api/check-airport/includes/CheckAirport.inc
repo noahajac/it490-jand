@@ -45,8 +45,10 @@ abstract class CheckAirport
             array_push(
                 $airports,
                 [
-                    'code' => $airport->getCode(),
-                    'name' => $airport->getName(),
+                    'code'        => $airport->getCode(),
+                    'name'        => $airport->getName(),
+                    'stateCode'   => $airport->getStateCode(),
+                    'countryCode' => $airport->getCountryCode(),
                 ]
             );
         }
