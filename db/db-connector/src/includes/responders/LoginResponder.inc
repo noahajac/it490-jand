@@ -29,6 +29,7 @@ abstract class LoginResponder
             $stmt     = $pdo->prepare('SELECT * FROM users WHERE email = :email');
             $stmt->execute(['email' => $email]);
             $user = $stmt->fetch();
+            $stmt->closeCursor();
         if ($user && password_verify($password, $user['password'])) {
             // Generate session token.
             $sessionToken = bin2hex(random_bytes(16));
@@ -45,12 +46,14 @@ abstract class LoginResponder
                     'expiration'   => $expirationTime,
                 ]
             );
+            $stmt->closeCursor();
             // Set expiration time to 12 hours from now.
             return new \JAND\Common\Messages\Frontend\LoginResponse(
                 true,
                 new \JAND\Common\Session(
                     $sessionToken,
                     $expirationTime,
+                    $user['user_id'],
                     $user['first_name'],
                     $user['last_name']
                 )

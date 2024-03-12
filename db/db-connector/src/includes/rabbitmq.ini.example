@@ -1,10 +1,10 @@
-[rabbitMQ]
+[db-frontend_db.server]
 BROKER_HOST = localhost
 BROKER_PORT = 5672
-USER = user
+USER = db
 PASSWORD = password
-VHOST = vhost
-EXCHANGE = exchange
-QUEUE = queue
-;EXCHANGE_TYPE = ????
-AUTO_DELETE = true
+VHOST = db-frontend
+CLIENT_EXCHANGE = frontend.client
+SERVER_EXCHANGE = db.server
+SERVER_QUEUE = db.server
+CLIENT_QUEUE_PREFIX = frontend.client

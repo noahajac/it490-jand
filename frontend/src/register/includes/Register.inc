@@ -16,9 +16,9 @@ abstract class Register
     /**
      * Session object, error object, or false if nothing else.
      *
-     * @var false|\JAND\Common\Session|\JAND\Common\Messages\Frontend\RegisterError $session
+     * @var false|\JAND\Common\Session|\JAND\Common\Messages\Shared\OperationError $session
      */
-    private static false|\JAND\Common\Session|\JAND\Common\Messages\Frontend\RegisterError $session;
+    private static false|\JAND\Common\Session|\JAND\Common\Messages\Shared\OperationError $session;
 
     /**
      * Array of errors to show user.
@@ -99,7 +99,7 @@ abstract class Register
             if (static::$session instanceof \JAND\Common\Session) {
                 header('Location: /landing');
                 exit();
-            } else if (static::$session instanceof \JAND\Common\Messages\Frontend\RegisterError) {
+            } else if (static::$session instanceof \JAND\Common\Messages\Shared\OperationError) {
                 array_push(static::$errors, static::$session->getMessage());
             } else {
                 array_push(static::$errors, 'An error has occured while registering.');

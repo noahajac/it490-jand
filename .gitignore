@@ -2,3 +2,5 @@
 /frontend/src/includes/rabbitmq.ini
 /frontend/jand-frontend.conf
 /db/db-connector/src/includes/rabbitmq.ini
+/dmz/src/includes/rabbitmq.ini
+/dmz/src/includes/responders/amadeus.ini

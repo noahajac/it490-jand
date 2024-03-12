@@ -30,6 +30,7 @@ abstract class SessionInvalidateResponder
         $stmt = $pdo->prepare('SELECT * FROM sessions WHERE session_token = :sessionToken');
         $stmt->execute(['sessionToken' => $sessionToken]);
         $session = $stmt->fetch();
+        $stmt->closeCursor();
 
         // Check if the session exists.
         if ($session) {
@@ -38,6 +39,7 @@ abstract class SessionInvalidateResponder
                 "UPDATE sessions SET expires_at = '1970-01-01 00:00:00' WHERE session_token = :sessionToken"
             );
             $updateStmt->execute(['sessionToken' => $sessionToken]);
+            $stmt->closeCursor();
 
             // Return success.
             return new \JAND\Common\Messages\Frontend\SessionInvalidateResponse(true);

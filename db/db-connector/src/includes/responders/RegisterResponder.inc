@@ -42,11 +42,14 @@ VALUES (:email, :password, :firstName, :lastName)'
                 'lastName'  => $lastName,
             ]
         );
+        $stmt->closeCursor();
 
         // Generate a session token.
         $sessionToken = bin2hex(random_bytes(16));
         // Generate a 32-character hexadecimal string.
         $expirationTime = (time() + 43200);
+
+        $userId = $pdo->lastInsertId();
 
         // Example MySQL query to insert a new session for the user.
         $stmt = $pdo->prepare(
@@ -55,14 +58,15 @@ VALUES (:userId, :sessionToken, CONVERT_TZ(FROM_UNIXTIME(:expiration), 'UTC', @@
         );
         $stmt->execute(
             [
-                'userId'       => $pdo->lastInsertId(),
+                'userId'       => $userId,
                 'sessionToken' => $sessionToken,
                 'expiration'   => $expirationTime,
             ]
         );
+        $stmt->closeCursor();
         return new \JAND\Common\Messages\Frontend\RegisterResponse(
             true,
-            new \JAND\Common\Session($sessionToken, $expirationTime, $firstName, $lastName)
+            new \JAND\Common\Session($sessionToken, $expirationTime, $userId, $firstName, $lastName)
         );
 
     }//end respondToRequest()

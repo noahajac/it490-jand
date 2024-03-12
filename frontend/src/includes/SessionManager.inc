@@ -40,12 +40,8 @@ abstract class SessionManager
                 return false;
             }
 
-            $client   = new \JAND\Common\RabbitMq\RabbitMqClient(
-                __DIR__.'/rabbitmq.ini',
-                'db-frontend_frontend.client'
-            );
             $request  = new \JAND\Common\Messages\Frontend\SessionValidateRequest($cookieValue);
-            $response = $request->sendRequest($client);
+            $response = $request->sendRequest(RabbitClientManager::getClient());
             if ($response instanceof \JAND\Common\Messages\Frontend\SessionValidateResponse) {
                 if ($response->getResult()) {
                     $session = $response->getSession();
@@ -76,10 +72,8 @@ abstract class SessionManager
     public static function login(string $email, string $passwordHash)
     {
         $cookieName = 'SESSION';
-
-        $client   = new \JAND\Common\RabbitMq\RabbitMqClient(__DIR__.'/rabbitmq.ini', 'db-frontend_frontend.client');
-        $request  = new \JAND\Common\Messages\Frontend\LoginRequest($email, $passwordHash);
-        $response = $request->sendRequest($client);
+        $request    = new \JAND\Common\Messages\Frontend\LoginRequest($email, $passwordHash);
+        $response   = $request->sendRequest(RabbitClientManager::getClient());
         if ($response instanceof \JAND\Common\Messages\Frontend\LoginResponse) {
             if ($response->getResult()) {
                 $session = $response->getSession();
@@ -114,15 +108,14 @@ abstract class SessionManager
      * @param string $lastName     User's last name.
      *
      * @return false|\JAND\Common\Session|
-     * \JAND\Common\Messages\Frontend\RegisterError Session object, error, or false.
+     * \JAND\Common\Messages\Shared\OperationError Session object, error, or false.
      */
     public static function register(string $email, string $passwordHash, string $firstName, string $lastName)
     {
         $cookieName = 'SESSION';
 
-        $client   = new \JAND\Common\RabbitMq\RabbitMqClient(__DIR__.'/rabbitmq.ini', 'db-frontend_frontend.client');
         $request  = new \JAND\Common\Messages\Frontend\RegisterRequest($email, $passwordHash, $firstName, $lastName);
-        $response = $request->sendRequest($client);
+        $response = $request->sendRequest(RabbitClientManager::getClient());
         if ($response instanceof \JAND\Common\Messages\Frontend\RegisterResponse) {
             if ($response->getResult()) {
                 $session = $response->getSession();
@@ -141,7 +134,7 @@ abstract class SessionManager
                 }
             } else {
                 $error = $response->getError();
-                if ($error instanceof \JAND\Common\Messages\Frontend\RegisterError) {
+                if ($error instanceof \JAND\Common\Messages\Shared\OperationError) {
                     return $error;
                 }
             }//end if
@@ -167,9 +160,8 @@ abstract class SessionManager
 
         $cookieName = 'SESSION';
 
-        $client   = new \JAND\Common\RabbitMq\RabbitMqClient(__DIR__.'/rabbitmq.ini', 'db-frontend_frontend.client');
         $request  = new \JAND\Common\Messages\Frontend\SessionInvalidateRequest($session->getSessionToken());
-        $response = $request->sendRequest($client);
+        $response = $request->sendRequest(RabbitClientManager::getClient());
         if ($response instanceof \JAND\Common\Messages\Frontend\SessionInvalidateResponse) {
             if ($response->getResult()) {
                 $result = $response->getResult();

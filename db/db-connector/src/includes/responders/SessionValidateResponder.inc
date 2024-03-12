@@ -31,6 +31,7 @@ abstract class SessionValidateResponder
         $stmt = $pdo->prepare(
             "SELECT
 UNIX_TIMESTAMP(CONVERT_TZ(sessions.expires_at, @@session.time_zone, 'UTC')) as expiration,
+users.user_id as user_id,
 users.first_name as first_name,
 users.last_name as last_name
 FROM sessions, users WHERE sessions.session_token = :sessionToken AND
@@ -39,6 +40,7 @@ sessions.expires_at > NOW()"
         );
         $stmt->execute(['sessionToken' => $sessionToken]);
         $session = $stmt->fetch();
+        $stmt->closeCursor();
 
         // Check if the session exists and is not expired.
         if ($session) {
@@ -48,6 +50,7 @@ sessions.expires_at > NOW()"
                 new \JAND\Common\Session(
                     $sessionToken,
                     $session['expiration'],
+                    $session['user_id'],
                     $session['first_name'],
                     $session['last_name']
                 )

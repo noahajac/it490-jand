@@ -43,21 +43,35 @@ class Session
      */
     private int $sessionExpiration;
 
+    /**
+     * User ID.
+     *
+     * @var string $userId ID of user.
+     */
+    private string $userId;
+
 
     /**
      * Creates a new session.
      *
      * @param string  $sessionToken      Session token.
      * @param integer $sessionExpiration Session expiration.
+     * @param string  $userId            ID of user session is for.
      * @param string  $firstName         User's first name.
      * @param string  $lastName          User's last name.
      */
-    public function __construct(string $sessionToken, int $sessionExpiration, string $firstName, string $lastName)
-    {
+    public function __construct(
+        string $sessionToken,
+        int $sessionExpiration,
+        string $userId,
+        string $firstName,
+        string $lastName
+    ) {
         $this->firstName         = $firstName;
         $this->lastName          = $lastName;
         $this->sessionToken      = $sessionToken;
         $this->sessionExpiration = $sessionExpiration;
+        $this->userId            = $userId;
 
     }//end __construct()
 
@@ -120,6 +134,18 @@ class Session
         return $this->sessionExpiration;
 
     }//end getSessionExpiration()
+
+
+    /**
+     * Gets the user ID.
+     *
+     * @return string User ID.
+     */
+    public function getUserId()
+    {
+        return $this->userId;
+
+    }//end getUserId()
 
 
 }//end class

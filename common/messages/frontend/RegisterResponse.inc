@@ -16,20 +16,23 @@ class RegisterResponse extends AccountResponse
     /**
      * Error when there is a failure.
      *
-     * @var ?RegisterError $error Error during registration.
+     * @var ?\JAND\Common\Messages\Shared\OperationError $error Error during registration.
      */
-    private ?RegisterError $error;
+    private ?\JAND\Common\Messages\Shared\OperationError $error;
 
 
     /**
      * Create a new register response.
      *
-     * @param boolean              $result  True on success, otherwise false.
-     * @param \JAND\Common\Session $session The session object on success.
-     * @param RegisterError        $error   Error when registration is rejected.
+     * @param boolean                                     $result  True on success, otherwise false.
+     * @param \JAND\Common\Session                        $session The session object on success.
+     * @param \JAND\Common\Messages\Shared\OperationError $error   Error when registration is rejected.
      * */
-    public function __construct(bool $result, ?\JAND\Common\Session $session, ?RegisterError $error=null)
-    {
+    public function __construct(
+        bool $result,
+        ?\JAND\Common\Session $session,
+        ?\JAND\Common\Messages\Shared\OperationError $error=null
+    ) {
         parent::__construct($result, $session);
         $this->error = $error;
 

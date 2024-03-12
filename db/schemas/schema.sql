@@ -9,6 +9,8 @@ USE jand;
 CREATE USER 'jand'@'localhost' IDENTIFIED WITH auth_socket;
 GRANT SELECT, INSERT, UPDATE, DELETE ON jand.* TO 'jand'@'localhost';
 
+SET GLOBAL event_scheduler = ON; 
+
 CREATE TABLE users (
     `user_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `password` VARCHAR(255) NOT NULL,
@@ -23,6 +25,16 @@ CREATE TABLE sessions (
     `user_id` INT NOT NULL,
     `expires_at` TIMESTAMP NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
+CREATE TABLE airport_cities (
+   `iata_code`    CHAR(3) NOT NULL PRIMARY KEY,
+   `name`         VARCHAR(255) NOT NULL,
+   `latitude`     DECIMAL(7,5) NOT NULL,
+   `longitute`    DECIMAL(8,5) NOT NULL,
+   `state_code`   VARCHAR(5) NOT NULL,
+   `country_code` CHAR(2) NOT NULL,
+   `created_at`   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE `user_trips` (

@@ -46,6 +46,8 @@ class Connector
             return Responders\SessionValidateResponder::respondToRequest($request, static::$pdo);
         } else if ($request instanceof \JAND\Common\Messages\Frontend\SessionInvalidateRequest) {
             return Responders\SessionInvalidateResponder::respondToRequest($request, static::$pdo);
+        } else if ($request instanceof \JAND\Common\Messages\Shared\AirportCitySearchRequest) {
+            return Responders\AirportCitySearchResponder::respondToRequest($request, static::$pdo);
         } else {
             return false;
         }//end if
