@@ -95,7 +95,7 @@ abstract class Reviews
         <div class="input-review">
             <h3>Write a Review</h3>
             <!--Example data. Can make a cascading dropdown menu with api data.-->
-            <form name="input-review" id="input-review" action="index.php" action="post">
+            <form name="input-review" id="input-review" action="#" method="post">
                 <label for="input-service">Choose Service:</label>
                     <select name="service" id="service">
                         <option value="Airline">Airline</option>
