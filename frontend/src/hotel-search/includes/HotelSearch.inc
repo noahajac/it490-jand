@@ -162,16 +162,6 @@ abstract class HotelSearch
             );
             $response = $request->sendRequest(\JAND\Frontend\Includes\RabbitClientManager::getClient());
 
-            $destCity = $response->checkCode(strtoupper($destination));
-            if (!$destCity) {
-                array_push($errorMsgs, 'Destination is not valid.');
-            }
-
-            $request  = new \JAND\Common\Messages\Shared\AirportCitySearchRequest(
-                $destination
-            );
-            $response = $request->sendRequest(\JAND\Frontend\Includes\RabbitClientManager::getClient());
-
             $destinationCity = $response->checkCode(strtoupper($destination));
             if (!$destinationCity) {
                 array_push($errorMsgs, 'Destination is not valid.');

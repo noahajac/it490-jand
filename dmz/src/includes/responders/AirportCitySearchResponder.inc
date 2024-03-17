@@ -50,7 +50,6 @@ abstract class AirportCitySearchResponder
                     ucwords(strtolower($result->name)),
                     $result->geoCode->latitude,
                     $result->geoCode->longitude,
-                    $result->address->stateCode,
                     $result->address->countryCode
                 )
             );

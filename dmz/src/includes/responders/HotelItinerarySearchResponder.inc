@@ -104,7 +104,7 @@ abstract class HotelItinerarySearchResponder
                                 null,
                                 new Hotel(
                                     null,
-                                    new AirportCity($hotel->hotel->cityCode, null, null, null, null, null),
+                                    new AirportCity($hotel->hotel->cityCode, null, null, null, null),
                                     $hotel->hotel->hotelId,
                                     $hotel->hotel->name
                                 ),

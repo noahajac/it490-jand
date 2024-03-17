@@ -47,7 +47,6 @@ abstract class CheckAirport
                 [
                     'code'        => $airport->getCode(),
                     'name'        => $airport->getName(),
-                    'stateCode'   => $airport->getStateCode(),
                     'countryCode' => $airport->getCountryCode(),
                 ]
             );

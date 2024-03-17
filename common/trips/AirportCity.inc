@@ -30,14 +30,6 @@ class AirportCity extends IATACode
     private ?float $longitude;
 
     /**
-     * State code.
-     * May be null if sent from DMZ.
-     *
-     * @var ?string State code.
-     */
-    private ?string $stateCode;
-
-    /**
      * Country code.
      * May be null if sent from DMZ.
      *
@@ -53,7 +45,6 @@ class AirportCity extends IATACode
      * @param string $name        Name.
      * @param float  $latitude    Latitude.
      * @param float  $longitude   Longitude.
-     * @param string $stateCode   State code.
      * @param string $countryCode Country code.
      */
     public function __construct(
@@ -61,13 +52,11 @@ class AirportCity extends IATACode
         ?string $name,
         ?float $latitude,
         ?float $longitude,
-        ?string $stateCode,
         ?string $countryCode
     ) {
         parent::__construct($code, $name);
         $this->latitude    = $latitude;
         $this->longitude   = $longitude;
-        $this->stateCode   = $stateCode;
         $this->countryCode = $countryCode;
 
     }//end __construct()
@@ -95,18 +84,6 @@ class AirportCity extends IATACode
         return $this->longitude;
 
     }//end getLongitude()
-
-
-    /**
-     * Gets state code.
-     *
-     * @return string State code.
-     */
-    public function getStateCode()
-    {
-        return $this->stateCode;
-
-    }//end getStateCode()
 
 
     /**

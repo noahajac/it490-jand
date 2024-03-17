@@ -32,7 +32,6 @@ CREATE TABLE airport_cities (
    `name`         VARCHAR(255) NOT NULL,
    `latitude`     DECIMAL(7,5) NOT NULL,
    `longitute`    DECIMAL(8,5) NOT NULL,
-   `state_code`   VARCHAR(5) NOT NULL,
    `country_code` CHAR(2) NOT NULL,
    `created_at`   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -154,18 +153,21 @@ CREATE TABLE `poi` (
     `poi_name`  VARCHAR(255) NOT NULL,
     `city`      CHAR(3) NOT NULL,
     `pulled_on` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE (poi_name, city),
     FOREIGN KEY (city) REFERENCES airport_cities(iata_code)
 );
 
 CREATE TABLE `poi_keywords` (
     `poi_id`    INT NOT NULL,
     `keyword`   VARCHAR(30) NOT NULL,
-    PRIMARY KEY (poi_id, keyword)
+    PRIMARY KEY (poi_id, keyword),
+    FOREIGN KEY (poi_id) REFERENCES poi(poi_id)
 );
 
 CREATE TABLE `poi_queries` (
     `city`      CHAR(3) NOT NULL PRIMARY KEY,
-    `pulled_on` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    `pulled_on` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (city) REFERENCES airport_cities(iata_code)
 );
 
 CREATE TABLE `hotel_bookings` (

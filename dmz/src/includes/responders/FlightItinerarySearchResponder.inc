@@ -68,12 +68,10 @@ abstract class FlightItinerarySearchResponder
                             null,
                             null,
                             null,
-                            null,
                             null
                         ),
                         new \JAND\Common\Trips\AirportCity(
                             $segment->arrival->iataCode,
-                            null,
                             null,
                             null,
                             null,
@@ -110,12 +108,10 @@ abstract class FlightItinerarySearchResponder
                                 null,
                                 null,
                                 null,
-                                null,
                                 null
                             ),
                             new \JAND\Common\Trips\AirportCity(
                                 $segment->arrival->iataCode,
-                                null,
                                 null,
                                 null,
                                 null,

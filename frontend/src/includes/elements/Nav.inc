@@ -46,6 +46,9 @@ abstract class Nav
             <li>
               <a class="nav-link active" href="/hotel-search">Search Hotels</a>
             </li>
+            <li>
+              <a class="nav-link active" href="/poi-search">Search Attractions</a>
+            </li>
             <?php } ?>
             <li class="nav-item dropdown account-nav">
               <a class="nav-link active dropdown-toggle"

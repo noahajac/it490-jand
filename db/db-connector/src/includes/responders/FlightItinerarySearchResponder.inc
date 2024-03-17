@@ -467,8 +467,8 @@ AND f.flight_id=s.flight_id ORDER BY s.position'
                         static::getSegmentInfo(
                             new Flight(
                                 $segment['flight_id'],
-                                new AirportCity($segment['depart_airport'], null, null, null, null, null),
-                                new AirportCity($segment['arrival_airport'], null, null, null, null, null),
+                                new AirportCity($segment['depart_airport'], null, null, null, null),
+                                new AirportCity($segment['arrival_airport'], null, null, null, null),
                                 new \DateTime($segment['depart_time']),
                                 new \DateTime($segment['arrival_time']),
                                 new Airline($segment['airline'], null),

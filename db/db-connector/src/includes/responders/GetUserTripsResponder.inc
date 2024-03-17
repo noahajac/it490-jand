@@ -47,7 +47,6 @@ AND t.user_id=s.user_id AND s.session_token = :sessionToken'
                         $result['name'],
                         $result['latitude'],
                         $result['longitude'],
-                        $result['state_code'],
                         $result['country_code']
                     ),
                     new \DateTime($result['start_date']),

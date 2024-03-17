@@ -58,6 +58,10 @@ class Connector
             return Responders\FlightItinerarySearchResponder::respondToRequest($request, static::$pdo);
         } else if ($request instanceof \JAND\Common\Messages\Shared\HotelItinerarySearchRequest) {
             return Responders\HotelItinerarySearchResponder::respondToRequest($request, static::$pdo);
+        } else if ($request instanceof \JAND\Common\Messages\Shared\PoiSearchRequest) {
+            return Responders\PoiSearchResponder::respondToRequest($request, static::$pdo);
+        } else if ($request instanceof \JAND\Common\Messages\Frontend\GetPoiKeywordsRequest) {
+            return Responders\GetPoiKeywordsResponder::respondToRequest($request, static::$pdo);
         } else {
             return false;
         }//end if

@@ -39,6 +39,8 @@ class Service
             return Responders\AirlineSearchResponder::respondToRequest($request);
         } else if ($request instanceof \JAND\Common\Messages\Shared\HotelItinerarySearchRequest) {
             return Responders\HotelItinerarySearchResponder::respondToRequest($request);
+        } else if ($request instanceof \JAND\Common\Messages\Shared\PoiSearchRequest) {
+            return Responders\PoiSearchResponder::respondToRequest($request);
         } else {
             return false;
         }//end if

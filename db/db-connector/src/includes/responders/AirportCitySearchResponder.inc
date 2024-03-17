@@ -26,9 +26,14 @@ abstract class AirportCitySearchResponder
     {
         $stmt = $pdo->prepare(
             'SELECT * FROM airport_cities 
-WHERE LOWER(name) LIKE LOWER(:query) OR iata_code LIKE UPPER(:query)'
+WHERE iata_code LIKE UPPER(:query) OR LOWER(name) LIKE LOWER(:query) ORDER BY (iata_code=UPPER(:exact)) DESC'
         );
-        $stmt->execute(['query' => '%'.$request->getSearchString().'%']);
+        $stmt->execute(
+            [
+                'query' => '%'.$request->getSearchString().'%',
+                'exact' => $request->getSearchString(),
+            ]
+        );
         $results = $stmt->fetchAll();
         $stmt->closeCursor();
         $airportCityList = [];
@@ -41,41 +46,45 @@ WHERE LOWER(name) LIKE LOWER(:query) OR iata_code LIKE UPPER(:query)'
                     $result['name'],
                     $result['latitude'],
                     $result['longitude'],
-                    $result['state_code'],
                     $result['country_code']
                 )
             );
         }
 
-        if (count($airportCityList) < 1) {
+        $forcePull = false;
+        if (strlen($request->getSearchString()) === 3) {
+            if (isset($airportCityList[0]) && $airportCityList[0]->getCode() !== $request->getSearchString()) {
+                // User specified a possible IATA code that was not found in DB.
+                $forcePull = true;
+            }
+        }
+
+        if (count($airportCityList) < 1 || $forcePull) {
             // No results found, try API.
             $request  = new \JAND\Common\Messages\Shared\AirportCitySearchRequest($request->getSearchString());
             $response = $request->sendRequest(\JAND\DbConnector\Includes\RabbitClientManager::getClient());
 
             foreach ($response->getResults() as &$airportCity) {
                 // Add to db.
-                try {
-                    $stmt = $pdo->prepare(
-                        'INSERT INTO airport_cities VALUES 
-        (:iataCode, :name, :latitude, :longitude, :stateCode, :countryCode, DEFAULT)'
-                    );
+                $stmt = $pdo->prepare(
+                    'INSERT INTO airport_cities VALUES 
+        (:iataCode, :name, :latitude, :longitude, :countryCode, DEFAULT) ON DUPLICATE KEY UPDATE
+iata_code=:iataCode, name=:name, latitude=:latitude, longitude=:longitude, 
+country_code=:countryCode'
+                );
                     $stmt->execute(
                         [
                             'iataCode'    => $airportCity->getCode(),
                             'name'        => $airportCity->getName(),
                             'latitude'    => $airportCity->getLatitude(),
                             'longitude'   => $airportCity->getLongitude(),
-                            'stateCode'   => $airportCity->getStateCode(),
                             'countryCode' => $airportCity->getCountryCode(),
                         ]
                     );
                     $stmt->closeCursor();
-                } catch (\PDOException $e) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
-                    // May already be in DB.
-                }
             }//end foreach
 
-            $airportCityList = array_merge($airportCityList, $response->getResults());
+            $airportCityList = array_merge($response->getResults(), $airportCityList);
         }//end if
 
         return new \JAND\Common\Messages\Shared\AirportCitySearchResponse($airportCityList);
