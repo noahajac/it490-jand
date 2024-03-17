@@ -5,7 +5,7 @@
     <rule ref="Squiz">
         <exclude name="Squiz.Operators.ComparisonOperatorUsage.ImplicitTrue" />
         <exclude name="Squiz.Commenting.FileComment.MissingSubpackageTag" />
-        <exclude name="Squiz.Objects.ObjectInstantiation.NotAssigned" />Squiz.PHP.EmbeddedPhp.Indent
+        <exclude name="Squiz.Objects.ObjectInstantiation.NotAssigned" />
         <exclude name="Squiz.PHP.DisallowSizeFunctionsInLoops.Found" />
         <exclude name="Squiz.Operators.ComparisonOperatorUsage.NotAllowed" />
         <exclude name="Squiz.PHP.EmbeddedPhp.Indent" />
@@ -13,6 +13,8 @@
         <exclude name="Generic.PHP.DisallowShortOpenTag.EchoFound" />
         <exclude name="Squiz.Commenting.InlineComment.DocBlock" />
         <exclude name="Squiz.Commenting.BlockComment.WrongStart" />
+        <exclude name="Squiz.PHP.EmbeddedPhp.OpenTagIndent" />
+
     </rule>
 
     <rule ref="PSR1.Files.SideEffects.FoundWithSymbols" />

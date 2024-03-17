@@ -91,7 +91,7 @@ abstract class FlightItinerarySearchResponder
             $inbound        = null;
             $returnSegments = null;
             $endDate        = null;
-            if (!$result->oneWay) {
+            if (!$request->getOneWay()) {
                 $inbound        = $result->itineraries[1];
                 $returnSegments = [];
                 foreach ($inbound->segments as &$segment) {
@@ -131,6 +131,8 @@ abstract class FlightItinerarySearchResponder
                 }//end foreach
 
                 $endDate = end($returnSegments)->getArrivalTime();
+            } else {
+                $endDate = end($outboundSegments)->getArrivalTime();
             }//end if
 
             array_push(
@@ -147,7 +149,7 @@ abstract class FlightItinerarySearchResponder
                     $request->getAdults(),
                     $request->getChildren(),
                     $request->getInfants(),
-                    $result->oneWay
+                    $request->getOneWay()
                 )
             );
         }//end foreach

@@ -16,3 +16,8 @@ table.table-borders td {
   border: .1em solid black;
   padding: .5em;
 }
+
+div.flight-result {
+  padding: 2em;
+  display: flex;
+}
