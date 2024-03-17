@@ -37,6 +37,8 @@ class Service
             return Responders\FlightItinerarySearchResponder::respondToRequest($request);
         } else if ($request instanceof \JAND\Common\Messages\DbConnector\AirlineSearchRequest) {
             return Responders\AirlineSearchResponder::respondToRequest($request);
+        } else if ($request instanceof \JAND\Common\Messages\Shared\HotelItinerarySearchRequest) {
+            return Responders\HotelItinerarySearchResponder::respondToRequest($request);
         } else {
             return false;
         }//end if

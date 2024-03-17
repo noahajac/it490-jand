@@ -113,8 +113,59 @@ CREATE TABLE `flight_queries` (
     `children`     INT NOT NULL DEFAULT 0,
     `infants`      INT NOT NULL DEFAULT 0,
     `one_way`      BOOLEAN NOT NULL DEFAULT 0,
-    `pulled_on`    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (origin, destination, start_date, end_date, adults, children, infants, one_way)
+    `pulled_on`    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (origin, destination, start_date, end_date, adults, children, infants, one_way),
+    FOREIGN KEY (origin) REFERENCES airport_cities(iata_code),
+    FOREIGN KEY (destination) REFERENCES airport_cities(iata_code)
+);
+
+CREATE TABLE `hotels` (
+    `hotel_id`   INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `hotel_code` CHAR(8) NOT NULL,
+    `hotel_name` VARCHAR(255) NOT NULL,
+    `city`       CHAR(3) NOT NULL,
+    `pulled_on`  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (city) REFERENCES airport_cities(iata_code)
+);
+
+CREATE TABLE `hotel_itineraries` (
+    `itinerary_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `hotel_id`     INT NOT NULL,
+    `check_in`     DATE NOT NULL,
+    `check_out`    DATE NOT NULL,
+    `adults`       INT NOT NULL,
+    `total_price`  DECIMAL(10, 2) NOT NULL,
+    `pulled_on`    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (hotel_id) REFERENCES hotels(hotel_id)
+);
+
+CREATE TABLE `hotel_queries` (
+    `city`      CHAR(3) NOT NULL,
+    `check_in`  DATE NOT NULL,
+    `check_out` DATE NOT NULL,
+    `adults`    INT NOT NULL,
+    `pulled_on` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (city, check_in, check_out, adults),
+    FOREIGN KEY (city) REFERENCES airport_cities(iata_code)
+);
+
+CREATE TABLE `poi` (
+    `poi_id`    INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `poi_name`  VARCHAR(255) NOT NULL,
+    `city`      CHAR(3) NOT NULL,
+    `pulled_on` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (city) REFERENCES airport_cities(iata_code)
+);
+
+CREATE TABLE `poi_keywords` (
+    `poi_id`    INT NOT NULL,
+    `keyword`   VARCHAR(30) NOT NULL,
+    PRIMARY KEY (poi_id, keyword)
+);
+
+CREATE TABLE `poi_queries` (
+    `city`      CHAR(3) NOT NULL PRIMARY KEY,
+    `pulled_on` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE `hotel_bookings` (
@@ -170,23 +221,6 @@ CREATE TABLE `user_vacation_preferences` (
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`user_id`),
     FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`)
-);
-
-CREATE TABLE `hotel_cache` (
-    `hotel_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `hotel_name` VARCHAR(255) NOT NULL,
-    `check_in_date` DATE NOT NULL,
-    `check_out_date` DATE NOT NULL,
-    `price_per_night` DECIMAL(10, 2) NOT NULL,
-    `last_updated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
-
-CREATE TABLE `poi_cache` (
-    `poi_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `poi_name` VARCHAR(255) NOT NULL,
-    `location` VARCHAR(255) NOT NULL,
-    `rating` DECIMAL(3, 1),
-    `last_updated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE `poi_reviews` (
