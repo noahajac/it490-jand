@@ -36,5 +36,8 @@ const listener = async (evt, inputField, valueField, checkKey) => {
   }
 };
 
-fromInputField.addEventListener('change', (evt) => { listener(evt, fromInputField, fromValueField, 'origin'); });
-toInputField.addEventListener('change', (evt) => { listener(evt, toInputField, toValueField, 'dest'); });
+if (fromInputField)
+  fromInputField.addEventListener('change', (evt) => { listener(evt, fromInputField, fromValueField, 'origin'); });
+
+if (toInputField)
+  toInputField.addEventListener('change', (evt) => { listener(evt, toInputField, toValueField, 'dest'); });
