@@ -170,6 +170,13 @@ CREATE TABLE `poi_queries` (
     FOREIGN KEY (city) REFERENCES airport_cities(iata_code)
 );
 
+CREATE TABLE `user_keyword_preferences` (
+    `user_id` INT NOT NULL,
+    `keyword` VARCHAR(30) NOT NULL,
+    PRIMARY KEY (user_id, keyword),
+    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`)
+);
+
 CREATE TABLE `hotel_bookings` (
     `booking_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `user_id` INT NOT NULL,
@@ -210,19 +217,6 @@ CREATE TABLE `airline_reviews` (
     `comment` TEXT,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id)
-);
-
-CREATE TABLE `user_vacation_preferences` (
-    `user_id` INT NOT NULL,
-    `romantic` BOOLEAN NOT NULL DEFAULT FALSE,
-    `outdoors` BOOLEAN NOT NULL DEFAULT FALSE,
-    `relax` BOOLEAN NOT NULL DEFAULT FALSE,
-    `beach` BOOLEAN NOT NULL DEFAULT FALSE,
-    `city` BOOLEAN NOT NULL DEFAULT FALSE,
-    `fun_attractions` BOOLEAN NOT NULL DEFAULT FALSE,
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`user_id`),
-    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`)
 );
 
 CREATE TABLE `poi_reviews` (

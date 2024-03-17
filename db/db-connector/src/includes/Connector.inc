@@ -62,6 +62,10 @@ class Connector
             return Responders\PoiSearchResponder::respondToRequest($request, static::$pdo);
         } else if ($request instanceof \JAND\Common\Messages\Frontend\GetPoiKeywordsRequest) {
             return Responders\GetPoiKeywordsResponder::respondToRequest($request, static::$pdo);
+        } else if ($request instanceof \JAND\Common\Messages\Frontend\GetUserKeywordPrefRequest) {
+            return Responders\GetUserKeywordPrefResponder::respondToRequest($request, static::$pdo);
+        } else if ($request instanceof \JAND\Common\Messages\Frontend\SetUserKeywordPrefRequest) {
+            return Responders\SetUserKeywordPrefResponder::respondToRequest($request, static::$pdo);
         } else {
             return false;
         }//end if

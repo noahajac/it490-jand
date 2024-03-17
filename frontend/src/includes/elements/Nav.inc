@@ -64,6 +64,9 @@ abstract class Nav
               <?php
                 if ($session) {
                     ?>
+                    <li>
+                      <a class="dropdown-item" href="/user-preferences">Set User Preferences</a>
+                  </li>
                   <li><a class="dropdown-item" href="/logout">Logout</a></li>
                     <?php
                 } else {

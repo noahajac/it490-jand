@@ -10,4 +10,4 @@ namespace JAND\Frontend\UserPreferences;
 require_once __DIR__.'/../common/Autoload.inc';
 \JAND\Common\Autoload::register();
 
-Includes\UserPreferences::echoUserPreferences();
+Includes\UserPreferences::processUserPreferences();

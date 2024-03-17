@@ -1,0 +1,29 @@
+main {
+  margin: 0 auto;
+  padding: 20px;
+}
+
+main h1 {
+  text-align: center;
+}
+
+.preference-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 10px;
+}
+
+.preference {
+  padding: .4em;
+}
+
+.preference input {
+  padding: 10px;
+}
+
+.destination {
+  font-style: bold;
+  font-size: 120%;
+}
