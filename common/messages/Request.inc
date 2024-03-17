@@ -19,7 +19,7 @@ abstract class Request
      *
      * @param \JAND\Common\RabbitMq\RabbitMqClient $client RabbitMQ library client.
      *
-     * @return mixed Response from message broker.
+     * @return ResponseType Response from message broker.
      */
     public function sendRequest(\JAND\Common\RabbitMq\RabbitMqClient $client)
     {

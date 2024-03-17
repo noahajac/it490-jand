@@ -58,7 +58,7 @@ class AirportCitySearchResponse extends SearchResponse
     /**
      * Gets the results.
      *
-     * @return ?AirportCity[] Search results.
+     * @return ?\JAND\Common\Trips\AirportCity[] Search results.
      */
     public function getResults()
     {

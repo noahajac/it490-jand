@@ -11,6 +11,8 @@
         <exclude name="Squiz.PHP.EmbeddedPhp.Indent" />
         <exclude name="Squiz.PHP.DisallowInlineIf.Found" />
         <exclude name="Generic.PHP.DisallowShortOpenTag.EchoFound" />
+        <exclude name="Squiz.Commenting.InlineComment.DocBlock" />
+        <exclude name="Squiz.Commenting.BlockComment.WrongStart" />
     </rule>
 
     <rule ref="PSR1.Files.SideEffects.FoundWithSymbols" />

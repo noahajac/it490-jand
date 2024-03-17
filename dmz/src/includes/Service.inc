@@ -33,6 +33,10 @@ class Service
     {
         if ($request instanceof \JAND\Common\Messages\Shared\AirportCitySearchRequest) {
             return Responders\AirportCitySearchResponder::respondToRequest($request);
+        } else if ($request instanceof \JAND\Common\Messages\Shared\FlightItinerarySearchRequest) {
+            return Responders\FlightItinerarySearchResponder::respondToRequest($request);
+        } else if ($request instanceof \JAND\Common\Messages\DbConnector\AirlineSearchRequest) {
+            return Responders\AirlineSearchResponder::respondToRequest($request);
         } else {
             return false;
         }//end if

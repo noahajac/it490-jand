@@ -14,18 +14,26 @@ class Flight
 {
 
     /**
+     * Unique flight ID.
+     * May be null if coming from DMZ.
+     *
+     * @var integer Flight ID.
+     */
+    private ?int $flightId;
+
+    /**
      * Departure airport.
      *
-     * @var Airport $departAirport Departure airport.
+     * @var AirportCity $departAirport Departure airport.
      */
-    private Airport $departAirport;
+    private AirportCity $departAirport;
 
     /**
      * Arrival airport.
      *
-     * @var Airport $arrivalAirport Arrival airport.
+     * @var AirportCity $arrivalAirport Arrival airport.
      */
-    private Airport $arrivalAirport;
+    private AirportCity $arrivalAirport;
 
     /**
      * Departure time.
@@ -55,39 +63,64 @@ class Flight
      */
     private int $flightNo;
 
+    /**
+     * Name of cabin class.
+     *
+     * @var string $className
+     */
+    private string $className;
+
 
     /**
      * Creates a new flight.
      *
-     * @param Airport   $departAirport  Departure airport.
-     * @param Airport   $arrivalAirport Arrival airport.
-     * @param \DateTime $departTime     Departure time.
-     * @param \DateTime $arrivalTime    Arrival time.
-     * @param Airline   $airline        Airline.
-     * @param integer   $flightNo       Flight number.
+     * @param integer     $flightId       Unique flight ID.
+     * @param AirportCity $departAirport  Departure airport.
+     * @param AirportCity $arrivalAirport Arrival airport.
+     * @param \DateTime   $departTime     Departure time.
+     * @param \DateTime   $arrivalTime    Arrival time.
+     * @param Airline     $airline        Airline.
+     * @param integer     $flightNo       Flight number.
+     * @param string      $className      Name of cabin class.
      */
     public function __construct(
-        Airport $departAirport,
-        Airport $arrivalAirport,
+        ?int $flightId,
+        AirportCity $departAirport,
+        AirportCity $arrivalAirport,
         \DateTime $departTime,
         \DateTime $arrivalTime,
         Airline $airline,
-        int $flightNo
+        int $flightNo,
+        string $className
     ) {
+        $this->flightId       = $flightId;
         $this->departAirport  = $departAirport;
         $this->arrivalAirport = $arrivalAirport;
         $this->departTime     = $departTime;
         $this->arrivalTime    = $arrivalTime;
         $this->airline        = $airline;
         $this->flightNo       = $flightNo;
+        $this->className      = $className;
 
     }//end __construct()
 
 
     /**
+     * Gets the flight ID.
+     *
+     * @return integer Flight ID.
+     */
+    public function getFlightId()
+    {
+        return $this->flightId;
+
+    }//end getFlightId()
+
+
+    /**
      * Gets departure airport.
      *
-     * @return Airport Departure airport.
+     * @return AirportCity Departure airport.
      */
     public function getDepartAirport()
     {
@@ -154,6 +187,18 @@ class Flight
         return $this->flightNo;
 
     }//end getFlightNo()
+
+
+    /**
+     * Gets class name.
+     *
+     * @return string Cabin class name
+     */
+    public function getClassName()
+    {
+        return $this->className;
+
+    }//end getClassName()
 
 
 }//end class

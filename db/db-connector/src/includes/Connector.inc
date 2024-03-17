@@ -54,6 +54,8 @@ class Connector
             return Responders\DeleteUserTripResponder::respondToRequest($request, static::$pdo);
         } else if ($request instanceof \JAND\Common\Messages\Frontend\CreateUserTripRequest) {
             return Responders\CreateUserTripResponder::respondToRequest($request, static::$pdo);
+        } else if ($request instanceof \JAND\Common\Messages\Shared\FlightItinerarySearchRequest) {
+            return Responders\FlightItinerarySearchResponder::respondToRequest($request, static::$pdo);
         } else {
             return false;
         }//end if
@@ -76,7 +78,7 @@ class Connector
         $dsn         = 'mysql:unix_socket=/var/run/mysqld/mysqld.sock;dbname=jand;charset=utf8';
         static::$pdo = new \PDO($dsn, 'jand');
         static::$pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-
+        static::$pdo->setAttribute(\PDO::ATTR_EMULATE_PREPARES, true);
         static::$server->processRequests(
             function (string $requestString) {
                 return serialize(

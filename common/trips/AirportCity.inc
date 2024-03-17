@@ -15,31 +15,35 @@ class AirportCity extends IATACode
 
     /**
      * Latitude.
+     * May be null if sent from DMZ.
      *
-     * @var float Latitude.
+     * @var ?float Latitude.
      */
-    private float $latitude;
+    private ?float $latitude;
 
     /**
      * Longitude.
+     * May be null if sent from DMZ.
      *
-     * @var float Longitude.
+     * @var ?float Longitude.
      */
-    private float $longitude;
+    private ?float $longitude;
 
     /**
      * State code.
+     * May be null if sent from DMZ.
      *
-     * @var string State code.
+     * @var ?string State code.
      */
-    private string $stateCode;
+    private ?string $stateCode;
 
     /**
      * Country code.
+     * May be null if sent from DMZ.
      *
-     * @var string Country code.
+     * @var ?string Country code.
      */
-    private string $countryCode;
+    private ?string $countryCode;
 
 
     /**
@@ -54,11 +58,11 @@ class AirportCity extends IATACode
      */
     public function __construct(
         string $code,
-        string $name,
-        float $latitude,
-        float $longitude,
-        string $stateCode,
-        string $countryCode
+        ?string $name,
+        ?float $latitude,
+        ?float $longitude,
+        ?string $stateCode,
+        ?string $countryCode
     ) {
         parent::__construct($code, $name);
         $this->latitude    = $latitude;
@@ -72,7 +76,7 @@ class AirportCity extends IATACode
     /**
      * Gets latitude.
      *
-     * @return float Latitude.
+     * @return ?float Latitude.
      */
     public function getLatitude()
     {
@@ -84,7 +88,7 @@ class AirportCity extends IATACode
     /**
      * Gets longitude.
      *
-     * @return float Longitude.
+     * @return ?float Longitude.
      */
     public function getLongitude()
     {
@@ -108,7 +112,7 @@ class AirportCity extends IATACode
     /**
      * Gets country code.
      *
-     * @return string Country code.
+     * @return ?string Country code.
      */
     public function getCountryCode()
     {

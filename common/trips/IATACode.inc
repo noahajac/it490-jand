@@ -22,10 +22,11 @@ abstract class IATACode
 
     /**
      * Location name.
+     * May be null if coming from DMZ.
      *
      * @var string $name Location name.
      */
-    private string $name;
+    private ?string $name;
 
 
     /**
@@ -34,7 +35,7 @@ abstract class IATACode
      * @param string $code IATA code.
      * @param string $name Name of location/thing.
      */
-    public function __construct(string $code, string $name)
+    public function __construct(string $code, ?string $name)
     {
         $this->code = $code;
         $this->name = $name;
@@ -57,7 +58,7 @@ abstract class IATACode
     /**
      * Gets name.
      *
-     * @return string Name represented by code.
+     * @return ?string Name represented by code.
      */
     public function getName()
     {
