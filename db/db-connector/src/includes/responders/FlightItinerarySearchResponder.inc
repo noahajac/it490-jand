@@ -378,12 +378,14 @@ AND NOW() < pulled_on + INTERVAL 1 DAY'
                             $segmentIndex++;
                         }
                     }
+                } else {
+                    $itineraryId = $existingItinerary;
                 }//end if
 
                 array_push(
                     $itineraries,
                     new \JAND\Common\Trips\FlightItinerary(
-                        1,
+                        $itineraryId,
                         $outboundSegments,
                         $returnSegments,
                         $origin,
@@ -530,7 +532,7 @@ AND f.flight_id=s.flight_id ORDER BY s.position'
                 array_push(
                     $itineraries,
                     new \JAND\Common\Trips\FlightItinerary(
-                        1,
+                        $itinerary['itinerary_id'],
                         $outboundSegments,
                         $returnSegments,
                         $origin,
