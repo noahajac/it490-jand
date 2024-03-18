@@ -31,7 +31,7 @@ CREATE TABLE airport_cities (
    `iata_code`    CHAR(3) NOT NULL PRIMARY KEY,
    `name`         VARCHAR(255) NOT NULL,
    `latitude`     DECIMAL(7,5) NOT NULL,
-   `longitute`    DECIMAL(8,5) NOT NULL,
+   `longitude`    DECIMAL(8,5) NOT NULL,
    `country_code` CHAR(2) NOT NULL,
    `created_at`   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
