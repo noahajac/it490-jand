@@ -60,7 +60,10 @@ abstract class Landing
                 <?php foreach ($response->getPois() as &$poi) { ?>
                     <tr>
                     <td><strong><?= $poi->getName(); ?></strong></td>
-                    <td><?= $poi->getCity()->getName().', '.$poi->getCity()->getCountryCode(); ?></td>
+                    <td>
+                        <a href="/flight-search?to=<?= $poi->getCity()->getCode(); ?>"
+                        ><?= $poi->getCity()->getName().', '.$poi->getCity()->getCountryCode(); ?></a>
+                    </td>
                     <td>
                              <a href="/reviews?type=poi&key=<?= $poi->getPoiId(); ?>"
                                         >Reviews</a>

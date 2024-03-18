@@ -37,16 +37,16 @@ abstract class FlightSearch
         <html lang="en">
 
         <head>
-            <?php echo \JAND\Frontend\Includes\Elements\Head::echoHead(); ?>
+        <?php echo \JAND\Frontend\Includes\Elements\Head::echoHead(); ?>
         </head>
             
         <body>
         <?php echo \JAND\Frontend\Includes\Elements\Nav::echoNav(); ?>
         <main>
-            <?php
-            if (count($itineraries) > 0) {
-                foreach ($itineraries as &$itinerary) {
-                    ?>
+        <?php
+        if (count($itineraries) > 0) {
+            foreach ($itineraries as &$itinerary) {
+                ?>
                     <div class="flight-result">
                     <table class="table-borders">
                         <tr>
@@ -73,12 +73,12 @@ abstract class FlightSearch
                     <table class="table-borders">
                         <tr>
                             <th colspan="4">Outbound</th>
-                            <?php
-                            foreach ($itinerary->getOutboundSegments() as &$outSegment) {
-                                ?>
+                        <?php
+                        foreach ($itinerary->getOutboundSegments() as &$outSegment) {
+                            ?>
                                 <tr>
                                     <th colspan="3">
-                                        <?= $outSegment->getAirline()->getName().' '.$outSegment->getFlightNo(); ?>
+                                    <?= $outSegment->getAirline()->getName().' '.$outSegment->getFlightNo(); ?>
                                     </th>
                                     <td>
                                         <a href="/reviews?type=airline&key=<?= $outSegment->getAirline()->getCode(); ?>"
@@ -92,8 +92,8 @@ abstract class FlightSearch
                                 <td><?= $outSegment->getArrivalTime()->format('Y-m-d g:i A'); ?></td>
                              </tr>
                                 <?php
-                            }
-                            ?>
+                        }
+                        ?>
                         </tr>
                     </table>
                     <?php if (!$itinerary->getOneWay()) { ?>
@@ -129,17 +129,17 @@ abstract class FlightSearch
                     ?>
                     </div>
                     <?php
-                }//end foreach
-            } else {
-                ?>
+            }//end foreach
+        } else {
+            ?>
             <div class="main-container">
         <div class="booking-form">
             
             <h2 class="title-form">Search for Flights</h2>
             
-                <?php foreach ($errors as $error) { ?>
+            <?php foreach ($errors as $error) { ?>
           <p class="error"><?php echo $error; ?></p>
-                <?php } ?>
+            <?php } ?>
 
             <form method="post">
             <div class="input-group">
@@ -159,7 +159,15 @@ abstract class FlightSearch
             
                 <div class="input-group">
                     <label for="to">To:</label>
-                    <input type="text" id="to-display" placeholder="Going To" required>
+                    <input type="text" 
+            <?php
+            $prefilledTo = filter_input(INPUT_GET, 'to', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+            if (!empty($prefilledTo)) {
+                echo 'value="'.$prefilledTo.'"';
+            }
+            ?>
+                    id="to-display" placeholder="Going To" required>
                     <input type="hidden" id="to" name="to">
                 </div>
             
@@ -184,25 +192,35 @@ abstract class FlightSearch
             </form>
             </div>
         </div>
-                <?php
-            }//end if
-            ?>
+            <?php
+        }//end if
+        ?>
         </main>
         <?php echo \JAND\Frontend\Includes\Elements\Footer::echoFooter(); ?>
         <script src="./scripts/city-autocomplete.js"></script>
+        <?php
+        if (!empty($prefilledTo)) {
+            ?>
+        <script>
+            if (toInputField)
+                toInputField.dispatchEvent(new Event('change'));
+        </script>
+            <?php
+        }
+        ?>
         </body>
         </html>
 
-        <?php
+            <?php
 
     }//end echoFlightSearch()
 
 
-    /**
-     * Runs the flight search page.
-     *
-     * @return void
-     */
+        /**
+         * Runs the flight search page.
+         *
+         * @return void
+         */
     public static function processFlightSearch()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
