@@ -82,7 +82,7 @@ abstract class CreateBooking
             exit();
         }
 
-        $type = filter_input(INPUT_GET, 'type', FILTER_VALIDATE_INT);
+        $type = filter_input(INPUT_GET, 'type');
         $key  = filter_input(INPUT_GET, 'key', FILTER_VALIDATE_INT);
 
         if ($type === 'flight') {
