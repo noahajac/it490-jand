@@ -64,6 +64,11 @@ abstract class FlightSearch
                             <td><?= $itinerary->getAdults(); ?> Adults</td>
                             <td><?= $itinerary->getChildren(); ?> Children</td>
                         </tr>
+                        <tr>
+                            <td colspan="2">
+                                <a href="/bookings/create?type=flight&key=<?= $itinerary->getItineraryId(); ?>"
+                            >Book Now</a></td>
+                        </tr>
                     </table>
                     <table class="table-borders">
                         <tr>

@@ -26,14 +26,14 @@ class HotelItinerary
      *
      * @var Hotel $hotel The hotel.
      */
-    private Hotel $hotel;
+    private ?Hotel $hotel;
 
     /**
      * Start date of stay.
      *
      * @var \DateTime $startDate;
      */
-    private \DateTime $startDate;
+    private ?\DateTime $startDate;
 
     /**
      * End date of stay.
@@ -70,9 +70,9 @@ class HotelItinerary
      */
     public function __construct(
         ?int $itineraryId=null,
-        Hotel $hotel,
-        \DateTime $startDate,
-        \DateTime $endDate,
+        ?Hotel $hotel,
+        ?\DateTime $startDate,
+        ?\DateTime $endDate,
         float $grandTotal,
         int $adults,
     ) {

@@ -43,21 +43,21 @@ class FlightItinerary
      *
      * @var AirportCity $tripOrigin
      */
-    private AirportCity $tripOrigin;
+    private ?AirportCity $tripOrigin;
 
     /**
      * Trip destination.
      *
      * @var AirportCity $tripDestination
      */
-    private AirportCity $tripDestination;
+    private ?AirportCity $tripDestination;
 
     /**
      * Start date of trip.
      *
      * @var \DateTime $startDate;
      */
-    private \DateTime $startDate;
+    private ?\DateTime $startDate;
 
     /**
      * End date of trip.
@@ -123,9 +123,9 @@ class FlightItinerary
         ?int $itineraryId=null,
         array $outboundSegments,
         ?array $returnSegments,
-        AirportCity $tripOrigin,
-        AirportCity $tripDestination,
-        \DateTime $startDate,
+        ?AirportCity $tripOrigin,
+        ?AirportCity $tripDestination,
+        ?\DateTime $startDate,
         ?\DateTime $endDate,
         float $grandTotal,
         int $adults,

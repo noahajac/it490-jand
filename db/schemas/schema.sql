@@ -214,23 +214,19 @@ CREATE TABLE `poi_reviews` (
 );
 
 CREATE TABLE `hotel_bookings` (
-    `booking_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `user_id` INT NOT NULL,
-    `hotel_name` VARCHAR(255) NOT NULL,
-    `check_in_date` DATE NOT NULL,
-    `check_out_date` DATE NOT NULL,
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
+    `itinerary_id` INT NOT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, itinerary_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (itinerary_id) REFERENCES hotel_itineraries(itinerary_id)
 );
 
 CREATE TABLE `flight_bookings` (
-    `booking_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `user_id` INT NOT NULL,
-    `flight_number` VARCHAR(50) NOT NULL,
-    `departure_date` DATE NOT NULL,
-    `arrival_date` DATE NOT NULL,
-    `departure_location` VARCHAR(255) NOT NULL,
-    `arrival_location` VARCHAR(255) NOT NULL,
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
+    `itinerary_id` INT NOT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, itinerary_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (itinerary_id) REFERENCES flight_itineraries(itinerary_id)
 );
