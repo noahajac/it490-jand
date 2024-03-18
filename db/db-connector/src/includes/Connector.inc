@@ -76,6 +76,8 @@ class Connector
             return Responders\GetPoiReviewsResponder::respondToRequest($request, static::$pdo);
         } else if ($request instanceof \JAND\Common\Messages\Frontend\CreateReviewRequest) {
             return Responders\CreateReviewResponder::respondToRequest($request, static::$pdo);
+        } else if ($request instanceof \JAND\Common\Messages\Frontend\GetRecommendationsRequest) {
+            return Responders\GetRecommendationsResponder::respondToRequest($request, static::$pdo);
         } else {
             return false;
         }//end if

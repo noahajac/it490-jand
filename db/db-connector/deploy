@@ -49,3 +49,5 @@ systemctl enable jand-db-connector.service
 
 echo "Starting service."
 systemctl restart jand-db-connector.service
+
+echo "Make sure ONLY_FULL_GROUP_BY is disabled in MySQL."

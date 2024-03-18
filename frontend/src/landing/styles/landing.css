@@ -1,0 +1,33 @@
+main {
+  margin: 0 auto;
+  padding: 20px;
+}
+
+main h1 {
+  text-align: center;
+}
+
+.rec-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+.rec {
+  padding: 25px;
+}
+
+.rec table->tr th,
+td {
+  border: 1px solid black;
+  padding: 10px;
+}
+
+th {
+  padding-bottom: 2em;
+}
+
+.rec-heading {
+  padding-bottom: 5px;
+}

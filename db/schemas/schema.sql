@@ -9,7 +9,7 @@ USE jand;
 CREATE USER 'jand'@'localhost' IDENTIFIED WITH auth_socket;
 GRANT SELECT, INSERT, UPDATE, DELETE ON jand.* TO 'jand'@'localhost';
 
-SET GLOBAL event_scheduler = ON; 
+SET @@sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
 
 CREATE TABLE users (
     `user_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
