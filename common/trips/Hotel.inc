@@ -26,21 +26,21 @@ class Hotel
      *
      * @var AirportCity $city City hotel is in.
      */
-    private AirportCity $city;
+    private ?AirportCity $city;
 
     /**
      * Hotel code.
      *
      * @var string $hotelCode Amadeus hotel code.
      */
-    private string $hotelCode;
+    private ?string $hotelCode;
 
     /**
      * Name of hotel.
      *
      * @var string $name Name of hotel.
      */
-    private string $name;
+    private ?string $name;
 
 
     /**
@@ -53,9 +53,9 @@ class Hotel
      */
     public function __construct(
         ?int $hotelId,
-        AirportCity $city,
-        string $hotelCode,
-        string $name
+        ?AirportCity $city,
+        ?string $hotelCode,
+        ?string $name
     ) {
         $this->hotelId   = $hotelId;
         $this->city      = $city;
@@ -68,7 +68,7 @@ class Hotel
     /**
      * Gets the hotel ID.
      *
-     * @return integer Hotel ID.
+     * @return ?integer Hotel ID.
      */
     public function getHotelId()
     {
@@ -80,7 +80,7 @@ class Hotel
     /**
      * Gets hotel city.
      *
-     * @return AirportCity Hotel city.
+     * @return ?AirportCity Hotel city.
      */
     public function getCity()
     {
@@ -92,7 +92,7 @@ class Hotel
     /**
      * Gets hotel code.
      *
-     * @return string Hotel code.
+     * @return ?string Hotel code.
      */
     public function getHotelCode()
     {
@@ -104,7 +104,7 @@ class Hotel
     /**
      * Gets hotel name.
      *
-     * @return string Hotel name.
+     * @return ?string Hotel name.
      */
     public function getName()
     {

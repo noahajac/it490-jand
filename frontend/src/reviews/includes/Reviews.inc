@@ -7,6 +7,13 @@
 
 namespace JAND\Frontend\Reviews\Includes;
 
+use JAND\Common\Trips\Airline;
+use JAND\Common\Trips\AirlineReview;
+use JAND\Common\Trips\Hotel;
+use JAND\Common\Trips\HotelReview;
+use JAND\Common\Trips\Poi;
+use JAND\Common\Trips\PoiReview;
+
 /**
  * Frontend reviews page.
  */
@@ -17,9 +24,13 @@ abstract class Reviews
     /**
      * Echoes main reviews page.
      *
+     * @param AirlineReview[]|HotelReview[]|PoiReview[] $reviews Reviews.
+     * @param AirlineReview|HotelReview|PoiReview       $own     User's own review.
+     * @param string[]                                  $errors  Errors to show on form.
+     *
      * @return void
      */
-    public static function echoReviews()
+    private static function echoReviews(array $reviews, mixed $own, array $errors=[])
     {
         ?>
 
@@ -28,37 +39,7 @@ abstract class Reviews
 
     <head>
         <?php echo \JAND\Frontend\Includes\Elements\Head::echoHead(); ?>
-        <title>JAND Travel - Reviews</title>
-        <link rel="stylesheet" href="reviews.css">
-        <style>
-            main{
-                margin: 0 auto;
-                padding: 20px;
-            }
-            main h1{
-                text-align: center;
-            }
-            .review-container{
-                display: flex;
-                flex-direction: column;
-                padding: 60px;
-                gap: 20px;
-            }
-            .review{
-                border: 1px solid black;
-                padding: 10px;
-            }
-            .overall-rating{
-                font-size: 25px;
-            }
-            .input-review-container{
-                display: flex;
-                justify-content: center;
-            }
-            .input-review{
-                padding: 10px;
-           }
-        </style>
+        <link rel="stylesheet" href="styles/reviews.css">
     </head>
 
     <body>
@@ -66,65 +47,113 @@ abstract class Reviews
       <main>
         <h1>Reviews</h1>
         <div class="review-container">
+        <?php
+        if (count($reviews) > 0) {
+            ?>
+            <h1>
+            <?php
+            if ($reviews[0] instanceof AirlineReview) {
+                echo $reviews[0]->getAirline()->getName();
+            } else if ($reviews[0] instanceof HotelReview) {
+                echo $reviews[0]->getHotel()->getName();
+            } else {
+                echo $reviews[0]->getPoi()->getName();
+            }
+            ?>
+            </h1>
+            
         <div class="review overall-rating">
-            <p class=>Overall Rating: 4.67</p>
+            <?php
+                $adder = 0;
+            foreach ($reviews as &$review) {
+                $adder = ($adder + $review->getRating());
+            }
+
+            $average = ($adder / count($reviews));
+            ?>
+            <p class=>Overall Rating: <?= $average; ?></p>
         </div>
+            <?php
+            foreach ($reviews as &$review) {
+                ?>
         <div class="review">
-            <p class="customer-name">Name: Rob Johnson</p>
-            <p class="service">Service: Airline</p>
-            <p class="company">Company Name: United Airlines</p>
-            <p class="rating">Rating: 4</p>
-            <p class="text-review">Review: Satisfactory service.</p>
+            <p class="rating">Rating: <?= $review->getRating(); ?></p>
+            <p class="text-review">Review: <?= htmlspecialchars($review->getComment()); ?></p>
         </div>
-        <div class="review">
-            <p class="customer-name">Name: James Hunt</p>
-            <p class="service">Service: Hotel</p>
-            <p class="company">Company Name: Hard Rock Hotel and Casino Atlantic City </p>
-            <p class="rating">Rating: 5</p>
-            <p class="text-review">Review: Amazing experience!</p>
-        </div>
-        <div class="review">
-            <p class="customer-name">Name: Alice Smith</p>
-            <p class="service">Service: Attraction</p>
-            <p class="company">Company Name: Cape May County Park and Zoo</p>
-            <p class="rating">Rating: 5</p>
-            <p class="text-review">Review: Had a great time.</p>
-        </div>
+                <?php
+            }
+            ?>
+
+        
+        <?php } else { ?>
+            <h2>No reviews found.</h2>
+            <?php
+        }//end if
+        ?>
         </div>
         <div class="input-review-container">
         <div class="input-review">
             <h3>Write a Review</h3>
-            <!--Example data. Can make a cascading dropdown menu with api data.-->
+            <?php foreach ($errors as $error) { ?>
+                <p class="error"><?php echo $error; ?></p>
+            <?php } ?>
             <form name="input-review" id="input-review" action="#" method="post">
-                <label for="input-service">Choose Service:</label>
-                    <select name="service" id="service">
-                        <option value="Airline">Airline</option>
-                        <option value="Hotel">Hotel</option>
-                        <option value="Attraction">Attraction</option>
-                    </select>
-                    <br>
-                <label for="input-company">Choose Company Name:</label>
-                    <select name="company" id="cars">
-                        <option value="United-Airlines">United Airlines</option>
-                        <option value="Hard-Rock">Hard Rock Hotel and Casino Atlantic City</option>
-                        <option value="Cape-May">Cape May County Park and Zoo</option>
-                    </select>
-                    <br>
                 <label for="input-rating">Rating:</label>
                 <select name="input-rating" id="input-rating">
-                    <option value="5">5</option>
-                    <option value="4">4</option>
-                    <option value="3">3</option>
-                    <option value="2">2</option>
-                    <option value="1">1</option>
+                    <option value="5" 
+                    <?php
+                    if (isset($own) && $own->getRating() === 5) {
+                        echo 'selected';
+                    }
+                    ?>
+                    >5</option>
+                    <option value="4"
+                    <?php
+                    if (isset($own) && $own->getRating() === 4) {
+                        echo 'selected';
+                    }
+                    ?>
+                    >4</option>
+                    <option value="3"
+                    <?php
+                    if (isset($own) && $own->getRating() === 3) {
+                        echo 'selected';
+                    }
+                    ?>
+                    >3</option>
+                    <option value="2"
+                    <?php
+                    if (isset($own) && $own->getRating() === 2) {
+                        echo 'selected';
+                    }
+                    ?>
+                    >2</option>
+                    <option value="1"
+                    <?php
+                    if (isset($own) && $own->getRating() === 1) {
+                        echo 'selected';
+                    }
+                    ?>
+                    >1</option>
                 </select>
                 <br>    
                 <label for="input-text-review">
                     <p class="input-text-review">Write your review here:</p>
-                    <textarea name="text-review" rows="10" cols="60"></textarea>
+                    <textarea name="text-review" rows="10" cols="60">
+<?php // phpcs:ignore Generic.WhiteSpace.ScopeIndent.Incorrect
+        if (isset($own)) {
+            echo htmlspecialchars($own->getComment());
+        }
+
+        // phpcs:ignore Squiz.PHP.EmbeddedPhp.ContentAfterEnd 
+        ?></textarea>
+        
                     <br>
                 <input type="submit" value="Submit" name="submit">
             </form>
+            <form method="post">
+            <button id="delete" name="delete" value="on" type="submit">Delete this Review</button>
+        </form>
         </div>
         </div>
       </main>
@@ -135,6 +164,164 @@ abstract class Reviews
         <?php
 
     }//end echoReviews()
+
+
+    /**
+     * Starts review page.
+     *
+     * @return void
+     */
+    public static function processReviews()
+    {
+        $type = filter_input(INPUT_GET, 'type');
+        $key  = filter_input(INPUT_GET, 'key');
+
+        $session = \JAND\Frontend\Includes\SessionManager::getSession();
+
+        if (!$session) {
+            http_response_code(401);
+            exit();
+        }
+
+        $errorMsgs = [];
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $rating  = filter_input(
+                INPUT_POST,
+                'input-rating',
+                FILTER_VALIDATE_INT,
+                [
+                    'options' => [
+                        'min_range' => 1,
+                        'max_range' => 5,
+                    ],
+                ]
+            );
+            $comment = filter_input(INPUT_POST, 'text-review', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $delete  = filter_input(INPUT_POST, 'delete', FILTER_VALIDATE_BOOL);
+
+            if ($delete) {
+                if ($type === 'airline') {
+                    $request = new \JAND\Common\Messages\Frontend\DeleteReviewRequest(
+                        $session->getSessionToken(),
+                        new AirlineReview(
+                            null,
+                            5,
+                            '',
+                            new Airline($key, null)
+                        )
+                    );
+                } else if ($type === 'hotel') {
+                    $request = new \JAND\Common\Messages\Frontend\DeleteReviewRequest(
+                        $session->getSessionToken(),
+                        new HotelReview(
+                            null,
+                            5,
+                            '',
+                            new Hotel($key, null, null, null)
+                        )
+                    );
+                } else {
+                    $request = new \JAND\Common\Messages\Frontend\DeleteReviewRequest(
+                        $session->getSessionToken(),
+                        new PoiReview(
+                            null,
+                            5,
+                            '',
+                            new Poi($key, null, [], null)
+                        )
+                    );
+                }//end if
+
+                $request->sendRequest(\JAND\Frontend\Includes\RabbitClientManager::getClient());
+            } else {
+                if (empty($comment)) {
+                    $comment = '';
+                }
+
+                if (empty($rating)) {
+                    array_push($errorMsgs, 'You must supply a valid rating.');
+                }
+
+                if (count($errorMsgs) < 1) {
+                    if ($type === 'airline') {
+                        $request = new \JAND\Common\Messages\Frontend\CreateReviewRequest(
+                            $session->getSessionToken(),
+                            new AirlineReview(
+                                null,
+                                $rating,
+                                $comment,
+                                new Airline($key, null)
+                            )
+                        );
+                    } else if ($type === 'hotel') {
+                        $request = new \JAND\Common\Messages\Frontend\CreateReviewRequest(
+                            $session->getSessionToken(),
+                            new HotelReview(
+                                null,
+                                $rating,
+                                $comment,
+                                new Hotel($key, null, null, null)
+                            )
+                        );
+                    } else {
+                        $request = new \JAND\Common\Messages\Frontend\CreateReviewRequest(
+                            $session->getSessionToken(),
+                            new PoiReview(
+                                null,
+                                $rating,
+                                $comment,
+                                new Poi($key, null, [], null)
+                            )
+                        );
+                    }//end if
+
+                    $request->sendRequest(\JAND\Frontend\Includes\RabbitClientManager::getClient());
+                }//end if
+            }//end if
+        }//end if
+
+        if ($type === 'airline') {
+            $request = new \JAND\Common\Messages\Frontend\GetAirlineReviewsRequest(
+                $session->getSessionToken(),
+                new Airline($key, null)
+            );
+            /**
+             * Reviews from DB.
+             *
+             * @var \JAND\Common\Messages\Frontend\GetReviewsResponse $response Response.
+             */
+            $response = $request->sendRequest(\JAND\Frontend\Includes\RabbitClientManager::getClient());
+        } else if ($type === 'hotel') {
+            $request = new \JAND\Common\Messages\Frontend\GetHotelReviewsRequest(
+                $session->getSessionToken(),
+                new Hotel($key, null, null, null)
+            );
+            /**
+             * Reviews from DB.
+             *
+             * @var \JAND\Common\Messages\Frontend\GetReviewsResponse $response Response.
+             */
+            $response = $request->sendRequest(\JAND\Frontend\Includes\RabbitClientManager::getClient());
+        } else {
+            $request = new \JAND\Common\Messages\Frontend\GetPoiReviewsRequest(
+                $session->getSessionToken(),
+                new Poi($key, null, [], null)
+            );
+            /**
+             * Reviews from DB.
+             *
+             * @var \JAND\Common\Messages\Frontend\GetReviewsResponse $response Response.
+             */
+            $response = $request->sendRequest(\JAND\Frontend\Includes\RabbitClientManager::getClient());
+        }//end if
+
+        $reviews   = $response->getReviews();
+        $ownReview = $response->getOwn();
+
+        static::echoReviews($reviews, $ownReview, $errorMsgs);
+
+    }//end processReviews()
 
 
 }//end class

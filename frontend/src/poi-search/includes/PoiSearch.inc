@@ -24,13 +24,6 @@ abstract class PoiSearch
      */
     private static function echoPoiSearch(array $errors=[], array $pois=[])
     {
-        $session = \JAND\Frontend\Includes\SessionManager::getSession();
-
-        if (!$session) {
-            http_response_code(401);
-            exit();
-        }
-
         ?>
 
         <!DOCTYPE html>
@@ -67,6 +60,12 @@ abstract class PoiSearch
                             }
                             ?>
                             </td>
+                        </tr>
+                        <tr>
+                        <td>
+                             <a href="/reviews?type=poi&key=<?= $poi->getPoiId(); ?>"
+                                        >Reviews</a>
+                                    </td>
                         </tr>
                     </table>
                     </div>
@@ -139,6 +138,13 @@ abstract class PoiSearch
      */
     public static function processPoiSearch()
     {
+        $session = \JAND\Frontend\Includes\SessionManager::getSession();
+
+        if (!$session) {
+            http_response_code(401);
+            exit();
+        }
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errorMsgs = [];
 

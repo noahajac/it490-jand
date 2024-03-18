@@ -59,6 +59,12 @@ abstract class HotelSearch
                         <tr>
                             <th colspan="2">$<?= $itinerary->getGrandTotal(); ?></th>
                         </tr>
+                        <tr>
+                        <td colspan="2">
+                             <a href="/reviews?type=hotel&key=<?= $itinerary->getHotel()->getHotelId(); ?>"
+                                        >Reviews</a>
+                                    </td>
+                        </tr>
                     </table>
                     </div>
                     <?php

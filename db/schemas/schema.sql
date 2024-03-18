@@ -177,6 +177,42 @@ CREATE TABLE `user_keyword_preferences` (
     FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`)
 );
 
+CREATE TABLE `airline_reviews` (
+    `review_id`  INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `user_id`    INT NOT NULL,
+    `iata_code`  CHAR(3) NOT NULL,
+    `rating`     INT NOT NULL,
+    `comment`    TEXT,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE (user_id, iata_code),
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (iata_code) REFERENCES airlines(iata_code)
+);
+
+CREATE TABLE `hotel_reviews` (
+    `review_id`  INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `user_id`    INT NOT NULL,
+    `hotel_id`   INT NOT NULL,
+    `rating`     INT NOT NULL,
+    `comment`    TEXT,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE (user_id, hotel_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (hotel_id) REFERENCES hotels(hotel_id)
+);
+
+CREATE TABLE `poi_reviews` (
+    `review_id`  INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `user_id`    INT NOT NULL,
+    `poi_id`     INT NOT NULL,
+    `rating`     INT NOT NULL,
+    `comment`    TEXT,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE (user_id, poi_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (poi_id) REFERENCES poi(poi_id)
+);
+
 CREATE TABLE `hotel_bookings` (
     `booking_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `user_id` INT NOT NULL,
@@ -197,35 +233,4 @@ CREATE TABLE `flight_bookings` (
     `arrival_location` VARCHAR(255) NOT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id)
-);
-
-CREATE TABLE `hotel_reviews` (
-    `review_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `user_id` INT NOT NULL,
-    `hotel_name` VARCHAR(255) NOT NULL,
-    `rating` DECIMAL(3,1) NOT NULL,
-    `comment` TEXT,
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
-);
-
-CREATE TABLE `airline_reviews` (
-    `review_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `user_id` INT NOT NULL,
-    `airline_name` VARCHAR(255) NOT NULL,
-    `rating` DECIMAL(3,1) NOT NULL,
-    `comment` TEXT,
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
-);
-
-CREATE TABLE `poi_reviews` (
-    `review_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `poi_id` INT NOT NULL,
-    `user_id` INT NOT NULL,
-    `rating` DECIMAL(3, 1) NOT NULL,
-    `comment` TEXT,
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (`poi_id`) REFERENCES `poi_cache`(`poi_id`),
-    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`)
 );

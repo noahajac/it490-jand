@@ -66,6 +66,16 @@ class Connector
             return Responders\GetUserKeywordPrefResponder::respondToRequest($request, static::$pdo);
         } else if ($request instanceof \JAND\Common\Messages\Frontend\SetUserKeywordPrefRequest) {
             return Responders\SetUserKeywordPrefResponder::respondToRequest($request, static::$pdo);
+        } else if ($request instanceof \JAND\Common\Messages\Frontend\DeleteReviewRequest) {
+            return Responders\DeleteReviewResponder::respondToRequest($request, static::$pdo);
+        } else if ($request instanceof \JAND\Common\Messages\Frontend\GetAirlineReviewsRequest) {
+            return Responders\GetAirlineReviewsResponder::respondToRequest($request, static::$pdo);
+        } else if ($request instanceof \JAND\Common\Messages\Frontend\GetHotelReviewsRequest) {
+            return Responders\GetHotelReviewsResponder::respondToRequest($request, static::$pdo);
+        } else if ($request instanceof \JAND\Common\Messages\Frontend\GetPoiReviewsRequest) {
+            return Responders\GetPoiReviewsResponder::respondToRequest($request, static::$pdo);
+        } else if ($request instanceof \JAND\Common\Messages\Frontend\CreateReviewRequest) {
+            return Responders\CreateReviewResponder::respondToRequest($request, static::$pdo);
         } else {
             return false;
         }//end if

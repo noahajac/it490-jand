@@ -26,7 +26,7 @@ class Poi
      *
      * @var AirportCity $city City poi is in.
      */
-    private AirportCity $city;
+    private ?AirportCity $city;
 
     /**
      * Poi keyword tags.
@@ -40,7 +40,7 @@ class Poi
      *
      * @var string $name Name of poi.
      */
-    private string $name;
+    private ?string $name;
 
 
     /**
@@ -53,9 +53,9 @@ class Poi
      */
     public function __construct(
         ?int $poiId,
-        AirportCity $city,
+        ?AirportCity $city,
         array $tags,
-        string $name
+        ?string $name
     ) {
         $this->poiId = $poiId;
         $this->city  = $city;
@@ -80,7 +80,7 @@ class Poi
     /**
      * Gets poi city.
      *
-     * @return AirportCity Poi city.
+     * @return ?AirportCity Poi city.
      */
     public function getCity()
     {
@@ -104,7 +104,7 @@ class Poi
     /**
      * Gets poi name.
      *
-     * @return string Poi name.
+     * @return ?string Poi name.
      */
     public function getName()
     {

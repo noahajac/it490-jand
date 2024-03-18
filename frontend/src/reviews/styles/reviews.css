@@ -1,0 +1,27 @@
+main{
+  margin: 0 auto;
+  padding: 20px;
+}
+main h1{
+  text-align: center;
+}
+.review-container{
+  display: flex;
+  flex-direction: column;
+  padding: 60px;
+  gap: 20px;
+}
+.review{
+  border: 1px solid black;
+  padding: 10px;
+}
+.overall-rating{
+  font-size: 25px;
+}
+.input-review-container{
+  display: flex;
+  justify-content: center;
+}
+.input-review{
+  padding: 10px;
+}

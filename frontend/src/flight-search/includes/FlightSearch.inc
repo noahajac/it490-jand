@@ -72,9 +72,13 @@ abstract class FlightSearch
                             foreach ($itinerary->getOutboundSegments() as &$outSegment) {
                                 ?>
                                 <tr>
-                                    <th colspan="4">
+                                    <th colspan="3">
                                         <?= $outSegment->getAirline()->getName().' '.$outSegment->getFlightNo(); ?>
                                     </th>
+                                    <td>
+                                        <a href="/reviews?type=airline&key=<?= $outSegment->getAirline()->getCode(); ?>"
+                                        >Reviews</a>
+                                    </td>
                                 </tr>
                                 <tr>
                                 <td><?= $outSegment->getDepartAirport()->getName(); ?></td>
@@ -95,9 +99,14 @@ abstract class FlightSearch
                             foreach ($itinerary->getReturnSegments() as &$returnSegment) {
                                 ?>
                                 <tr>
-                                    <th colspan="4">
+                                    <th colspan="3">
                                     <?= $returnSegment->getAirline()->getName().' '.$returnSegment->getFlightNo(); ?>
                                     </th>
+                                    <td>
+                                        <a 
+                                        href="/reviews?type=airline&key=<?= $returnSegment->getAirline()->getCode(); ?>"
+                                        >Reviews</a>
+                                    </td>
                                 </tr>
                                 <tr>
                                 <td><?= $returnSegment->getDepartAirport()->getName(); ?></td>
