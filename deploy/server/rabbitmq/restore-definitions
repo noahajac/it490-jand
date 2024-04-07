@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+# Restores RabbitMQ definitions from repo.
+
+if [ $EUID -ne 0 ]; then
+  echo 'Script must be run as root.'
+  exit 1
+fi
+
+script_dir=$(dirname -- "$(readlink -f -- "$0")")
+temp_definition_name=definitions$(date +%s).json
+definition_name=definitions.json
+
+rabbitmqctl stop_app
+rabbitmqctl reset
+rabbitmqctl start_app
+rabbitmqctl delete_user guest
+
+# Must put in place where rabbitmq user has access.
+cp $script_dir/$definition_name /tmp/$temp_definition_name
+chmod 664 /tmp/$temp_definition_name
+rabbitmqctl import_definitions /tmp/$temp_definition_name
+rm /tmp/$temp_definition_name

@@ -1,0 +1,15 @@
+[Unit]
+Description=JAND deploy server.
+After=network-online.target
+Requires=network-online.target
+
+[Service]
+ExecStart=/srv/jand-deploy-server/jand-deploy-server.php
+User=jand
+Group=jand
+Restart=on-failure
+RestartSec=30s
+
+[Install]
+WantedBy=default.target
+RequiredBy=network.target
