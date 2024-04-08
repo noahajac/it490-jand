@@ -39,6 +39,12 @@ chown -R ${deploy_user}:${deploy_user} $deploy_dir
 chmod -R u=rwX,go=rX $deploy_dir
 restorecon $deploy_dir &> /dev/null || :
 
+echo "Copying sudoers file."
+cp $script_dir/2-jand /etc/sudoers.d/.
+chown root:root /etc/sudoers.d/2-jand
+chmod 440 /etc/sudoers.d/2-jand
+restorecon /etc/sudoers.d/2-jand &> /dev/null || :
+
 echo "Copying systemd service file."
 cp $script_dir/jand-deploy-bundler.service /etc/systemd/system/.
 chown -R ${deploy_user}:${deploy_user} /etc/systemd/system/jand-deploy-bundler.service

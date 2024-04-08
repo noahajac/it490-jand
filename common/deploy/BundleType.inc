@@ -55,7 +55,7 @@ class BundleType
      * @param string   $name        Bundle name.
      * @param string[] $directories Directories to copy.
      * @param string[] $services    Services to restart.
-     * @param string[] $scripts     Scripts to run.
+     * @param Script[] $scripts     Scripts to run.
      * @param Target   $target      Bundle target.
      */
     public function __construct(
@@ -125,7 +125,7 @@ class BundleType
     /**
      * Gets scripts to run.
      *
-     * @return string[] Scripts to run.
+     * @return Script[] Scripts to run.
      */
     public function getScripts()
     {

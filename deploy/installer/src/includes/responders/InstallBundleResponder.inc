@@ -7,6 +7,7 @@
 
 namespace JAND\DeployInstaller\Includes\Responders;
 
+use JAND\Common\Deploy\Script;
 use JAND\Common\Messages\Deploy\InstallBundleRequest;
 use JAND\Common\Messages\Deploy\InstallBundleResponse;
 use PharData;
@@ -32,9 +33,11 @@ abstract class InstallBundleResponder
         $services    = $request->getType()->getServices();
         $target      = $request->getType()->getTarget()->value;
         $name        = $request->getType()->getName();
+        $scripts     = $request->getType()->getScripts();
 
         $buildDir       = '/tmp/jand-deploy-installer/'.$name.'-'.$version;
         $directoriesDir = $buildDir.'/directories';
+        $scriptsDir     = $buildDir.'/scripts';
 
         if (!is_dir('/tmp/jand-deploy-installer')) {
             mkdir('/tmp/jand-deploy-installer', 0755);
@@ -51,6 +54,12 @@ abstract class InstallBundleResponder
             $fullPath = '/srv/'.$target.'/'.$directory;
             shell_exec('rm -rf '.$fullPath.'/{..?*,.[!.]*,*}');
             shell_exec('cp -RT '.$directoriesDir.'/'.$directory.' '.$fullPath);
+        }
+
+        foreach ($scripts as &$script) {
+            if ($script === Script::Rabbitmq) {
+                shell_exec('sudo /srv/jand-deploy-installer/scripts/restore-definitions '.$scriptsDir);
+            }
         }
 
         shell_exec('rm -rf '.$buildDir);

@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+# Backs up RabbitMQ definitions to repo.
+
+if [ $EUID -ne 0 ]; then
+  echo 'Script must be run as root.'
+  exit 1
+fi
+
+script_dir=$1
+temp_definition_name=definitions$(date +%s).json
+definition_name=definitions.json
+
+# Must export to a location that the rabbitmq user has access to.
+rabbitmqctl export_definitions /tmp/$temp_definition_name
+
+echo "Moving definitions to $script_dir/$definition_name."
+
+mv /tmp/$temp_definition_name $script_dir/$definition_name
+chown --reference $script_dir $script_dir/$definition_name

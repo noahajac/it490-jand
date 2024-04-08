@@ -8,6 +8,7 @@
 namespace JAND\DeployServer\Includes\Responders;
 
 use JAND\Common\Deploy\BundleType;
+use JAND\Common\Deploy\Script;
 use JAND\Common\Deploy\Target;
 
 /**
@@ -46,10 +47,11 @@ abstract class GetBundleTypesResponder
                 $services = [];
             }
 
+            $scripts = [];
             if (isset($bundleConfig['SCRIPTS'])) {
-                $scripts = $bundleConfig['SCRIPTS'];
-            } else {
-                $scripts = [];
+                foreach ($bundleConfig['SCRIPTS'] as &$script) {
+                    array_push($scripts, Script::tryFrom($script));
+                }
             }
 
             $target = Target::tryFrom($bundleConfig['TARGET']);

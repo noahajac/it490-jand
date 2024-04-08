@@ -1,1 +1,2 @@
 jand ALL = NOPASSWD: /usr/bin/systemctl
+jand ALL = NOPASSWD: /srv/jand-deploy-installer/scripts/restore-definitions

@@ -1,0 +1,1 @@
+jand ALL = NOPASSWD: /srv/jand-deploy-bundler/scripts/backup-definitions

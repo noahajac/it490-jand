@@ -7,6 +7,7 @@
 
 namespace JAND\DeployBundler\Includes\Responders;
 
+use JAND\Common\Deploy\Script;
 use JAND\Common\Messages\Deploy\CreateNewBundleRequest;
 use JAND\Common\Messages\Deploy\CreateNewBundleResponse;
 use PharData;
@@ -29,11 +30,13 @@ abstract class CreateNewBundleResponder
     {
         $version     = $request->getVersion();
         $directories = $request->getType()->getDirectories();
+        $scripts     = $request->getType()->getScripts();
         $target      = $request->getType()->getTarget()->value;
         $name        = $request->getType()->getName();
 
         $buildDir       = '/tmp/jand-deploy-bundler/'.$name.'-'.$version;
         $directoriesDir = $buildDir.'/directories';
+        $scriptsDir     = $buildDir.'/scripts';
 
         if (!is_dir('/tmp/jand-deploy-bundler')) {
             mkdir('/tmp/jand-deploy-bundler', 0755);
@@ -41,10 +44,17 @@ abstract class CreateNewBundleResponder
 
         mkdir($buildDir, 0755);
         mkdir($directoriesDir, 0755);
+        mkdir($scriptsDir, 0755);
 
         foreach ($directories as &$directory) {
             $fullPath = '/srv/'.$target.'/'.$directory;
             shell_exec('cp -RT '.$fullPath.' '.$directoriesDir.'/'.$directory);
+        }
+
+        foreach ($scripts as &$script) {
+            if ($script === Script::Rabbitmq) {
+                shell_exec('sudo /srv/jand-deploy-bundler/scripts/backup-definitions '.$scriptsDir);
+            }
         }
 
         $phar = new PharData($buildDir.'.tar');
