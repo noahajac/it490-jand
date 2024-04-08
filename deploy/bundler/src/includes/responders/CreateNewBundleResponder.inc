@@ -60,7 +60,10 @@ abstract class CreateNewBundleResponder
         $phar = new PharData($buildDir.'.tar');
         $phar->buildFromDirectory($buildDir);
 
-        shell_exec('scp '.$buildDir.'.tar /var/lib/jand/'.$name.'-'.$version.'.tar');
+        $sshConfig = parse_ini_file(__DIR__.'/../../ssh.ini');
+        $sshHost   = $sshConfig['HOST'];
+
+        shell_exec('scp '.$buildDir.'.tar '.$sshHost.':/var/lib/jand/'.$name.'-'.$version.'.tar');
 
         shell_exec('rm -rf '.$buildDir);
         shell_exec('rm -rf '.$buildDir.'.tar');

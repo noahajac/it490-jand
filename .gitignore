@@ -7,4 +7,6 @@
 /deploy/server/src/rabbitmq.ini
 /deploy/client/src/rabbitmq.ini
 /deploy/bundler/src/rabbitmq.ini
+/deploy/bundler/src/ssh.ini
 /deploy/installer/src/rabbitmq.ini
+/deploy/installer/src/ssh.ini

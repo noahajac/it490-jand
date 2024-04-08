@@ -43,7 +43,10 @@ abstract class InstallBundleResponder
             mkdir('/tmp/jand-deploy-installer', 0755);
         }
 
-        shell_exec('scp /var/lib/jand/'.$name.'-'.$version.'.tar '.$buildDir.'.tar');
+        $sshConfig = parse_ini_file(__DIR__.'/../../ssh.ini');
+        $sshHost   = $sshConfig['HOST'];
+
+        shell_exec('scp '.$sshHost.':/var/lib/jand/'.$name.'-'.$version.'.tar '.$buildDir.'.tar');
 
         mkdir($buildDir, 0755);
 
