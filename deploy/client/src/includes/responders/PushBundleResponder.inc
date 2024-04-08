@@ -62,7 +62,7 @@ abstract class PushBundleResponder
                      */
                     $response = $request->sendRequest(RabbitClientManager::getClient());
                     if ($response->getIsBundle() && $response->getPassedQa()) {
-                        return 'Installed to QA bundle version '.$bundleVersion.'.'.PHP_EOL;
+                        return 'Installed to prod bundle version '.$bundleVersion.'.'.PHP_EOL;
                     } else if (!$response->getIsBundle()) {
                         return 'Not a valid bundle.'.PHP_EOL;
                     } else {
