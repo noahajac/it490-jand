@@ -34,7 +34,7 @@ abstract class PushBundleResponder
 
         $pushTarget = $argv[4];
 
-        if ($pushTarget !== 'qa' || $pushTarget !== 'prod') {
+        if ($pushTarget !== 'qa' && $pushTarget !== 'prod') {
             return 'Invalid target.'.PHP_EOL;
         }
 
