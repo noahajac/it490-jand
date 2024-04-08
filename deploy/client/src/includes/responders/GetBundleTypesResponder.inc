@@ -22,9 +22,11 @@ abstract class GetBundleTypesResponder
     /**
      * Responds to a get bundle types requests.
      *
-     * @return string Response to request.
+     * @param boolean $returnTypes Return types instead of string.
+     *
+     * @return string|BundleType[] Response to request.
      */
-    public static function respondToRequest()
+    public static function respondToRequest(?bool $returnTypes=false)
     {
         $request = new GetBundleTypesRequest();
 
@@ -38,14 +40,22 @@ abstract class GetBundleTypesResponder
         $bundleTypes = $bundleTypesResponse->getResults();
 
         if (count($bundleTypes) < 1) {
-            return 'No types found.'.PHP_EOL;
-        } else {
-            $response = '';
-            foreach ($bundleTypes as &$bundleType) {
-                $response .= $bundleType->getName().PHP_EOL;
+            if ($returnTypes) {
+                return [];
+            } else {
+                return 'No types found.'.PHP_EOL;
             }
+        } else {
+            if ($returnTypes) {
+                return $bundleTypes;
+            } else {
+                $response = '';
+                foreach ($bundleTypes as &$bundleType) {
+                    $response .= $bundleType->getName().PHP_EOL;
+                }
 
-            return $response;
+                return $response;
+            }
         }
 
     }//end respondToRequest()

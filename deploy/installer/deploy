@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Deploys database connector files.
+# Deploys deploy installer files.
 
 if [ $EUID -ne 0 ]; then
   echo 'Script must be run as root.'
@@ -8,7 +8,7 @@ if [ $EUID -ne 0 ]; then
 fi
 
 script_dir=$(dirname -- "$(readlink -f -- "$0")")
-deploy_dir=/srv/jand-db-connector
+deploy_dir=/srv/jand-deploy-installer
 deploy_user=jand
 
 if [ ! -f $script_dir/src/includes/rabbitmq.ini ]; then
@@ -28,7 +28,7 @@ else
     restorecon /var/lib/jand/.ssh &> /dev/null || :
 fi
 
-echo "Copying connector files."
+echo "Copying deploy files."
 if [ -d "$deploy_dir" ]; then
   rm -rf $deploy_dir/{..?*,.[!.]*,*}
 else
@@ -40,18 +40,22 @@ chmod -R u=rwX,go=rX $deploy_dir
 restorecon $deploy_dir &> /dev/null || :
 
 echo "Copying systemd service file."
-cp $script_dir/jand-db-connector.service /etc/systemd/system/.
-chown -R ${deploy_user}:${deploy_user} /etc/systemd/system/jand-db-connector.service
-chmod -R u=rwX,go=rX /etc/systemd/system/jand-db-connector.service
-restorecon /etc/systemd/system/jand-db-connector.service &> /dev/null || :
+cp $script_dir/jand-deploy-installer.service /etc/systemd/system/.
+chown -R ${deploy_user}:${deploy_user} /etc/systemd/system/jand-deploy-installer.service
+chmod -R u=rwX,go=rX /etc/systemd/system/jand-deploy-installer.service
+restorecon /etc/systemd/system/jand-deploy-installer.service &> /dev/null || :
+
+echo "Copying sudoers file."
+cp $script_dir/1-jand /etc/sudoers.d/.
+chown root:root /etc/sudoers.d/1-jand
+chmod 440 /etc/sudoers.d/1-jand
+restorecon /etc/sudoers.d/1-jand &> /dev/null || :
 
 echo "Reloading systemd daemon."
 systemctl daemon-reload
 
 echo "Enabling service."
-systemctl enable jand-db-connector.service
+systemctl enable jand-deploy-installer.service
 
 echo "Starting service."
-systemctl restart jand-db-connector.service
-
-echo "Make sure ONLY_FULL_GROUP_BY is disabled in MySQL."
+systemctl restart jand-deploy-installer.service

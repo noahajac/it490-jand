@@ -9,6 +9,7 @@ fi
 
 script_dir=$(dirname -- "$(readlink -f -- "$0")")
 deploy_dir=/srv/jand-frontend
+deploy_user=jand
 
 if [ ! -f $script_dir/src/includes/rabbitmq.ini ]; then
   echo 'rabbitmq.ini does not exist.'
@@ -20,6 +21,18 @@ if [ ! -f $script_dir/jand-frontend.conf ]; then
   exit 1
 fi
 
+echo "Checking for "$deploy_user" user."
+if id "$deploy_user" &>/dev/null; then
+    echo "Found $deploy_user user."
+else
+    echo "User not found. Creating $deploy_user user."
+    useradd -r -s $(which nologin) -d /var/lib/jand -n -c "JAND" "$deploy_user"
+    mkdir /var/lib/jand/.ssh
+    chown -R ${deploy_user}:${deploy_user} /var/lib/jand/.ssh
+    chmod -R u=rXw,g=,o= /var/lib/jand/.ssh
+    restorecon /var/lib/jand/.ssh &> /dev/null || :
+fi
+
 echo "Copying frontend files."
 if [ -d "$deploy_dir" ]; then
   rm -rf $deploy_dir/{..?*,.[!.]*,*}
@@ -27,7 +40,7 @@ else
   mkdir $deploy_dir
 fi
 cp -RTL $script_dir/src $deploy_dir
-chown -R root:root $deploy_dir
+chown -R ${deploy_user}:${deploy_user} $deploy_dir
 chmod -R u=rwX,go=rX $deploy_dir
 restorecon $deploy_dir &> /dev/null || :
 

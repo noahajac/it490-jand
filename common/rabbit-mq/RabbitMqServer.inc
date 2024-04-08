@@ -120,10 +120,6 @@ class RabbitMqServer
      */
     public function processMessage(\AMQPEnvelope $msg)
     {
-        if ($msg->getRoutingKey() !== '*') {
-            return true;
-        }
-
         // Send the ack to clear the item from the queue.
         $this->serverQueue->ack($msg->getDeliveryTag());
         try {

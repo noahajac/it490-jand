@@ -25,8 +25,12 @@ class DeployClient
     {
         if ($argv[1] === 'getbundletypes') {
             return Responders\GetBundleTypesResponder::respondToRequest();
+        } else if ($argv[1] === 'createbundle') {
+            return Responders\CreateNewBundleResponder::respondToRequest($argv);
+        } else if ($argv[1] === 'qapushbundle') {
+            return Responders\QaPushBundleResponder::respondToRequest($argv);
         } else {
-            return 'Please enter command.'.PHP_EOL;
+            return 'Please enter command getbundletypes, createbundle, or qapushbundle.'.PHP_EOL;
         }//end if
 
     }//end requestProcessor()

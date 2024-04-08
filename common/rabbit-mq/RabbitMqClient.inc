@@ -134,10 +134,11 @@ class RabbitMqClient
      *
      * @param mixed  $message     Message to send.
      * @param string $contentType Message MIME type.
+     * @param string $routingKey  Routing key.
      *
      * @return mixed Message response.
      */
-    public function sendRequest(mixed $message, string $contentType='text/plain')
+    public function sendRequest(mixed $message, string $contentType='text/plain', string $routingKey='*')
     {
         $uid = uniqid();
 
@@ -164,7 +165,7 @@ class RabbitMqClient
 
             $exchange->publish(
                 $message,
-                '*',
+                $routingKey,
                 \AMQP_NOPARAM,
                 [
                     'reply_to'       => $responseQueue->getName(),

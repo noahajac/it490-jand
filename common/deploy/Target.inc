@@ -12,7 +12,7 @@ namespace JAND\Common\Deploy;
  */
 enum Target: string
 {
-    case Frontend = 'frontend';
-    case Backend  = 'backend';
-    case Dmz      = 'dmz';
+    case Frontend    = 'jand-frontend';
+    case DbConnector = 'jand-db-connector';
+    case Dmz         = 'jand-dmz';
 }//end enum

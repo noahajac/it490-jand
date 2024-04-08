@@ -4,3 +4,7 @@
 /db/db-connector/src/includes/rabbitmq.ini
 /dmz/src/includes/rabbitmq.ini
 /dmz/src/includes/responders/amadeus.ini
+/deploy/server/src/includes/rabbitmq.ini
+/deploy/client/src/includes/rabbitmq.ini
+/deploy/bundler/src/includes/rabbitmq.ini
+/deploy/installer/src/includes/rabbitmq.ini

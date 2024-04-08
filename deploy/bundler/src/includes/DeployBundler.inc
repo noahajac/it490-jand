@@ -1,17 +1,17 @@
 <?php
 /**
- * Contains main deploy server logic.
+ * Contains main deploy bundler logic.
  *
- * @package JAND\DeployServer\Includes\DeployServer
+ * @package JAND\DeployBundler\Includes\DeployBundler
  */
 
-namespace JAND\DeployServer\Includes;
+namespace JAND\DeployBundler\Includes;
 
 /**
  * Listens to requests from Rabbit and performs appropriate
- * action./
+ * action.
  */
-class DeployServer
+class DeployBundler
 {
 
     /**
@@ -20,13 +20,6 @@ class DeployServer
      * @var \JAND\Common\RabbitMq\RabbitMqServer $server RabbitMQ server.
      */
     private static \JAND\Common\RabbitMq\RabbitMqServer $server;
-
-    /**
-     * Database PDO instance.
-     *
-     * @var \PDO $pdo PDO instance.
-     */
-    private static \PDO $pdo;
 
 
     /**
@@ -38,21 +31,17 @@ class DeployServer
      */
     private static function requestProcessor(mixed $request)
     {
-        if ($request instanceof \JAND\Common\Messages\Deploy\GetBundleTypesRequest) {
-            return Responders\GetBundleTypesResponder::respondToRequest();
-        } else if ($request instanceof \JAND\Common\Messages\Deploy\QaPushBundleRequest) {
-            return Responders\QaPushBundleResponder::respondToRequest($request);
-        } else if ($request instanceof \JAND\Common\Messages\Deploy\CreateNewBundleRequest) {
+        if ($request instanceof \JAND\Common\Messages\Deploy\CreateNewBundleRequest) {
             return Responders\CreateNewBundleResponder::respondToRequest($request);
         } else {
             return false;
-        }
+        }//end if
 
     }//end requestProcessor()
 
 
     /**
-     * Creates RabbitMqServer and PDO, then starts listening to requests.
+     * Creates RabbitMqServer, then starts listening to requests.
      *
      * @return void
      */
@@ -60,13 +49,9 @@ class DeployServer
     {
         static::$server = new \JAND\Common\RabbitMq\RabbitMqServer(
             __DIR__.'/rabbitmq.ini',
-            'dclient-dserver_dserver.server'
+            'dbundlers-dserver_dbundlers.server'
         );
 
-        $dsn         = 'mysql:unix_socket=/var/run/mysqld/mysqld.sock;dbname=jand_deploy;charset=utf8';
-        static::$pdo = new \PDO($dsn, 'jand');
-        static::$pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        static::$pdo->setAttribute(\PDO::ATTR_EMULATE_PREPARES, true);
         static::$server->processRequests(
             function (string $requestString) {
                 return serialize(
