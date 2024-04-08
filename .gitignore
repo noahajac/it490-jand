@@ -1,10 +1,10 @@
 /vendor/
-/frontend/src/includes/rabbitmq.ini
+/frontend/src/rabbitmq.ini
 /frontend/jand-frontend.conf
-/db/db-connector/src/includes/rabbitmq.ini
-/dmz/src/includes/rabbitmq.ini
+/db/db-connector/src/rabbitmq.ini
+/dmz/src/rabbitmq.ini
 /dmz/src/includes/responders/amadeus.ini
-/deploy/server/src/includes/rabbitmq.ini
-/deploy/client/src/includes/rabbitmq.ini
-/deploy/bundler/src/includes/rabbitmq.ini
-/deploy/installer/src/includes/rabbitmq.ini
+/deploy/server/src/rabbitmq.ini
+/deploy/client/src/rabbitmq.ini
+/deploy/bundler/src/rabbitmq.ini
+/deploy/installer/src/rabbitmq.ini

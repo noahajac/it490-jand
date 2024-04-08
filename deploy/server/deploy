@@ -11,7 +11,7 @@ script_dir=$(dirname -- "$(readlink -f -- "$0")")
 deploy_dir=/srv/jand-deploy-server
 deploy_user=jand
 
-if [ ! -f $script_dir/src/includes/rabbitmq.ini ]; then
+if [ ! -f $script_dir/src/rabbitmq.ini ]; then
   echo 'rabbitmq.ini does not exist.'
   exit 1
 fi
