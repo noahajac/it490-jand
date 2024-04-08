@@ -21,7 +21,7 @@ if id "$deploy_user" &>/dev/null; then
     echo "Found $deploy_user user."
 else
     echo "User not found. Creating $deploy_user user."
-    useradd -r -s $(which nologin) -d /var/lib/jand -m -c "JAND" "$deploy_user"
+    useradd -r -s $(which bash) -d /var/lib/jand -m -c "JAND" "$deploy_user"
     mkdir /var/lib/jand/.ssh
     chown -R ${deploy_user}:${deploy_user} /var/lib/jand/.ssh
     chmod -R u=rXw,g=,o= /var/lib/jand/.ssh
