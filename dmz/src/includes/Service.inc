@@ -56,7 +56,7 @@ class Service
     public static function start()
     {
         static::$server = new \JAND\Common\RabbitMq\RabbitMqServer(
-            __DIR__.'/rabbitmq.ini',
+            __DIR__.'/../rabbitmq.ini',
             'db-dmz_dmz.server'
         );
 

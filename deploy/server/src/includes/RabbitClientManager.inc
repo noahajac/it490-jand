@@ -37,7 +37,7 @@ abstract class RabbitClientManager
     {
         if (!isset(static::$rabbitMqClientBundlers)) {
             static::$rabbitMqClientBundlers = new \JAND\Common\RabbitMq\RabbitMqClient(
-                __DIR__.'/rabbitmq.ini',
+                __DIR__.'/../rabbitmq.ini',
                 'dbundlers-dserver_dserver.client'
             );
         }
@@ -56,7 +56,7 @@ abstract class RabbitClientManager
     {
         if (!isset(static::$rabbitMqClientInstallers)) {
             static::$rabbitMqClientInstallers = new \JAND\Common\RabbitMq\RabbitMqClient(
-                __DIR__.'/rabbitmq.ini',
+                __DIR__.'/../rabbitmq.ini',
                 'dinstallers-dserver_dserver.client'
             );
         }

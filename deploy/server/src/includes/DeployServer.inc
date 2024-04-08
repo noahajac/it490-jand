@@ -67,7 +67,7 @@ class DeployServer
     public static function start()
     {
         static::$server = new \JAND\Common\RabbitMq\RabbitMqServer(
-            __DIR__.'/rabbitmq.ini',
+            __DIR__.'/../rabbitmq.ini',
             'dclient-dserver_dserver.server'
         );
 

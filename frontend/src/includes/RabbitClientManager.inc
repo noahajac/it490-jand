@@ -30,7 +30,7 @@ abstract class RabbitClientManager
     {
         if (!isset(static::$rabbitMqClient)) {
             static::$rabbitMqClient = new \JAND\Common\RabbitMq\RabbitMqClient(
-                __DIR__.'/rabbitmq.ini',
+                __DIR__.'/../rabbitmq.ini',
                 'db-frontend_frontend.client'
             );
         }
