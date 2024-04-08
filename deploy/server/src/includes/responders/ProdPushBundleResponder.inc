@@ -44,7 +44,7 @@ version_number=:versionNumber'
         $checkBundleStmt->closeCursor();
         if (empty($checkBundleResults)) {
             return new ProdPushBundleResponse(false, false);
-        } else if (Status::tryFrom($checkBundleResults['status']) === Status::Failed) {
+        } else if (Status::tryFrom($checkBundleResults['status']) !== Status::Passed) {
             return new ProdPushBundleResponse(true, false);
         }
 
