@@ -22,7 +22,7 @@ class QaPushBundleResponse
 
 
     /**
-     * Is a real bundle.
+     * Creates the response.
      *
      * @param boolean $isBundle Is real bundle.
      */

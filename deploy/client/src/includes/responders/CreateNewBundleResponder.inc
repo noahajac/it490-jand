@@ -7,10 +7,7 @@
 
 namespace JAND\DeployClient\Includes\Responders;
 
-use JAND\Common\Deploy\BundleType;
 use JAND\Common\Messages\Deploy\CreateNewBundleRequest;
-use JAND\Common\Messages\Deploy\GetBundleTypesRequest;
-use JAND\Common\Messages\Deploy\GetBundleTypesResponse;
 use JAND\DeployClient\Includes\RabbitClientManager;
 
 /**

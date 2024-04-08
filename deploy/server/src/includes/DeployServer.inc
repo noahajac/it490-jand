@@ -38,12 +38,20 @@ class DeployServer
      */
     private static function requestProcessor(mixed $request)
     {
-        if ($request instanceof \JAND\Common\Messages\Deploy\GetBundleTypesRequest) {
+        if (get_class($request) === \JAND\Common\Messages\Deploy\GetBundleTypesRequest::class) {
             return Responders\GetBundleTypesResponder::respondToRequest();
-        } else if ($request instanceof \JAND\Common\Messages\Deploy\QaPushBundleRequest) {
-            return Responders\QaPushBundleResponder::respondToRequest($request);
-        } else if ($request instanceof \JAND\Common\Messages\Deploy\CreateNewBundleRequest) {
-            return Responders\CreateNewBundleResponder::respondToRequest($request);
+        } else if (get_class($request) === \JAND\Common\Messages\Deploy\QaPushBundleRequest::class) {
+            return Responders\QaPushBundleResponder::respondToRequest($request, static::$pdo);
+        } else if (get_class($request) === \JAND\Common\Messages\Deploy\CreateNewBundleRequest::class) {
+            return Responders\CreateNewBundleResponder::respondToRequest($request, static::$pdo);
+        } else if (get_class($request) === \JAND\Common\Messages\Deploy\ProdPushBundleRequest::class) {
+            return Responders\ProdPushBundleResponder::respondToRequest($request, static::$pdo);
+        } else if (get_class($request) === \JAND\Common\Messages\Deploy\GetBundlesRequest::class) {
+            return Responders\GetBundlesResponder::respondToRequest(static::$pdo);
+        } else if (get_class($request) === \JAND\Common\Messages\Deploy\SetBundleStatusRequest::class) {
+            return Responders\SetBundleStatusResponder::respondToRequest($request, static::$pdo);
+        } else if (get_class($request) === \JAND\Common\Messages\Deploy\RollbackBundleRequest::class) {
+            return Responders\RollbackBundleResponder::respondToRequest($request, static::$pdo);
         } else {
             return false;
         }

@@ -23,14 +23,27 @@ class DeployClient
      */
     private static function requestProcessor(array $argv)
     {
-        if ($argv[1] === 'getbundletypes') {
+        if ($argv[1] === 'types') {
             return Responders\GetBundleTypesResponder::respondToRequest();
-        } else if ($argv[1] === 'createbundle') {
+        } else if ($argv[1] === 'create') {
             return Responders\CreateNewBundleResponder::respondToRequest($argv);
-        } else if ($argv[1] === 'qapushbundle') {
-            return Responders\QaPushBundleResponder::respondToRequest($argv);
+        } else if ($argv[1] === 'push') {
+            return Responders\PushBundleResponder::respondToRequest($argv);
+        } else if ($argv[1] === 'list') {
+            return Responders\GetBundlesResponder::respondToRequest($argv);
+        } else if ($argv[1] === 'rollback') {
+            return Responders\RollbackBundleResponder::respondToRequest($argv);
+        } else if ($argv[1] === 'set') {
+            return Responders\SetBundleStatusResponder::respondToRequest($argv);
         } else {
-            return 'Please enter command getbundletypes, createbundle, or qapushbundle.'.PHP_EOL;
+            $helpStr  = 'Available commands:'.PHP_EOL;
+            $helpStr .= 'types'.PHP_EOL;
+            $helpStr .= 'create   <NAME>'.PHP_EOL;
+            $helpStr .= 'push     <NAME> <VERSION> (qa|prod)'.PHP_EOL;
+            $helpStr .= 'list'.PHP_EOL;
+            $helpStr .= 'rollback <NAME> (qa|prod)'.PHP_EOL;
+            $helpStr .= 'set      <NAME> <VERSION> (pass|fail)'.PHP_EOL;
+            return $helpStr;
         }//end if
 
     }//end requestProcessor()
