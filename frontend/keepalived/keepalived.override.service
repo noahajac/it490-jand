@@ -1,0 +1,4 @@
+# Wait before starting to allow time for DHCPv6.
+
+[Service]
+ExecStartPre=/bin/sleep 30
