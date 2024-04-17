@@ -38,12 +38,11 @@ abstract class UserPreferences
       <main>
         <h1>Set Your Travel Preferences</h1>
         <div class="preference-container">
-        
+        <h3>Destinations to Visit</h3>
         
             <form name="input-preference" id="input-preference" method="post">
 
-                <h3>Destinations to Visit</h3>
-        <div class="preference">
+                
         <?php
         $request = new \JAND\Common\Messages\Frontend\GetPoiKeywordsRequest();
         /**
@@ -87,7 +86,6 @@ abstract class UserPreferences
         ?>
                 <button type="submit">Save</button>
             </form>
-        </div>
       </main>
         <?php echo \JAND\Frontend\Includes\Elements\Footer::echoFooter(); ?>
     </body>
