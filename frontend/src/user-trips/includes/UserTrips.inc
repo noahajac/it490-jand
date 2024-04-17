@@ -44,7 +44,8 @@ abstract class UserTrips
     <body>
         <?php echo \JAND\Frontend\Includes\Elements\Nav::echoNav(); ?>
       <main>
-        <a href="./create">Create new trip</a>
+        <div class="trips-container">
+        <a id="create-new-trip" href="./create">Create new trip</a>
         <?php
         $trips = $response->getUserTrips();
 
@@ -72,7 +73,7 @@ abstract class UserTrips
                 <?php
         }//end if
         ?>
-
+        </div>
       </main>
         <?php echo \JAND\Frontend\Includes\Elements\Footer::echoFooter(); ?>
     </body>

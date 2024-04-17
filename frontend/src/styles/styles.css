@@ -6,6 +6,23 @@ main {
   margin: .2em .2em;
 }
 
+.trips-container{
+  margin-top: 10px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+#create-new-trip{
+  text-align: center;
+  background-color: #e3f2fd;
+  max-width: 140px;
+  padding: 5px;
+  border-radius: 8px;
+}
+
 .error {
   color: red;
 }
@@ -13,6 +30,7 @@ main {
 table.table-borders,
 table.table-borders th,
 table.table-borders td {
+  margin-top: 15px;
   border: .1em solid black;
   padding: .5em;
 }
@@ -20,4 +38,19 @@ table.table-borders td {
 div.flight-result {
   padding: 2em;
   display: flex;
+}
+
+/* unvisited link */
+a:link {
+  color: blue;
+}
+
+/* visited link */
+a:visited {
+  color: purple;
+}
+
+/* mouse over link */
+a:hover {
+  color: hotpink;
 }

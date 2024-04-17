@@ -38,21 +38,6 @@ th {
   padding-bottom: 5px;
 }
 
-/* unvisited link */
-.rec a:link {
-  color: blue;
-}
-
-/* visited link */
-.rec a:visited {
-  color: purple;
-}
-
-/* mouse over link */
-.rec a:hover {
-  color: hotpink;
-}
-
 @media screen and (max-width: 650px) {
   .rec-heading, .rec{
     text-align: center;
