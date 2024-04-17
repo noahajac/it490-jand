@@ -21,6 +21,7 @@ abstract class Head
      */
     public static function echoHead()
     {
+        header('X-JAND-Failover: '.gethostname());
         ?>
     <meta charset="utf-8">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" 
