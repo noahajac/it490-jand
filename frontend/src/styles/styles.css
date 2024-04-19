@@ -3,24 +3,9 @@ nav {
 }
 
 main {
-  margin: .2em .2em;
-}
-
-.trips-container{
-  margin-top: 10px;
-  background-color: #ffffff;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
+  margin: 0 auto;
   padding: 20px;
-}
-
-#create-new-trip{
-  text-align: center;
-  background-color: #e3f2fd;
-  max-width: 140px;
-  padding: 5px;
-  border-radius: 8px;
+  box-sizing: border-box;
 }
 
 .error {
@@ -53,4 +38,91 @@ a:visited {
 /* mouse over link */
 a:hover {
   color: hotpink;
+}
+
+/*user trips page*/
+.trips-container{
+  margin: 0 auto;
+  max-width: 850px;
+  margin-top: 50px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.create-heading {
+  padding-bottom: 5px;
+}
+
+#create-new-trip{
+  text-align: center;
+  background-color: #e3f2fd;
+  max-width: 140px;
+  padding: 10px;
+  margin-bottom: 5px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: black;
+}
+
+/*user-trips create page*/
+.create-trips-ctr{
+  background-color: #ffffff;
+  border-radius: 8px;
+  max-width: 450px;
+  margin: 0 auto;
+  margin-top: 50px;
+}
+
+.trip-heading{
+  padding-top: 20px;
+  padding-left: 20px
+}
+
+#create-trip-form table{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+#create-trip-form input{
+  padding: 8px;
+  margin: 4px;
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 10px !important;
+  /*makes the input round and not square*/
+  flex-grow: 1;
+  /*Input expands to fill the space */
+  margin-right: 15px;
+}
+
+#create-submit{
+  margin-top: 30px !important;
+}
+
+#delete-trip-btn{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#delete{
+  width: 50%;
+  margin-top: -20px;
+  margin-bottom: 30px;
+}
+
+@media screen and (max-width: 650px) {
+  .create-heading, #create-new-trip{
+    text-align: center;
+    align-self: center;
+  }
+  .trip-heading{
+    text-align: center;
+    padding-left: 0px;
+  }
 }

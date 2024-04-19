@@ -45,6 +45,7 @@ abstract class UserTrips
         <?php echo \JAND\Frontend\Includes\Elements\Nav::echoNav(); ?>
       <main>
         <div class="trips-container">
+        <h3 class="create-heading">Create Your Trips</h3>
         <a id="create-new-trip" href="./create">Create new trip</a>
         <?php
         $trips = $response->getUserTrips();

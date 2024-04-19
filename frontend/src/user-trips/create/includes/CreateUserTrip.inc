@@ -46,10 +46,12 @@ abstract class CreateUserTrip
     <body>
         <?php echo \JAND\Frontend\Includes\Elements\Nav::echoNav(); ?>
       <main>
+        <div class="create-trips-ctr">
         <?php foreach ($errors as $error) { ?>
           <p class="error"><?php echo $error; ?></p>
         <?php } ?>
-        <form method="post">
+        <form method="post" id="create-trip-form">
+        <h3 class="trip-heading">Trip Details</h3>
             <table>
                 <tr>
                     <th><label for="destination-display">Destination:</label></th>
@@ -81,10 +83,11 @@ abstract class CreateUserTrip
         </form>
         <?php if ($showDelete) { ?>
         <br>
-        <form method="post">
+        <form method="post" id="delete-trip-btn">
             <button id="delete" name="delete" value="on" type="submit">Delete this Trip</button>
         </form>
         <?php } ?>
+        </div>
       </main>
         <?php echo \JAND\Frontend\Includes\Elements\Footer::echoFooter(); ?>
         <script src="./scripts/destination-autocomplete.js"></script>

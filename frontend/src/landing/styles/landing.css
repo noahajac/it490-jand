@@ -9,11 +9,12 @@ main h1 {
 }
 
 .rec-container {
+  margin: 0 auto;
   background-color: #ffffff;
   margin-top: 30px;
   border-radius: 8px;
   width: auto;
-  min-width: 300px;
+  max-width: 1000px;
   display: flex;
   flex-direction: column;
   gap: 20px;
