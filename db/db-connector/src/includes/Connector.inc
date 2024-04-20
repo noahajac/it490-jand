@@ -110,7 +110,8 @@ class Connector
                 return serialize(
                     static::requestProcessor(unserialize($requestString))
                 );
-            }
+            },
+            '/tmp/jand-db-connector-inhibit'
         );
 
     }//end start()

@@ -65,7 +65,8 @@ class Service
                 return serialize(
                     static::requestProcessor(unserialize($requestString))
                 );
-            }
+            },
+            '/tmp/jand-dmz-inhibit'
         );
 
     }//end start()

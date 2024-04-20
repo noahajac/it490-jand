@@ -77,6 +77,13 @@ class RabbitMqServer
     private string $clientExchangeName;
 
     /**
+     * Only process requests if this file doesn't exists.
+     *
+     * @var string $inhibitFile Don't process request if this file exists.
+     */
+    private ?string $inhibitFile;
+
+    /**
      * AMQP server queue.
      *
      * @var \AMQPQueue $serverQueue Server queue to receive requests.
@@ -120,6 +127,10 @@ class RabbitMqServer
      */
     public function processMessage(\AMQPEnvelope $msg)
     {
+        if (isset($this->inhibitFile) && file_exists($this->inhibitFile)) {
+            return true;
+        }
+
         // Send the ack to clear the item from the queue.
         $this->serverQueue->ack($msg->getDeliveryTag());
         try {
@@ -164,13 +175,15 @@ class RabbitMqServer
     /**
      * Connect to RabbitMQ server and start processing requests.
      *
-     * @param callable $callback Callback function when a request comes in.
+     * @param callable $callback    Callback function when a request comes in.
+     * @param string   $inhibitFile If set, don't process message when file exists.
      *
      * @return void
      */
-    public function processRequests(callable $callback)
+    public function processRequests(callable $callback, ?string $inhibitFile=null)
     {
         try {
+            $this->inhibitFile  = $inhibitFile;
             $this->callback     = $callback;
             $params             = [];
             $params['host']     = $this->brokerHost;
