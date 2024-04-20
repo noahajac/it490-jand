@@ -16,7 +16,7 @@ fi
 
 source $script_dir/../../../server-ip-config
 
-cp ../../jand-ufw-profiles /etc/ufw/applications.d/jand-ufw-profiles
+cp $script_dir/../../jand-ufw-profiles /etc/ufw/applications.d/jand-ufw-profiles
 chown root:root /etc/ufw/applications.d/jand-ufw-profiles
 chmod 0644 /etc/ufw/applications.d/jand-ufw-profiles
 restorecon /etc/ufw/applications.d/jand-ufw-profiles &> /dev/null || :
