@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+endState=$3
+name=$2
+type=$1
+
+inhibitFile=/tmp/jand-db-connector-inhibit
+
+case $endState in
+    "MASTER")
+      rm -f $inhibitFile
+      exit 0
+      ;;
+    "BACKUP" | "FAULT")
+      touch $inhibitFile
+      exit 0
+      ;;
+    *)        
+      echo "Unknown state ${endState} for VRRP ${type} ${name}"
+      exit 1
+      ;;
+esac
