@@ -48,8 +48,8 @@ restorecon /etc/systemd/system/jand-db-connector.service &> /dev/null || :
 echo "Reloading systemd daemon."
 systemctl daemon-reload
 
-echo "Enabling service."
-systemctl enable jand-db-connector.service
+# echo "Enabling service."
+# systemctl enable jand-db-connector.service
 
 echo "Starting service."
 systemctl restart jand-db-connector.service

@@ -8,11 +8,13 @@ inhibitFile=/tmp/jand-dmz-inhibit
 
 case $endState in
     "MASTER")
-      rm -f $inhibitFile
+      # rm -f $inhibitFile
+      systemctl start jand-dmz.service
       exit 0
       ;;
     "BACKUP" | "FAULT")
-      touch $inhibitFile
+      # touch $inhibitFile
+      systemctl stop jand-dmz.service
       exit 0
       ;;
     *)        

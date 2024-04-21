@@ -8,11 +8,13 @@ inhibitFile=/tmp/jand-db-connector-inhibit
 
 case $endState in
     "MASTER")
-      rm -f $inhibitFile
+      # rm -f $inhibitFile
+      systemctl start jand-db-connector.service
       exit 0
       ;;
     "BACKUP" | "FAULT")
-      touch $inhibitFile
+      # touch $inhibitFile
+      systemctl stop jand-db-connector.service
       exit 0
       ;;
     *)        

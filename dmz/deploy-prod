@@ -53,8 +53,8 @@ restorecon /etc/systemd/system/jand-dmz.service &> /dev/null || :
 echo "Reloading systemd daemon."
 systemctl daemon-reload
 
-echo "Enabling service."
-systemctl enable jand-dmz.service
+# echo "Enabling service."
+# systemctl enable jand-dmz.service
 
 echo "Starting service."
 systemctl restart jand-dmz.service
