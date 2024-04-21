@@ -14,4 +14,3 @@ RestartSec=3s
 
 [Install]
 WantedBy=default.target
-RequiredBy=network.target
