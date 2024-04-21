@@ -137,6 +137,8 @@ class RabbitMqClient
      * @param string $routingKey  Routing key.
      *
      * @return mixed Message response.
+     *
+     * @throws RabbitException Exception on timeout.
      */
     public function sendRequest(mixed $message, string $contentType='text/plain', string $routingKey='*')
     {
@@ -178,7 +180,7 @@ class RabbitMqClient
             $waitIterations = 0;
             while ($response === false) {
                 if ($waitIterations > 600) {
-                    return false;
+                    throw new RabbitException();
                 }
 
                 $response = $responseQueue->get();
