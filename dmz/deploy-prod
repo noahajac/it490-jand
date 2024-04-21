@@ -57,4 +57,4 @@ systemctl daemon-reload
 # systemctl enable jand-dmz.service
 
 echo "Starting service."
-systemctl restart jand-dmz.service
+systemctl try-restart jand-dmz.service
