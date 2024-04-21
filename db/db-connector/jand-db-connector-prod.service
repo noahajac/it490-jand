@@ -9,7 +9,7 @@ Requires=keepalived.service
 ExecStart=/srv/jand-db-connector/jand-db-connector.php
 User=jand
 Group=jand
-Restart=on-failure
+Restart=always
 RestartSec=3s
 
 [Install]

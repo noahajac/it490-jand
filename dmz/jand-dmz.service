@@ -7,7 +7,7 @@ Requires=network-online.target
 ExecStart=/srv/jand-dmz/jand-dmz.php
 User=jand
 Group=jand
-Restart=on-failure
+Restart=always
 RestartSec=3s
 
 [Install]
