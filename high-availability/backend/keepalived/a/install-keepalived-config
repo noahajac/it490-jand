@@ -101,6 +101,11 @@ chown root:root $deploy_dir/override.conf
 chmod 0644 $deploy_dir/override.conf
 restorecon $deploy_dir/override.conf &> /dev/null || :
 
+cp $script_dir/../jand-be-notify-script /usr/local/bin/jand-be-notify-script
+chown root:root /usr/local/bin/jand-be-notify-script
+chmod 0755 /usr/local/bin/jand-be-notify-script
+restorecon /usr/local/bin/jand-be-notify-script &> /dev/null || :
+
 systemctl daemon-reload
 systemctl enable keepalived.service
 systemctl restart keepalived.service
