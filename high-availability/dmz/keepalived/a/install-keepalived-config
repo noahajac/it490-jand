@@ -25,13 +25,6 @@ global_defs {
     script_user root root
 }
 
-
-vrrp_script chk_jand_dmz {
-    script "/usr/bin/systemctl is-active --quiet jand-dmz.service"
-    interval 5
-    timeout 5
-}
-
 vrrp_sync_group VI_JAND_DMZ {
   group {
     VI_JAND_DMZ_6
@@ -55,10 +48,6 @@ vrrp_instance VI_JAND_DMZ_6 {
     virtual_ipaddress {
         $PROD_DMZ_HA_IPV6
     }
-
-    track_script {
-        chk_jand_dmz
-    }
 }
 
 vrrp_instance VI_JAND_DMZ_4 {
@@ -74,10 +63,6 @@ vrrp_instance VI_JAND_DMZ_4 {
 
     virtual_ipaddress {
         $PROD_DMZ_HA_IPV4
-    }
-
-    track_script {
-        chk_jand_dmz
     }
 }
 EOF
