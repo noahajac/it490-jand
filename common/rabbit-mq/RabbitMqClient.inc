@@ -174,11 +174,20 @@ class RabbitMqClient
                 ]
             );
 
-            $responseQueue->consume([$this, 'processResponse']);
-            $response = $this->responses[$uid];
-            unset($this->responses[$uid]);
+            $response       = false;
+            $waitIterations = 0;
+            while ($response === false) {
+                if ($waitIterations > 600) {
+                    return false;
+                }
 
-            return $response;
+                $response = $responseQueue->get();
+                usleep(100000);
+                $waitIterations++;
+            }
+
+            $responseQueue->ack($response->getDeliveryTag());
+            return $response->getBody();
         } catch (\Exception $e) {
             die('failed to send message to exchange: '.$e->getMessage()."\n");
         }//end try
