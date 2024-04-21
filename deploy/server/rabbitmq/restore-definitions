@@ -11,10 +11,10 @@ script_dir=$(dirname -- "$(readlink -f -- "$0")")
 temp_definition_name=definitions$(date +%s).json
 definition_name=definitions.json
 
-rabbitmqctl stop_app
-rabbitmqctl reset
-rabbitmqctl start_app
-rabbitmqctl delete_user guest
+# rabbitmqctl stop_app
+# rabbitmqctl reset
+# rabbitmqctl start_app
+# rabbitmqctl delete_user guest
 
 # Must put in place where rabbitmq user has access.
 cp $script_dir/$definition_name /tmp/$temp_definition_name
