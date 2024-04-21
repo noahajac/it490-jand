@@ -1,13 +1,16 @@
 [Unit]
-Description=JAND database connector.
+Description=JAND DMZ service.
 After=network-online.target
 Requires=network-online.target
+After=keepalived.service
+Requires=keepalived.service
 
 [Service]
-ExecStart=/srv/jand-db-connector/jand-db-connector.php
+ExecStart=/srv/jand-dmz/jand-dmz.php
 User=jand
 Group=jand
 Restart=on-failure
+ExecStartPre=/bin/sleep 45
 RestartSec=3s
 
 [Install]

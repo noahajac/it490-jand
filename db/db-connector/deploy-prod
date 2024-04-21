@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+
+# Deploys database connector files for prod.
+
+if [ $EUID -ne 0 ]; then
+  echo 'Script must be run as root.'
+  exit 1
+fi
+
+script_dir=$(dirname -- "$(readlink -f -- "$0")")
+deploy_dir=/srv/jand-db-connector
+deploy_user=jand
+
+if [ ! -f $script_dir/src/rabbitmq.ini ]; then
+  echo 'rabbitmq.ini does not exist.'
+  exit 1
+fi
+
+echo "Checking for "$deploy_user" user."
+if id "$deploy_user" &>/dev/null; then
+    echo "Found $deploy_user user."
+else
+    echo "User not found. Creating $deploy_user user."
+    useradd -r -s $(which nologin) -d /var/lib/jand -m -c "JAND" "$deploy_user"
+    mkdir /var/lib/jand/.ssh
+    chown -R ${deploy_user}:${deploy_user} /var/lib/jand/.ssh
+    chmod -R u=rXw,g=,o= /var/lib/jand/.ssh
+    restorecon /var/lib/jand/.ssh &> /dev/null || :
+fi
+
+echo "Copying connector files."
+if [ -d "$deploy_dir" ]; then
+  rm -rf $deploy_dir/{..?*,.[!.]*,*}
+else
+  mkdir $deploy_dir
+fi
+cp -RTL $script_dir/src $deploy_dir
+chown -R ${deploy_user}:${deploy_user} $deploy_dir
+chmod -R u=rwX,go=rX $deploy_dir
+restorecon $deploy_dir &> /dev/null || :
+
+echo "Copying systemd service file."
+cp $script_dir/jand-db-connector-prod.service /etc/systemd/system/jand-db-connector.service
+chown -R ${deploy_user}:${deploy_user} /etc/systemd/system/jand-db-connector.service
+chmod -R u=rwX,go=rX /etc/systemd/system/jand-db-connector.service
+restorecon /etc/systemd/system/jand-db-connector.service &> /dev/null || :
+
+echo "Reloading systemd daemon."
+systemctl daemon-reload
+
+echo "Enabling service."
+systemctl enable jand-db-connector.service
+
+echo "Starting service."
+systemctl restart jand-db-connector.service
+
+echo "Make sure ONLY_FULL_GROUP_BY is disabled in MySQL."

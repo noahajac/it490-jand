@@ -2,6 +2,8 @@
 Description=JAND database connector.
 After=network-online.target
 Requires=network-online.target
+After=keepalived.service
+Requires=keepalived.service
 
 [Service]
 ExecStart=/srv/jand-db-connector/jand-db-connector.php
