@@ -8,7 +8,7 @@ ExecStart=/srv/jand-db-connector/jand-db-connector.php
 User=jand
 Group=jand
 Restart=on-failure
-RestartSec=30s
+RestartSec=3s
 
 [Install]
 WantedBy=default.target

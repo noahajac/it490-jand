@@ -51,7 +51,8 @@ version_number=:versionNumber'
         $target = $request->getType()->getTarget();
 
         $requestToInstall = new InstallBundleRequest($request->getType(), $request->getVersion());
-        $requestToInstall->sendRequest(RabbitClientManager::getInstallerClient(), 'prod.'.$target->value);
+        $requestToInstall->sendRequest(RabbitClientManager::getInstallerClient(), 'prod.'.$target->value.'.a');
+        $requestToInstall->sendRequest(RabbitClientManager::getInstallerClient(), 'prod.'.$target->value.'.b');
 
         return new ProdPushBundleResponse(true, true);
 

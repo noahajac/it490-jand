@@ -1,0 +1,104 @@
+#!/usr/bin/env bash
+
+# Deploys keepalived config for frontend A.
+
+if [ $EUID -ne 0 ]; then
+  echo 'Script must be run as root.'
+  exit 1
+fi
+
+script_dir=$(dirname -- "$(readlink -f -- "$0")")
+
+if [ ! -f $script_dir/../../../../server-ip-config ]; then
+  echo 'server-ip-config does not exist.'
+  exit 1
+fi
+
+
+source $script_dir/../../../../server-ip-config
+
+echo "Installing keepalived config."
+
+cat << EOF > /etc/keepalived/keepalived.conf
+global_defs {
+    enable_script_security
+    script_user jand jand
+}
+
+
+vrrp_script chk_jand_fe {
+    script "/usr/bin/curl https://${PROD_FE_A_FQDN}/landing/"
+    interval 5
+    timeout 5
+}
+
+vrrp_sync_group VI_JAND_FE {
+  group {
+    VI_JAND_FE_6
+    VI_JAND_FE_4
+  }
+}
+
+vrrp_instance VI_JAND_FE_6 {
+    interface ens18
+    state MASTER
+    priority 200
+
+    virtual_router_id 3
+    unicast_src_ip $PROD_FE_A_IPV6
+    unicast_peer {
+        $PROD_FE_B_IPV6
+    }
+
+    virtual_ipaddress {
+        $PROD_FE_HA_IPV6
+    }
+
+    track_script {
+        chk_jand_fe
+    }
+}
+
+vrrp_instance VI_JAND_FE_4 {
+    interface ens18
+    state MASTER
+    priority 200
+
+    virtual_router_id 3
+    unicast_src_ip $PROD_FE_A_IPV4
+    unicast_peer {
+        $PROD_FE_B_IPV4
+    }
+
+    virtual_ipaddress {
+        $PROD_FE_HA_IPV4
+    }
+
+    track_script {
+        chk_jand_fe
+    }
+}
+EOF
+
+chown root:root /etc/keepalived/keepalived.conf
+chmod 0644 /etc/keepalived/keepalived.conf
+restorecon /etc/keepalived/keepalived.conf &> /dev/null || :
+
+echo "Installing keepalived systemd override."
+
+deploy_dir=/etc/systemd/system/keepalived.service.d
+
+if [ -d "$deploy_dir" ]; then
+  rm -rf $deploy_dir/{..?*,.[!.]*,*}
+else
+  mkdir -p $deploy_dir
+fi
+
+cp $script_dir/../../../keepalived-override.conf $deploy_dir/override.conf
+chown root:root $deploy_dir/override.conf
+chmod 0644 $deploy_dir/override.conf
+restorecon $deploy_dir/override.conf &> /dev/null || :
+
+systemctl daemon-reload
+systemctl enable keepalived.service
+systemctl restart keepalived.service
