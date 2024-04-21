@@ -132,7 +132,13 @@ class RabbitMqServer
         }
 
         // Send the ack to clear the item from the queue.
-        $this->serverQueue->ack($msg->getDeliveryTag());
+        try {
+            $this->serverQueue->ack($msg->getDeliveryTag());
+        } catch (\Throwable $th) {
+            $this->conn->reconnect();
+            $this->serverQueue->ack($msg->getDeliveryTag());
+        }
+
         try {
             if ($msg->getReplyTo()) {
                 // Message wants a response. Process request.
@@ -183,15 +189,16 @@ class RabbitMqServer
     public function processRequests(callable $callback, ?string $inhibitFile=null)
     {
         try {
-            $this->inhibitFile  = $inhibitFile;
-            $this->callback     = $callback;
-            $params             = [];
-            $params['host']     = $this->brokerHost;
-            $params['port']     = $this->brokerPort;
-            $params['login']    = $this->user;
-            $params['password'] = $this->password;
-            $params['vhost']    = $this->vHost;
-            $this->conn         = new \AMQPConnection($params);
+            $this->inhibitFile   = $inhibitFile;
+            $this->callback      = $callback;
+            $params              = [];
+            $params['host']      = $this->brokerHost;
+            $params['port']      = $this->brokerPort;
+            $params['login']     = $this->user;
+            $params['password']  = $this->password;
+            $params['vhost']     = $this->vHost;
+            $params['heartbeat'] = 3;
+            $this->conn          = new \AMQPConnection($params);
             $this->conn->connect();
 
             $channel = new \AMQPChannel($this->conn);
