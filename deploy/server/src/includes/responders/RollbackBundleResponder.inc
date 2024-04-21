@@ -7,6 +7,7 @@
 
 namespace JAND\DeployServer\Includes\Responders;
 
+use JAND\Common\Deploy\RollbackTarget;
 use JAND\Common\Deploy\Status;
 use JAND\Common\Messages\Deploy\InstallBundleRequest;
 use JAND\Common\Messages\Deploy\RollbackBundleRequest;
@@ -50,10 +51,22 @@ status=:status ORDER BY version_number DESC'
         $target = $request->getTarget();
 
         $requestToInstall = new InstallBundleRequest($request->getType(), $checkBundleResults['version_number']);
-        $requestToInstall->sendRequest(
-            RabbitClientManager::getInstallerClient(),
-            $target->value.'.'.$request->getType()->getTarget()->value
-        );
+        if ($target === RollbackTarget::Prod) {
+            $requestToInstall->sendRequest(
+                RabbitClientManager::getInstallerClient(),
+                $target->value.'.'.$request->getType()->getTarget()->value.'.a'
+            );
+
+            $requestToInstall->sendRequest(
+                RabbitClientManager::getInstallerClient(),
+                $target->value.'.'.$request->getType()->getTarget()->value.'.b'
+            );
+        } else {
+            $requestToInstall->sendRequest(
+                RabbitClientManager::getInstallerClient(),
+                $target->value.'.'.$request->getType()->getTarget()->value
+            );
+        }
 
         return new RollbackBundleResponse(true);
 
