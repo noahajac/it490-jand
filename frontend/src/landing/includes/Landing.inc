@@ -47,7 +47,7 @@ abstract class Landing
              *
              * @var \JAND\Common\Messages\Frontend\GetRecommendationsResponse $response Reccs from DB.
              */
-            $response = $request->sendRequest(\JAND\Frontend\Includes\RabbitClientManager::getClient());
+            $response = \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
 
             if (count($response->getPois()) > 0) {
                 ?>

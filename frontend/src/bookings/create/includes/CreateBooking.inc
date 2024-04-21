@@ -126,7 +126,7 @@ abstract class CreateBooking
                 );
             }//end if
 
-                $request->sendRequest(\JAND\Frontend\Includes\RabbitClientManager::getClient());
+                \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
 
                 header('Location: ..');
                 exit();

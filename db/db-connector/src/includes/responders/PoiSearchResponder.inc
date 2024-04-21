@@ -10,7 +10,7 @@ namespace JAND\DbConnector\Includes\Responders;
 use JAND\Common\Messages\Shared\AirportCitySearchRequest;
 use JAND\Common\Trips\Hotel;
 use JAND\Common\Trips\Poi;
-
+use JAND\DbConnector\Includes\RabbitClientManager;
 
 /**
  * Responds to POI search requests.
@@ -66,7 +66,7 @@ AND NOW() < pulled_on + INTERVAL 1 DAY'
              *
              * @var \JAND\Common\Messages\Shared\PoiSearchResponse $dmzResult
              */
-            $dmzResult = $dmzRequest->sendRequest(\JAND\DbConnector\Includes\RabbitClientManager::getClient());
+            $dmzResult = RabbitClientManager::sendRequest($dmzRequest);
 
             foreach ($dmzResult->getPois() as &$poi) {
                 $addPoiStmt = $pdo->prepare(

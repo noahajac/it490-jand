@@ -37,7 +37,7 @@ abstract class CheckAirport
         }
 
         $request  = new \JAND\Common\Messages\Shared\AirportCitySearchRequest($searchString);
-        $response = $request->sendRequest(\JAND\Frontend\Includes\RabbitClientManager::getClient());
+        $response = \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
 
         $airports = [];
 

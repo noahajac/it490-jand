@@ -287,7 +287,7 @@ abstract class FlightSearch
             $request  = new \JAND\Common\Messages\Shared\AirportCitySearchRequest(
                 $destination
             );
-            $response = $request->sendRequest(\JAND\Frontend\Includes\RabbitClientManager::getClient());
+            $response = \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
 
             $destCity = $response->checkCode(strtoupper($destination));
             if (!$destCity) {
@@ -297,7 +297,7 @@ abstract class FlightSearch
             $request  = new \JAND\Common\Messages\Shared\AirportCitySearchRequest(
                 $origin
             );
-            $response = $request->sendRequest(\JAND\Frontend\Includes\RabbitClientManager::getClient());
+            $response = \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
 
             $originCity = $response->checkCode(strtoupper($origin));
             if (!$originCity) {
@@ -333,7 +333,7 @@ abstract class FlightSearch
              *
              * @var \JAND\Common\Messages\Shared\FlightItinerarySearchResponse $response Search response.
              */
-            $response = $request->sendRequest(\JAND\Frontend\Includes\RabbitClientManager::getClient());
+            $response = \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
 
             static::echoFlightSearch([], $response->getFlightItineraries());
         } else {

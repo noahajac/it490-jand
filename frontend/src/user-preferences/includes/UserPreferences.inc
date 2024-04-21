@@ -50,7 +50,7 @@ abstract class UserPreferences
          *
          * @var \JAND\Common\Messages\Frontend\GetPoiKeywordsResponse $keywordResponse Response.
          */
-        $keywordResponse = $request->sendRequest(\JAND\Frontend\Includes\RabbitClientManager::getClient());
+        $keywordResponse = \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
 
         $request = new \JAND\Common\Messages\Frontend\GetUserKeywordPrefRequest(
             SessionManager::getSession()->getSessionToken()
@@ -60,7 +60,7 @@ abstract class UserPreferences
              *
              * @var \JAND\Common\Messages\Frontend\GetUserKeywordPrefResponse $userResponse Response.
              */
-            $userResponse = $request->sendRequest(\JAND\Frontend\Includes\RabbitClientManager::getClient());
+            $userResponse = \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
 
         foreach ($keywordResponse->getKeywords() as &$keyword) {
             $selected = false;
@@ -121,7 +121,7 @@ abstract class UserPreferences
                 $session->getSessionToken(),
                 $enabledKeywords
             );
-            $request->sendRequest(\JAND\Frontend\Includes\RabbitClientManager::getClient());
+            \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
         }//end if
 
         static::echoUserPreferences();

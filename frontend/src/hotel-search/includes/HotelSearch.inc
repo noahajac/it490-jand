@@ -170,7 +170,7 @@ abstract class HotelSearch
             $request  = new \JAND\Common\Messages\Shared\AirportCitySearchRequest(
                 $destination
             );
-            $response = $request->sendRequest(\JAND\Frontend\Includes\RabbitClientManager::getClient());
+            $response = \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
 
             $destinationCity = $response->checkCode(strtoupper($destination));
             if (!$destinationCity) {
@@ -202,7 +202,7 @@ abstract class HotelSearch
              *
              * @var \JAND\Common\Messages\Shared\HotelItinerarySearchResponse $response Search response.
              */
-            $response = $request->sendRequest(\JAND\Frontend\Includes\RabbitClientManager::getClient());
+            $response = \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
 
             static::echoHotelSearch([], $response->getHotelItineraries());
         } else {

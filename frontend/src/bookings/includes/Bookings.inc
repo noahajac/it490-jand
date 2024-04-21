@@ -38,7 +38,7 @@ abstract class Bookings
          *
          * @var GetBookingsResponse $response Bookings.
          */
-        $response = $request->sendRequest(\JAND\Frontend\Includes\RabbitClientManager::getClient());
+        $response = \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
         ?>
 
     <!DOCTYPE html>

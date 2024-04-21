@@ -233,7 +233,7 @@ abstract class Reviews
                     );
                 }//end if
 
-                $request->sendRequest(\JAND\Frontend\Includes\RabbitClientManager::getClient());
+                \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
             } else {
                 if (empty($comment)) {
                     $comment = '';
@@ -276,7 +276,7 @@ abstract class Reviews
                         );
                     }//end if
 
-                    $request->sendRequest(\JAND\Frontend\Includes\RabbitClientManager::getClient());
+                    \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
                 }//end if
             }//end if
         }//end if
@@ -291,7 +291,7 @@ abstract class Reviews
              *
              * @var \JAND\Common\Messages\Frontend\GetReviewsResponse $response Response.
              */
-            $response = $request->sendRequest(\JAND\Frontend\Includes\RabbitClientManager::getClient());
+            $response = \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
         } else if ($type === 'hotel') {
             $request = new \JAND\Common\Messages\Frontend\GetHotelReviewsRequest(
                 $session->getSessionToken(),
@@ -302,7 +302,7 @@ abstract class Reviews
              *
              * @var \JAND\Common\Messages\Frontend\GetReviewsResponse $response Response.
              */
-            $response = $request->sendRequest(\JAND\Frontend\Includes\RabbitClientManager::getClient());
+            $response = \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
         } else {
             $request = new \JAND\Common\Messages\Frontend\GetPoiReviewsRequest(
                 $session->getSessionToken(),
@@ -313,7 +313,7 @@ abstract class Reviews
              *
              * @var \JAND\Common\Messages\Frontend\GetReviewsResponse $response Response.
              */
-            $response = $request->sendRequest(\JAND\Frontend\Includes\RabbitClientManager::getClient());
+            $response = \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
         }//end if
 
         $reviews   = $response->getReviews();

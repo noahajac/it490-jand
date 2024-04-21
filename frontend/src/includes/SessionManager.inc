@@ -41,7 +41,7 @@ abstract class SessionManager
             }
 
             $request  = new \JAND\Common\Messages\Frontend\SessionValidateRequest($cookieValue);
-            $response = $request->sendRequest(RabbitClientManager::getClient());
+            $response = RabbitClientManager::sendRequest($request);
             if ($response instanceof \JAND\Common\Messages\Frontend\SessionValidateResponse) {
                 if ($response->getResult()) {
                     $session = $response->getSession();
@@ -73,7 +73,7 @@ abstract class SessionManager
     {
         $cookieName = 'SESSION';
         $request    = new \JAND\Common\Messages\Frontend\LoginRequest($email, $passwordHash);
-        $response   = $request->sendRequest(RabbitClientManager::getClient());
+        $response   = RabbitClientManager::sendRequest($request);
         if ($response instanceof \JAND\Common\Messages\Frontend\LoginResponse) {
             if ($response->getResult()) {
                 $session = $response->getSession();
@@ -115,7 +115,7 @@ abstract class SessionManager
         $cookieName = 'SESSION';
 
         $request  = new \JAND\Common\Messages\Frontend\RegisterRequest($email, $passwordHash, $firstName, $lastName);
-        $response = $request->sendRequest(RabbitClientManager::getClient());
+        $response = RabbitClientManager::sendRequest($request);
         if ($response instanceof \JAND\Common\Messages\Frontend\RegisterResponse) {
             if ($response->getResult()) {
                 $session = $response->getSession();
@@ -161,7 +161,7 @@ abstract class SessionManager
         $cookieName = 'SESSION';
 
         $request  = new \JAND\Common\Messages\Frontend\SessionInvalidateRequest($session->getSessionToken());
-        $response = $request->sendRequest(RabbitClientManager::getClient());
+        $response = RabbitClientManager::sendRequest($request);
         if ($response instanceof \JAND\Common\Messages\Frontend\SessionInvalidateResponse) {
             if ($response->getResult()) {
                 $result = $response->getResult();

@@ -52,7 +52,7 @@ WHERE LOWER(name) LIKE LOWER(:query) OR iata_code LIKE UPPER(:query)'
              *
              * @var \JAND\Common\Messages\DbConnector\AirlineSearchResponse $response DMZ response.
              */
-            $response = $request->sendRequest(\JAND\DbConnector\Includes\RabbitClientManager::getClient());
+            $response = \JAND\DbConnector\Includes\RabbitClientManager::sendRequest($request);
 
             foreach ($response->getResults() as &$airline) {
                 // Add to db.

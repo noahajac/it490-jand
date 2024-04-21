@@ -100,7 +100,7 @@ abstract class PoiSearch
                          *
                          * @var \JAND\Common\Messages\Frontend\GetPoiKeywordsResponse $response Response.
                          */
-                        $response = $request->sendRequest(\JAND\Frontend\Includes\RabbitClientManager::getClient());
+                        $response = \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
 
                         foreach ($response->getKeywords() as &$keyword) {
                             ?>
@@ -155,7 +155,7 @@ abstract class PoiSearch
             $request  = new \JAND\Common\Messages\Shared\AirportCitySearchRequest(
                 $destination
             );
-            $response = $request->sendRequest(\JAND\Frontend\Includes\RabbitClientManager::getClient());
+            $response = \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
 
             $destinationCity = $response->checkCode(strtoupper($destination));
             if (!$destinationCity) {
@@ -176,7 +176,7 @@ abstract class PoiSearch
              *
              * @var \JAND\Common\Messages\Shared\PoiSearchResponse $response Search response.
              */
-            $response = $request->sendRequest(\JAND\Frontend\Includes\RabbitClientManager::getClient());
+            $response = \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
 
             $pois = [];
             if (!empty($attractionType)) {

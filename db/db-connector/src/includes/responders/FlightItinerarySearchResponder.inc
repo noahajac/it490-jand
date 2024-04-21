@@ -276,7 +276,7 @@ AND NOW() < pulled_on + INTERVAL 1 DAY'
              *
              * @var \JAND\Common\Messages\Shared\FlightItinerarySearchResponse $dmzResult
              */
-            $dmzResult = $request->sendRequest(\JAND\DbConnector\Includes\RabbitClientManager::getClient());
+            $dmzResult = \JAND\DbConnector\Includes\RabbitClientManager::sendRequest($request);
 
             foreach ($dmzResult->getFlightItineraries() as &$itinerary) {
                 $outboundSegments = [];

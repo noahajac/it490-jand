@@ -125,7 +125,7 @@ abstract class CreateUserTrip
                     \JAND\Frontend\Includes\SessionManager::getSession()->getSessionToken(),
                     $tripToUpdate
                 );
-                $request->sendRequest(\JAND\Frontend\Includes\RabbitClientManager::getClient());
+                \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
                 header('Location: ..');
                 exit();
             } else {
@@ -160,7 +160,7 @@ abstract class CreateUserTrip
                 $request  = new \JAND\Common\Messages\Shared\AirportCitySearchRequest(
                     $destination
                 );
-                $response = $request->sendRequest(\JAND\Frontend\Includes\RabbitClientManager::getClient());
+                $response = \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
 
                 $city = $response->checkCode(strtoupper($destination));
                 if (!$city) {
@@ -189,7 +189,7 @@ abstract class CreateUserTrip
                         $endDate
                     )
                 );
-                $request->sendRequest(\JAND\Frontend\Includes\RabbitClientManager::getClient());
+                \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
 
                 header('Location: ..');
                 exit();
@@ -200,7 +200,7 @@ abstract class CreateUserTrip
                 $request  = new \JAND\Common\Messages\Frontend\GetUserTripsRequest(
                     \JAND\Frontend\Includes\SessionManager::getSession()->getSessionToken()
                 );
-                $response = $request->sendRequest(\JAND\Frontend\Includes\RabbitClientManager::getClient());
+                $response = \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
 
                 $destination        = null;
                 $destinationDisplay = null;

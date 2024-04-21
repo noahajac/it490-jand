@@ -31,7 +31,7 @@ abstract class UserTrips
         $request  = new \JAND\Common\Messages\Frontend\GetUserTripsRequest(
             \JAND\Frontend\Includes\SessionManager::getSession()->getSessionToken()
         );
-        $response = $request->sendRequest(\JAND\Frontend\Includes\RabbitClientManager::getClient());
+        $response = \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
         ?>
 
     <!DOCTYPE html>

@@ -62,7 +62,7 @@ WHERE iata_code LIKE UPPER(:query) OR LOWER(name) LIKE LOWER(:query) ORDER BY (i
         if (count($airportCityList) < 1 || $forcePull) {
             // No results found, try API.
             $request  = new \JAND\Common\Messages\Shared\AirportCitySearchRequest($request->getSearchString());
-            $response = $request->sendRequest(\JAND\DbConnector\Includes\RabbitClientManager::getClient());
+            $response = \JAND\DbConnector\Includes\RabbitClientManager::sendRequest($request);
 
             foreach ($response->getResults() as &$airportCity) {
                 // Add to db.
