@@ -8,6 +8,7 @@ ExecStart=/srv/jand-dmz/jand-dmz.php
 User=jand
 Group=jand
 Restart=on-failure
+ExecStartPre=/bin/sleep 45
 RestartSec=3s
 
 [Install]
