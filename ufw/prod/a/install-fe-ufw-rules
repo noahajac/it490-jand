@@ -31,5 +31,5 @@ ufw deny "RabbitMQ Cluster"
 ufw deny "MySQL"
 ufw deny "MySQL Replication"
 ufw allow "Frontend"
-ufw allow from $PROD_FE_B_IPV4 to any proto vrrp
-ufw allow from $PROD_FE_B_IPV6 to any proto vrrp
+ufw allow from $PROD_FE_B_IPV4 to any
+ufw allow from $PROD_FE_B_IPV6 to any

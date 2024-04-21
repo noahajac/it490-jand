@@ -45,5 +45,5 @@ ufw allow from $PROD_BE_A_IPV4 to any app "MySQL Replication"
 ufw allow from $PROD_BE_A_IPV6 to any app "MySQL Replication"
 ufw deny "MySQL Replication"
 ufw deny "Frontend
-ufw allow from $PROD_BE_A_IPV4 to any proto vrrp
-ufw allow from $PROD_BE_A_IPV6 to any proto vrrp
+ufw allow from $PROD_BE_A_IPV4 to any
+ufw allow from $PROD_BE_A_IPV6 to any
