@@ -12,12 +12,19 @@ main {
   color: red;
 }
 
-table.table-borders,
+table.table-borders{
+  border-radius: 15px;
+  padding: 5px;
+}
+
 table.table-borders th,
 table.table-borders td {
   margin-top: 15px;
-  border: .1em solid black;
+  border: .1em solid #D3D3D3;
   padding: .5em;
+  border-radius: 10px;
+  border-collapse:collapse;
+  font-weight: bold;
 }
 
 div.flight-result {
