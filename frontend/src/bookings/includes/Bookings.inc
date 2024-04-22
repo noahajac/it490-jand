@@ -68,19 +68,19 @@ abstract class Bookings
                     <div class="flight-result">
                     <table class="table-borders">
                         <tr>
-                            <th>From <?= $itinerary->getOrigin()->getName(); ?></th>
-                            <th>To <?= $itinerary->getDestination()->getName(); ?></th>
+                            <th>From: <?= $itinerary->getOrigin()->getName(); ?></th>
+                            <th>To: <?= $itinerary->getDestination()->getName(); ?></th>
                         </tr>
                         <tr>
-                            <th><?= $itinerary->getStartDate()->format('Y-m-d'); ?></th>
-                            <th><?= $itinerary->getEndDate()->format('Y-m-d'); ?></th>
+                            <th>Departure:  <?= $itinerary->getStartDate()->format('Y-m-d'); ?></th>
+                            <th>Return:  <?= $itinerary->getEndDate()->format('Y-m-d'); ?></th>
                         </tr>
                         <tr>
-                            <th colspan="2">$<?= $itinerary->getGrandTotal(); ?></th>
+                            <th colspan="2">Price: $<?= $itinerary->getGrandTotal(); ?></th>
                         </tr>
                         <tr>
-                            <td><?= $itinerary->getAdults(); ?> Adults</td>
-                            <td><?= $itinerary->getChildren(); ?> Children</td>
+                            <td>Passenger: <?= $itinerary->getAdults(); ?> Adults</td>
+                            <td>Passenger: <?= $itinerary->getChildren(); ?> Children</td>
                         </tr>
                     </table>
                     <table class="table-borders">
@@ -160,14 +160,14 @@ abstract class Bookings
                     <div class="flight-result">
                     <table class="table-borders">
                         <tr>
-                            <th colspan="2"><?= $itinerary->getHotel()->getName(); ?></th>
+                            <th colspan="2">Hotel: <?= $itinerary->getHotel()->getName(); ?></th>
                         </tr>
                         <tr>
-                            <th><?= $itinerary->getStartDate()->format('Y-m-d'); ?></th>
-                            <th><?= $itinerary->getEndDate()->format('Y-m-d'); ?></th>
+                            <th>Check in: <?= $itinerary->getStartDate()->format('Y-m-d'); ?></th>
+                            <th>CHeck Out: <?= $itinerary->getEndDate()->format('Y-m-d'); ?></th>
                         </tr>
                         <tr>
-                            <th colspan="2">$<?= $itinerary->getGrandTotal(); ?></th>
+                            <th colspan="2">Price: $<?= $itinerary->getGrandTotal(); ?></th>
                         </tr>
                         <tr>
                         <td colspan="2">

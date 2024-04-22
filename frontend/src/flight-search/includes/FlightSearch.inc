@@ -37,6 +37,7 @@ abstract class FlightSearch
         <html lang="en">
 
         <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <?php echo \JAND\Frontend\Includes\Elements\Head::echoHead(); ?>
         </head>
             
@@ -141,11 +142,10 @@ abstract class FlightSearch
           <p class="error"><?php echo $error; ?></p>
             <?php } ?>
 
-            <form method="post">
+            <form method="post" id="search">
             <div class="input-group">
                     <label for="trip">Trip:</label>
-                    <option value="space holder"></option>
-                    <select id="trip" name="trip">
+                    <select id="trip" name="trip" class="form-control">
                         <option value="round-trip" selected>Round-Trip</option>
                         <option value="one-way">One-Way</option>
                     </select>
@@ -187,7 +187,7 @@ abstract class FlightSearch
                     <input type="number" id="children" name="children" placeholder="Children" min="0" required>
                 </div>
             
-                <input type="submit" id="search-submit" value="Search">
+                <input type="submit" id="search-submit" class= "btn-submit" value="Search">
             
             </form>
             </div>

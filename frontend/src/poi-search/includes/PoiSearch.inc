@@ -112,7 +112,7 @@ abstract class PoiSearch
                 </div>
 
             
-                <input type="submit" id="search-submit" value="Search">
+                <input type="submit" id="search-submit" class=" btn-submit" value="Search">
             
             </form>
             </div>

@@ -105,7 +105,7 @@ abstract class HotelSearch
                     <input type="number" id="adults" name="adults" placeholder="Adults" min="1" max="10" required>
                 </div>
             
-                <input type="submit" id="search-submit" value="Search">
+                <input type="submit" id="search-submit" class="btn-submit" value="Search">
             
             </form>
             </div>

@@ -33,7 +33,7 @@ abstract class CreateBooking
     <body>
         <?php echo \JAND\Frontend\Includes\Elements\Nav::echoNav(); ?>
       <main>
-        <form method="post">
+        <form method="post" class="createpg">
             <table>
                 <tr>
                     <th><label for="cc-num">Credit Card:</label></th>
@@ -54,7 +54,7 @@ abstract class CreateBooking
                 <input type="hidden" name="destination" id="destination" >
 
                 <tr>
-                    <td colspan="2"><input type="submit" id="create-submit" value="Book"></td>
+                    <td colspan="2"><input type="submit" class="btn-submit" id="create-submit" value="Book"></td>
                 </tr>
             </table>
         </form>
