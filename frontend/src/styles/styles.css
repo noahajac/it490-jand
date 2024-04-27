@@ -104,7 +104,7 @@ a:hover {
   margin: 4px;
   width: 100%;
   border: 1px solid #ddd;
-  border-radius: 10px !important;
+  border-radius: 15px !important;
   /*makes the input round and not square*/
   flex-grow: 1;
   /*Input expands to fill the space */
@@ -112,6 +112,9 @@ a:hover {
 }
 
 #create-submit{
+  margin-left: 1px !important;
+  background-color: #007bff;
+  cursor: pointer !important;
   margin-top: 30px !important;
 }
 
@@ -125,6 +128,9 @@ a:hover {
   width: 50%;
   margin-top: -20px;
   margin-bottom: 30px;
+  border-radius: 15px;
+  background-color: #007bff;
+  cursor: pointer !important;
 }
 
 @media screen and (max-width: 650px) {
@@ -135,6 +141,12 @@ a:hover {
   .trip-heading{
     text-align: center;
     padding-left: 0px;
+  }
+  .trips-container {
+    font-size: 80%;
+  }
+  .create-trips-ctr{
+    font-size: 80%;
   }
 }
 
@@ -155,7 +167,8 @@ a:hover {
   font-size: 90%;
 }
 
-.initial-ctr tr, th{
+.initial-ctr tr, 
+.initial-ctr th{
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -175,6 +188,7 @@ a:hover {
   border: 1px solid #000;
   border-radius: 15px;
   background-color: #007bff;
+  margin-top: 5px;
 }
 
 .initial-ctr input[type = 'submit']:hover{
