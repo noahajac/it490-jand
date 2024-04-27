@@ -132,6 +132,7 @@ abstract class Register
         <?php foreach (static::$errors as $error) { ?>
           <p class="error"><?php echo $error; ?></p>
         <?php } ?>
+        <div class="initial-ctr">
         <h2>Register new account</h2>
         <form method="post">
           <table>
@@ -160,6 +161,7 @@ abstract class Register
             </tr>
           </table>
         </form>
+        </div>
       </main>
         <?php echo \JAND\Frontend\Includes\Elements\Footer::echoFooter(); ?>
     </body>

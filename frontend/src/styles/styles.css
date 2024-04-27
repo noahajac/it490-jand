@@ -2,6 +2,10 @@ nav {
   background-color: #e3f2fd;
 }
 
+.dropdown-item:visited{
+  color: #000;
+}
+
 main {
   margin: 0 auto;
   padding: 20px;
@@ -12,19 +16,19 @@ main {
   color: red;
 }
 
-table.table-borders{
-  border-radius: 15px;
-  padding: 5px;
-}
-
 table.table-borders th,
 table.table-borders td {
   margin-top: 15px;
   border: .1em solid #D3D3D3;
   padding: .5em;
-  border-radius: 10px;
+  border-radius:10px;
   border-collapse:collapse;
-  font-weight: bold;
+  font-weight:bold;
+}
+
+table.table-borders{
+border-radius:15px;
+padding:5px;
 }
 
 div.flight-result {
@@ -132,4 +136,47 @@ a:hover {
     text-align: center;
     padding-left: 0px;
   }
+}
+
+/*login and register*/
+
+.initial-ctr {
+  margin: 0 auto;
+  background-color: #fff;
+  max-width: 400px;
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.initial-ctr form{
+  font-size: 90%;
+}
+
+.initial-ctr tr, th{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.initial-ctr input{
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 4px;
+  width: 100%;
+}
+
+.initial-ctr input[type = 'submit']{
+  padding: 5px;
+  border: 1px solid #000;
+  border-radius: 15px;
+  background-color: #007bff;
+}
+
+.initial-ctr input[type = 'submit']:hover{
+  background-color: #1a42c5;
 }

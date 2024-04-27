@@ -13,6 +13,8 @@ main h3{
 }
 
 .preference-container{
+  margin: 0 auto;
+  max-width: 1000px;
   margin-top: 20px;
   background-color: #ffffff;
   border-radius: 8px;
@@ -23,6 +25,8 @@ main h3{
 button{
   max-width: 60px;
   margin: 5px;
+  border-radius: 15px;
+  background-color: #007bff;
 }
 
 form{
@@ -56,5 +60,15 @@ form{
   }
   main h1{
     font-size: 150%;
+  }
+}
+
+@media screen and (max-width: 400px){
+  form-> input, label{
+    font-size: 65%;
+  }
+  button{
+    width: 50px;
+    font-size: 80%
   }
 }

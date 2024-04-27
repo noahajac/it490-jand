@@ -50,7 +50,7 @@ abstract class Reviews
         <?php
         if (count($reviews) > 0) {
             ?>
-            <h1>
+            <h3>
             <?php
             if ($reviews[0] instanceof AirlineReview) {
                 echo $reviews[0]->getAirline()->getName();
@@ -60,7 +60,7 @@ abstract class Reviews
                 echo $reviews[0]->getPoi()->getName();
             }
             ?>
-            </h1>
+            </h3>
             
         <div class="review overall-rating">
             <?php
@@ -90,7 +90,6 @@ abstract class Reviews
             <?php
         }//end if
         ?>
-        </div>
         <div class="input-review-container">
         <div class="input-review">
             <h3>Write a Review</h3>
@@ -149,13 +148,18 @@ abstract class Reviews
         ?></textarea>
         
                     <br>
+                <div class="input-btn">
                 <input type="submit" value="Submit" name="submit">
+                </div>
             </form>
             <form method="post">
+            <div class="input-btn">
             <button id="delete" name="delete" value="on" type="submit">Delete this Review</button>
+            </div>
         </form>
         </div>
         </div>
+    </div>
       </main>
         <?php echo \JAND\Frontend\Includes\Elements\Footer::echoFooter(); ?>
     </body>
