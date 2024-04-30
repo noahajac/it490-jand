@@ -1,119 +1,93 @@
-<?php
-/**
- * Contains the register frontend page.
- *
- * @package JAND\Frontend\Register\Includes\Register
- */
-
-namespace JAND\Frontend\Register\Includes;
+use JAND\Frontend\Includes\SessionManager;
 
 /**
  * Frontend register page.
  */
 abstract class Register
 {
-
-    /**
-     * Session object, error object, or false if nothing else.
-     *
-     * @var false|\JAND\Common\Session|\JAND\Common\Messages\Shared\OperationError $session
-     */
-    private static false|\JAND\Common\Session|\JAND\Common\Messages\Shared\OperationError $session;
-
-    /**
-     * Array of errors to show user.
-     *
-     * @var string[] Array of errors.
-     */
+    private static false|Session|OperationError $session;
     private static array $errors = [];
 
-
-    /**
-     * Performs registration logic.
-     *
-     * @return void
-     */
     private static function processRegistration()
     {
-        static::$session = \JAND\Frontend\Includes\SessionManager::getSession();
+        try {
+            static::$session = SessionManager::getSession();
 
-        if (static::$session) {
-            // User already has a valid session.
-            header('Location: /landing');
-            exit();
-        }
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $email     = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
-            $password  = filter_input(
-                INPUT_POST,
-                'password',
-                FILTER_CALLBACK,
-                [
-                    'options' => function (string $value) {
-                        return (strlen($value) > 7) ? $value : false;
-                    },
-                ]
-            );
-            $firstName = filter_input(
-                INPUT_POST,
-                'first-name',
-                FILTER_SANITIZE_SPECIAL_CHARS,
-                ['flags' => (FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_BACKTICK)]
-            );
-            $lastName  = filter_input(
-                INPUT_POST,
-                'last-name',
-                FILTER_SANITIZE_SPECIAL_CHARS,
-                ['flags' => (FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_BACKTICK)]
-            );
-
-            if (empty($email)) {
-                array_push(static::$errors, 'Please enter a valid email address.');
-            }
-
-            if (empty($firstName)) {
-                array_push(static::$errors, 'Please enter your first name.');
-            }
-
-            if (empty($lastName)) {
-                array_push(static::$errors, 'Please enter your last name.');
-            }
-
-            if (empty($password)) {
-                array_push(static::$errors, 'Password must be at least 8 characters.');
-            }
-
-            // If there are any errors, go back to form.
-            if (static::$errors) {
-                return;
-            }
-
-            static::$session = \JAND\Frontend\Includes\SessionManager::register(
-                $email,
-                $password,
-                $firstName,
-                $lastName
-            );
-
-            if (static::$session instanceof \JAND\Common\Session) {
+            if (static::$session) {
+                // User already has a valid session.
                 header('Location: /landing');
                 exit();
-            } else if (static::$session instanceof \JAND\Common\Messages\Shared\OperationError) {
-                array_push(static::$errors, static::$session->getMessage());
-            } else {
-                array_push(static::$errors, 'An error has occured while registering.');
             }
-        }//end if
 
-    }//end processRegistration()
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $email     = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+                $password  = filter_input(
+                    INPUT_POST,
+                    'password',
+                    FILTER_CALLBACK,
+                    [
+                        'options' => function (string $value) {
+                            return (strlen($value) > 7) ? $value : false;
+                        },
+                    ]
+                );
+                $firstName = filter_input(
+                    INPUT_POST,
+                    'first-name',
+                    FILTER_SANITIZE_SPECIAL_CHARS,
+                    ['flags' => (FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_BACKTICK)]
+                );
+                $lastName  = filter_input(
+                    INPUT_POST,
+                    'last-name',
+                    FILTER_SANITIZE_SPECIAL_CHARS,
+                    ['flags' => (FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_BACKTICK)]
+                );
 
+                if (empty($email)) {
+                    array_push(static::$errors, 'Please enter a valid email address.');
+                }
 
-    /**
-     * Echoes registration page.
-     *
-     * @return void
-     */
+                if (empty($firstName)) {
+                    array_push(static::$errors, 'Please enter your first name.');
+                }
+
+                if (empty($lastName)) {
+                    array_push(static::$errors, 'Please enter your last name.');
+                }
+
+                if (empty($password)) {
+                    array_push(static::$errors, 'Password must be at least 8 characters.');
+                }
+
+                if (static::$errors) {
+                    return;
+                }
+
+                static::$session = SessionManager::register(
+                    $email,
+                    $password,
+                    $firstName,
+                    $lastName
+                );
+
+                if (static::$session instanceof Session) {
+                    header('Location: /landing');
+                    exit();
+                } else if (static::$session instanceof OperationError) {
+                    array_push(static::$errors, static::$session->getMessage());
+                } else {
+                    array_push(static::$errors, 'An error has occurred while registering.');
+                }
+            }
+        } catch (\Exception $e) {
+            // Log the error
+            error_log('Error in Registration process: ' . $e->getMessage());
+
+            static::$errors[] = 'An error occurred. Please try again later.';
+        }
+    }
+
     public static function echoRegister()
     {
         static::processRegistration();
