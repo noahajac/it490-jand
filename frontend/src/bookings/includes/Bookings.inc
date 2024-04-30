@@ -101,8 +101,8 @@ abstract class Bookings
                                 <tr>
                                 <td><?= $outSegment->getDepartAirport()->getName(); ?></td>
                                 <td><?= $outSegment->getArrivalAirport()->getName(); ?></td>
-                                <td><?= $outSegment->getDepartTime()->format('Y-m-d g:i A'); ?></td>
-                                <td><?= $outSegment->getArrivalTime()->format('Y-m-d g:i A'); ?></td>
+                                <td><?= $outSegment->getDepartTime()->format('Y-m-d g:i A'); ?>Departure: </td>
+                                <td><?= $outSegment->getArrivalTime()->format('Y-m-d g:i A'); ?>Arrival: </td>
                              </tr>
                                 <?php
                             }
@@ -129,8 +129,8 @@ abstract class Bookings
                                 <tr>
                                 <td><?= $returnSegment->getDepartAirport()->getName(); ?></td>
                                 <td><?= $returnSegment->getArrivalAirport()->getName(); ?></td>
-                                <td><?= $returnSegment->getDepartTime()->format('Y-m-d g:i A'); ?></td>
-                                <td><?= $returnSegment->getArrivalTime()->format('Y-m-d g:i A'); ?></td>
+                                <td><?= $returnSegment->getDepartTime()->format('Y-m-d g:i A'); ?>Departure: </td>
+                                <td><?= $returnSegment->getArrivalTime()->format('Y-m-d g:i A'); ?>Arrival: </td>
                              </tr>
                                 <?php
                             }
@@ -149,7 +149,7 @@ abstract class Bookings
 
         if (count($hotels) < 1) {
             ?>
-            <h2>You have no hotels booked.</h2> 
+            <h2>You have no hotels booked</h2> 
             <?php
         } else {
             ?>
