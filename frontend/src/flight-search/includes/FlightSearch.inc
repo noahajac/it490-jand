@@ -13,7 +13,6 @@ namespace JAND\Frontend\FlightSearch\Includes;
 abstract class FlightSearch
 {
 
-
     /**
      * Echoes flight search page.
      *
@@ -24,6 +23,7 @@ abstract class FlightSearch
      */
     private static function echoFlightSearch(array $errors=[], array $itineraries=[])
     {
+      try{
         $session = \JAND\Frontend\Includes\SessionManager::getSession();
 
         if (!$session) {
@@ -40,7 +40,7 @@ abstract class FlightSearch
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <?php echo \JAND\Frontend\Includes\Elements\Head::echoHead(); ?>
         </head>
-            
+
         <body>
         <?php echo \JAND\Frontend\Includes\Elements\Nav::echoNav(); ?>
         <main>
@@ -109,7 +109,7 @@ abstract class FlightSearch
                                     <?= $returnSegment->getAirline()->getName().' '.$returnSegment->getFlightNo(); ?>
                                     </th>
                                     <td>
-                                        <a 
+                                        <a
                                         href="/reviews?type=airline&key=<?= $returnSegment->getAirline()->getCode(); ?>"
                                         >Reviews</a>
                                     </td>
@@ -135,9 +135,9 @@ abstract class FlightSearch
             ?>
             <div class="main-container">
         <div class="booking-form">
-            
+
             <h2 class="title-form">Search for Flights</h2>
-            
+
             <?php foreach ($errors as $error) { ?>
           <p class="error"><?php echo $error; ?></p>
             <?php } ?>
@@ -150,16 +150,16 @@ abstract class FlightSearch
                         <option value="one-way">One-Way</option>
                     </select>
                 </div>
-            
+
                 <div class="input-group">
                     <label for="from">From:</label>
                     <input type="text" id="from-display" placeholder= "Leaving From" required>
                     <input type="hidden" id="from" name="from">
                 </div>
-            
+
                 <div class="input-group">
                     <label for="to">To:</label>
-                    <input type="text" 
+                    <input type="text"
             <?php
             $prefilledTo = filter_input(INPUT_GET, 'to', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
@@ -170,25 +170,25 @@ abstract class FlightSearch
                     id="to-display" placeholder="Going To" required>
                     <input type="hidden" id="to" name="to">
                 </div>
-            
+
                 <div class="input-group">
                     <label for="departure">Departure:</label>
                     <input type="date" id="departure" name="departure" placeholder="Leaving From" required>
                 </div>
-            
+
                 <div class="input-group">
                     <label for="return">Return:</label>
                     <input type="date" id="return" name="return">
                 </div>
-                
+
                 <div class="input-group">
                     <label>Travelers:</label>
                     <input type="number" id="adults" name="adults" placeholder="Adults" min="1" required>
                     <input type="number" id="children" name="children" placeholder="Children" min="0" required>
                 </div>
-            
+
                 <input type="submit" id="search-submit" class= "btn-submit" value="Search">
-            
+
             </form>
             </div>
         </div>
@@ -213,7 +213,14 @@ abstract class FlightSearch
 
             <?php
 
-    }//end echoFlightSearch()
+    } catch (\Exception $e){
+      // Log the error here
+            error_log('Error in echoFlightSearch: ' . $e->getMessage(), 0);
+            echo '<p>An error occurred while processing the flight search. Please try again later.</p>';
+
+    }
+  }
+  //end echoFlightSearch()
 
 
         /**
@@ -223,6 +230,7 @@ abstract class FlightSearch
          */
     public static function processFlightSearch()
     {
+      try{
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errorMsgs = [];
 
@@ -339,6 +347,12 @@ abstract class FlightSearch
         } else {
             static::echoFlightSearch();
         }//end if
+      } catch (\Exception $e) {
+        // Log the error here
+            error_log('Error in processFlightSearch: ' . $e->getMessage(), 0);
+            $errorMsgs = ['An error occurred while processing the flight search. Please try again later.'];
+            static::echoFlightSearch($errorMsgs);
+      }
 
     }//end processFlightSearch()
 
