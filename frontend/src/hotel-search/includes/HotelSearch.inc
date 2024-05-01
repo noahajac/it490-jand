@@ -24,103 +24,108 @@ abstract class HotelSearch
      */
     private static function echoHotelSearch(array $errors=[], array $itineraries=[])
     {
-        $session = \JAND\Frontend\Includes\SessionManager::getSession();
+      try{
+          $session = \JAND\Frontend\Includes\SessionManager::getSession();
 
-        if (!$session) {
-            http_response_code(401);
-            exit();
-        }
+          if (!$session) {
+              http_response_code(401);
+              exit();
+          }
 
-        ?>
+          ?>
 
-        <!DOCTYPE html>
-        <html lang="en">
+          <!DOCTYPE html>
+          <html lang="en">
 
-        <head>
-            <?php echo \JAND\Frontend\Includes\Elements\Head::echoHead(); ?>
-        </head>
-            
-        <body>
-        <?php echo \JAND\Frontend\Includes\Elements\Nav::echoNav(); ?>
-        <main>
-            <?php
-            if (count($itineraries) > 0) {
-                foreach ($itineraries as &$itinerary) {
-                    ?>
-                    <div class="flight-result">
-                    <table class="table-borders">
-                        <tr>
-                            <th colspan="2"><?= $itinerary->getHotel()->getName(); ?></th>
-                        </tr>
-                        <tr>
-                            <th><?= $itinerary->getStartDate()->format('Y-m-d'); ?></th>
-                            <th><?= $itinerary->getEndDate()->format('Y-m-d'); ?></th>
-                        </tr>
-                        <tr>
-                            <th colspan="2">$<?= $itinerary->getGrandTotal(); ?></th>
-                        </tr>
-                        <tr>
-                        <td>
-                             <a href="/bookings/create?type=hotel&key=<?= $itinerary->getHotel()->getHotelId(); ?>"
-                                        >Book Now</a>
-                                    </td>
-                        <td>
-                             <a href="/reviews?type=hotel&key=<?= $itinerary->getHotel()->getHotelId(); ?>"
-                                        >Reviews</a>
-                                    </td>
-                        </tr>
-                    </table>
-                    </div>
-                    <?php
-                }//end foreach
-            } else {
-                ?>
-            <div class="main-container">
-        <div class="booking-form">
-            
-            <h2 class="title-form">Search for Hotels</h2>
-            
-                <?php foreach ($errors as $error) { ?>
-          <p class="error"><?php echo $error; ?></p>
-                <?php } ?>
+          <head>
+              <?php echo \JAND\Frontend\Includes\Elements\Head::echoHead(); ?>
+          </head>
 
-            <form method="post">
-                <div class="input-group">
-                    <label for="destination">Destination:</label>
-                    <input type="text" id="destination-display" placeholder="Going To?" required> 
-                    <input type="hidden" id="destination" name="destination"> 
-                </div>
+          <body>
+          <?php echo \JAND\Frontend\Includes\Elements\Nav::echoNav(); ?>
+          <main>
+              <?php
+              if (count($itineraries) > 0) {
+                  foreach ($itineraries as &$itinerary) {
+                      ?>
+                      <div class="flight-result">
+                      <table class="table-borders">
+                          <tr>
+                              <th colspan="2"><?= $itinerary->getHotel()->getName(); ?></th>
+                          </tr>
+                          <tr>
+                              <th><?= $itinerary->getStartDate()->format('Y-m-d'); ?></th>
+                              <th><?= $itinerary->getEndDate()->format('Y-m-d'); ?></th>
+                          </tr>
+                          <tr>
+                              <th colspan="2">$<?= $itinerary->getGrandTotal(); ?></th>
+                          </tr>
+                          <tr>
+                          <td>
+                               <a href="/bookings/create?type=hotel&key=<?= $itinerary->getHotel()->getHotelId(); ?>"
+                                          >Book Now</a>
+                                      </td>
+                          <td>
+                               <a href="/reviews?type=hotel&key=<?= $itinerary->getHotel()->getHotelId(); ?>"
+                                          >Reviews</a>
+                                      </td>
+                          </tr>
+                      </table>
+                      </div>
+                      <?php
+                  }//end foreach
+              } else {
+                  ?>
+              <div class="main-container">
+          <div class="booking-form">
 
-                <div class="input-group date-group">
-                    <div class="date-labels">
-                        <label for="check-in">Check-in:</label> 
-                        <input type="date" id="check-in" name="check-in" required>
-                        <label for="check-out" class="departure-label">Check-out:</label> 
-                        <input type="date" id="check-out" name="check-out" required>
-                    </div>
-                </div>
+              <h2 class="title-form">Search for Hotels</h2>
 
-                <div class="input-group">
-                    <label>Travelers:</label>
-                    <input type="number" id="adults" name="adults" placeholder="Adults" min="1" max="10" required>
-                </div>
-            
-                <input type="submit" id="search-submit" class="btn-submit" value="Search">
-            
-            </form>
-            </div>
-        </div>
-                <?php
-            }//end if
-            ?>
-        </main>
-        <?php echo \JAND\Frontend\Includes\Elements\Footer::echoFooter(); ?>
-        <script src="./scripts/city-autocomplete.js"></script>
-        </body>
-        </html>
+                  <?php foreach ($errors as $error) { ?>
+            <p class="error"><?php echo $error; ?></p>
+                  <?php } ?>
+
+              <form method="post">
+                  <div class="input-group">
+                      <label for="destination">Destination:</label>
+                      <input type="text" id="destination-display" placeholder="Going To?" required>
+                      <input type="hidden" id="destination" name="destination">
+                  </div>
+
+                  <div class="input-group date-group">
+                      <div class="date-labels">
+                          <label for="check-in">Check-in:</label>
+                          <input type="date" id="check-in" name="check-in" required>
+                          <label for="check-out" class="departure-label">Check-out:</label>
+                          <input type="date" id="check-out" name="check-out" required>
+                      </div>
+                  </div>
+
+                  <div class="input-group">
+                      <label>Travelers:</label>
+                      <input type="number" id="adults" name="adults" placeholder="Adults" min="1" max="10" required>
+                  </div>
+
+                  <input type="submit" id="search-submit" class="btn-submit" value="Search">
+
+              </form>
+              </div>
+          </div>
+                  <?php
+              }//end if
+              ?>
+          </main>
+          <?php echo \JAND\Frontend\Includes\Elements\Footer::echoFooter(); ?>
+          <script src="./scripts/city-autocomplete.js"></script>
+          </body>
+          </html>
 
         <?php
-
+    } catch (\Exception $e){
+      // Log the error here
+        error_log('Error in echoHotelSearch: ' . $e->getMessage(), 0);
+        echo '<p>An error occurred while processing the hotel search. Please try again later.</p>';
+    }
     }//end echoHotelSearch()
 
 
@@ -131,6 +136,7 @@ abstract class HotelSearch
      */
     public static function processHotelSearch()
     {
+      try{
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errorMsgs = [];
 
@@ -208,7 +214,11 @@ abstract class HotelSearch
         } else {
             static::echoHotelSearch();
         }//end if
-
+      } catch (\Exception $e) {
+            error_log('Error in processHotelSearch: ' . $e->getMessage(), 0);
+            $errorMsgs = ['An error occurred while processing the hotel search. Please try again later.'];
+            static::echoHotelSearch($errorMsgs);
+      }
     }//end processHotelSearch()
 
 
