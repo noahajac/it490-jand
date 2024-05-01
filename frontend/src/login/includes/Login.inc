@@ -35,6 +35,7 @@ abstract class Login
      */
     private static function processLogin()
     {
+      try{
         static::$session = \JAND\Frontend\Includes\SessionManager::getSession();
 
         if (static::$session) {
@@ -69,7 +70,12 @@ abstract class Login
                 array_push(static::$errors, 'Incorrect username or password.');
             }
         }//end if
-
+      } catch (\Exception $e){
+            // Log the error here
+            error_log('Error in processLogin: ' . $e->getMessage(), 0);
+            // Display a generic error message or handle the error accordingly
+            array_push(static::$errors, 'An error occurred while processing the login.');
+          }
     }//end processLogin()
 
 
