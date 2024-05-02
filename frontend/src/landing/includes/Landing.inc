@@ -7,6 +7,8 @@
 
 namespace JAND\Frontend\Landing\Includes;
 
+use JAND\Common\Trips\Poi;
+
 /**
  * Main landing page.
  */
@@ -58,7 +60,12 @@ abstract class Landing
             <h3 class="rec-heading">Recommendations for You</h3>
             <p>Based off of reviews and your preferences.</p>
             <table>
-                <?php foreach ($response->getPois() as &$poi) { ?>
+            <?php
+                $index = 0;
+                foreach ($response->getPois() as &$poi) {
+                $hide = filter_input(INPUT_POST, 'hide'.strval($index), FILTER_VALIDATE_BOOL);
+                if (!$hide){ 
+            ?>
                     <tr>
                     <td><strong><?= $poi->getName(); ?></strong></td>
                     <td>
@@ -69,9 +76,14 @@ abstract class Landing
                              <a href="/reviews?type=poi&key=<?= $poi->getPoiId(); ?>"
                                         >Reviews</a>
                                     </td>
+                        <td>
+                        <form method="post" action="">
+                        <button id="hide<?php echo $index?>" name="hide<?php echo $index?>" value="on" type="submit">Hide</button>
+                        </form>
+                    </td>
                 </tr>
                 <tr>
-                            <th colspan="3">
+                            <th colspan="4">
                             <?php
                             $onTag = 1;
                             foreach ($poi->getTags() as &$tag) {
@@ -86,8 +98,20 @@ abstract class Landing
                             ?>
                             </th>
                         </tr>
-
+                        
                     <?php
+                        }// end if statement
+                else{
+                        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                                $request = new \JAND\Common\Messages\Frontend\GetRecommendationsRequest(
+                                $session->getSessionToken(),
+                                new Poi($key, null, [], null)
+                        );
+
+                        $response = \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
+                        }
+                }
+                $index++;
                 }//end foreach
                 ?>
                 </table>
