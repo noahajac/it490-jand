@@ -98,7 +98,7 @@ abstract class CreateBooking
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($type === 'flight') {
-                $request = new \JAND\Common\Messages\Frontend\CreateBookingRequest(
+                $request = new \JAND\Common\Messages\Shared\CreateBookingRequest(
                     \JAND\Frontend\Includes\SessionManager::getSession()->getSessionToken(),
                     new \JAND\Common\Trips\FlightItinerary(
                         $key,
@@ -113,7 +113,7 @@ abstract class CreateBooking
                     )
                 );
             } else {
-                $request = new \JAND\Common\Messages\Frontend\CreateBookingRequest(
+                $request = new \JAND\Common\Messages\Shared\CreateBookingRequest(
                     \JAND\Frontend\Includes\SessionManager::getSession()->getSessionToken(),
                     new \JAND\Common\Trips\HotelItinerary(
                         $key,

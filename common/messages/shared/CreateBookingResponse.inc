@@ -2,10 +2,10 @@
 /**
  * Response when creating a booking.
  *
- * @package JAND\Common\Messages\Frontend\CreateBookingResponse
+ * @package JAND\Common\Messages\Shared\CreateBookingResponse
  */
 
-namespace JAND\Common\Messages\Frontend;
+namespace JAND\Common\Messages\Shared;
 
 /**
  * Response when deleting a booking.

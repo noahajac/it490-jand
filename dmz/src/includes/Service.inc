@@ -41,6 +41,8 @@ class Service
             return Responders\HotelItinerarySearchResponder::respondToRequest($request);
         } else if ($request instanceof \JAND\Common\Messages\Shared\PoiSearchRequest) {
             return Responders\PoiSearchResponder::respondToRequest($request);
+        } else if ($request instanceof \JAND\Common\Messages\Shared\CreateBookingRequest) {
+            return Responders\CreateBookingResponder::respondToRequest($request);
         } else {
             return false;
         }//end if

@@ -121,6 +121,8 @@ abstract class HotelItinerarySearchResponder
             }//end foreach
         }//end foreach
 
+        echo 'Returning results';
+
         return new \JAND\Common\Messages\Shared\HotelItinerarySearchResponse($offerList);
 
     }//end respondToRequest()

@@ -2,10 +2,10 @@
 /**
  * Request to create a booking.
  *
- * @package JAND\Common\Messages\Frontend\CreateBookingRequest
+ * @package JAND\Common\Messages\Shared\CreateBookingRequest
  */
 
-namespace JAND\Common\Messages\Frontend;
+namespace JAND\Common\Messages\Shared;
 
 use JAND\Common\Messages\Frontend\SessionRequest;
 use JAND\Common\Trips\FlightItinerary;
@@ -24,17 +24,26 @@ class CreateBookingRequest extends SessionRequest
      */
     private FlightItinerary|HotelItinerary $booking;
 
+    /**
+     * User's email.
+     *
+     * @var ?string $email User's email.
+     */
+    private ?string $email;
+
 
     /**
      * Creates a booking request.
      *
      * @param string                         $sessionToken Session token.
      * @param FlightItinerary|HotelItinerary $booking      The booking.
+     * @param string                         $email        The user's email.
      */
-    public function __construct(string $sessionToken, FlightItinerary|HotelItinerary $booking)
+    public function __construct(string $sessionToken, FlightItinerary|HotelItinerary $booking, ?string $email=null)
     {
         parent::__construct($sessionToken);
         $this->booking = $booking;
+        $this->email   = $email;
 
     }//end __construct()
 
@@ -49,6 +58,18 @@ class CreateBookingRequest extends SessionRequest
         return $this->booking;
 
     }//end getBooking()
+
+
+    /**
+     * Gets user's email.
+     *
+     * @return string Email.
+     */
+    public function getEmail()
+    {
+        return $this->email;
+
+    }//end getEmail()
 
 
 }//end class
