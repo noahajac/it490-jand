@@ -24,15 +24,15 @@ abstract class HotelSearch
      */
     private static function echoHotelSearch(array $errors=[], array $itineraries=[])
     {
-      try{
-          $session = \JAND\Frontend\Includes\SessionManager::getSession();
+        try {
+            $session = \JAND\Frontend\Includes\SessionManager::getSession();
 
-          if (!$session) {
-              http_response_code(401);
-              exit();
-          }
+            if (!$session) {
+                http_response_code(401);
+                exit();
+            }
 
-          ?>
+            ?>
 
           <!DOCTYPE html>
           <html lang="en">
@@ -42,12 +42,12 @@ abstract class HotelSearch
           </head>
 
           <body>
-          <?php echo \JAND\Frontend\Includes\Elements\Nav::echoNav(); ?>
+            <?php echo \JAND\Frontend\Includes\Elements\Nav::echoNav(); ?>
           <main>
               <?php
-              if (count($itineraries) > 0) {
-                  foreach ($itineraries as &$itinerary) {
-                      ?>
+                if (count($itineraries) > 0) {
+                    foreach ($itineraries as &$itinerary) {
+                        ?>
                       <div class="flight-result">
                       <table class="table-borders">
                           <tr>
@@ -72,18 +72,18 @@ abstract class HotelSearch
                           </tr>
                       </table>
                       </div>
-                      <?php
-                  }//end foreach
-              } else {
-                  ?>
+                        <?php
+                    }//end foreach
+                } else {
+                    ?>
               <div class="main-container">
           <div class="booking-form">
 
               <h2 class="title-form">Search for Hotels</h2>
 
-                  <?php foreach ($errors as $error) { ?>
+                    <?php foreach ($errors as $error) { ?>
             <p class="error"><?php echo $error; ?></p>
-                  <?php } ?>
+                    <?php } ?>
 
               <form method="post">
                   <div class="input-group">
@@ -111,21 +111,22 @@ abstract class HotelSearch
               </form>
               </div>
           </div>
-                  <?php
-              }//end if
-              ?>
+                    <?php
+                }//end if
+                ?>
           </main>
-          <?php echo \JAND\Frontend\Includes\Elements\Footer::echoFooter(); ?>
+            <?php echo \JAND\Frontend\Includes\Elements\Footer::echoFooter(); ?>
           <script src="./scripts/city-autocomplete.js"></script>
           </body>
           </html>
 
-        <?php
-    } catch (\Exception $e){
-      // Log the error here
-        error_log('Error in echoHotelSearch: ' . $e->getMessage(), 0);
-        echo '<p>An error occurred while processing the hotel search. Please try again later.</p>';
-    }
+            <?php
+        } catch (\Exception $e) {
+            // Log the error here.
+            error_log('Error in echoHotelSearch: '.$e->getMessage(), 0);
+            echo '<p>An error occurred while processing the hotel search. Please try again later.</p>';
+        }//end try
+
     }//end echoHotelSearch()
 
 
@@ -136,89 +137,90 @@ abstract class HotelSearch
      */
     public static function processHotelSearch()
     {
-      try{
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $errorMsgs = [];
+        try {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $errorMsgs = [];
 
-            $destination = filter_input(INPUT_POST, 'destination', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            $checkIn     = filter_input(
-                INPUT_POST,
-                'check-in',
-                FILTER_CALLBACK,
-                [
-                    'options' => [
-                        '\\JAND\\Frontend\\Includes\\DateCallback',
-                        'checkDate',
-                    ],
-                ]
-            );
-            $checkOut    = filter_input(
-                INPUT_POST,
-                'check-out',
-                FILTER_CALLBACK,
-                [
-                    'options' => [
-                        '\\JAND\\Frontend\\Includes\\DateCallback',
-                        'checkDate',
-                    ],
-                ]
-            );
-            $adults      = filter_input(INPUT_POST, 'adults', FILTER_SANITIZE_NUMBER_INT);
+                $destination = filter_input(INPUT_POST, 'destination', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                $checkIn     = filter_input(
+                    INPUT_POST,
+                    'check-in',
+                    FILTER_CALLBACK,
+                    [
+                        'options' => [
+                            '\\JAND\\Frontend\\Includes\\DateCallback',
+                            'checkDate',
+                        ],
+                    ]
+                );
+                $checkOut    = filter_input(
+                    INPUT_POST,
+                    'check-out',
+                    FILTER_CALLBACK,
+                    [
+                        'options' => [
+                            '\\JAND\\Frontend\\Includes\\DateCallback',
+                            'checkDate',
+                        ],
+                    ]
+                );
+                $adults      = filter_input(INPUT_POST, 'adults', FILTER_SANITIZE_NUMBER_INT);
 
-            if (empty($destination)) {
-                array_push($errorMsgs, 'You must input a destination.');
-            }
+                if (empty($destination)) {
+                      array_push($errorMsgs, 'You must input a destination.');
+                }
 
-            if (empty($adults)) {
-                array_push($errorMsgs, 'You must enter number of adults.');
-            }
+                if (empty($adults)) {
+                    array_push($errorMsgs, 'You must enter number of adults.');
+                }
 
-            $request  = new \JAND\Common\Messages\Shared\AirportCitySearchRequest(
-                $destination
-            );
-            $response = \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
+                $request  = new \JAND\Common\Messages\Shared\AirportCitySearchRequest(
+                    $destination
+                );
+                $response = \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
 
-            $destinationCity = $response->checkCode(strtoupper($destination));
-            if (!$destinationCity) {
-                array_push($errorMsgs, 'Destination is not valid.');
-            }
+                $destinationCity = $response->checkCode(strtoupper($destination));
+                if (!$destinationCity) {
+                      array_push($errorMsgs, 'Destination is not valid.');
+                }
 
-            if (empty($checkIn)) {
-                array_push($errorMsgs, 'Check in must be valid.');
-            }
+                if (empty($checkIn)) {
+                    array_push($errorMsgs, 'Check in must be valid.');
+                }
 
-            if (empty($checkOut)) {
-                array_push($errorMsgs, 'Check out must be valid.');
-            }
+                if (empty($checkOut)) {
+                    array_push($errorMsgs, 'Check out must be valid.');
+                }
 
-            if (count($errorMsgs) > 0) {
-                static::echoHotelSearch($errorMsgs);
-                exit();
-            }
+                if (count($errorMsgs) > 0) {
+                    static::echoHotelSearch($errorMsgs);
+                    exit();
+                }
 
-            $request = new \JAND\Common\Messages\Shared\HotelItinerarySearchRequest(
-                $destinationCity,
-                $checkIn,
-                $checkOut,
-                $adults
-            );
+                $request = new \JAND\Common\Messages\Shared\HotelItinerarySearchRequest(
+                    $destinationCity,
+                    $checkIn,
+                    $checkOut,
+                    $adults
+                );
 
-            /**
-             * Hotel itinerary search response.
-             *
-             * @var \JAND\Common\Messages\Shared\HotelItinerarySearchResponse $response Search response.
-             */
-            $response = \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
+                /**
+                 * Hotel itinerary search response.
+                 *
+                 * @var \JAND\Common\Messages\Shared\HotelItinerarySearchResponse $response Search response.
+                 */
+                $response = \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
 
-            static::echoHotelSearch([], $response->getHotelItineraries());
-        } else {
-            static::echoHotelSearch();
-        }//end if
-      } catch (\Exception $e) {
-            error_log('Error in processHotelSearch: ' . $e->getMessage(), 0);
+                static::echoHotelSearch([], $response->getHotelItineraries());
+            } else {
+                static::echoHotelSearch();
+            }//end if
+        } catch (\Exception $e) {
+            error_log('Error in processHotelSearch: '.$e->getMessage(), 0);
             $errorMsgs = ['An error occurred while processing the hotel search. Please try again later.'];
             static::echoHotelSearch($errorMsgs);
-      }
+        }//end try
+
     }//end processHotelSearch()
 
 

@@ -35,47 +35,48 @@ abstract class Login
      */
     private static function processLogin()
     {
-      try{
-        static::$session = \JAND\Frontend\Includes\SessionManager::getSession();
-
-        if (static::$session) {
-            // User already has a valid session.
-            header('Location: /landing');
-            exit();
-        }
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $email    = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
-            $password = filter_input(INPUT_POST, 'password');
-
-            if (empty($email)) {
-                array_push(static::$errors, 'Please enter your email address.');
-            }
-
-            if (empty($password)) {
-                array_push(static::$errors, 'Please enter your password.');
-            }
-
-            // If there are any errors, go back to form.
-            if (static::$errors) {
-                return;
-            }
-
-            static::$session = \JAND\Frontend\Includes\SessionManager::login($email, $password);
+        try {
+            static::$session = \JAND\Frontend\Includes\SessionManager::getSession();
 
             if (static::$session) {
+                // User already has a valid session.
                 header('Location: /landing');
                 exit();
-            } else {
-                array_push(static::$errors, 'Incorrect username or password.');
             }
-        }//end if
-      } catch (\Exception $e){
+
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $email    = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+                $password = filter_input(INPUT_POST, 'password');
+
+                if (empty($email)) {
+                    array_push(static::$errors, 'Please enter your email address.');
+                }
+
+                if (empty($password)) {
+                    array_push(static::$errors, 'Please enter your password.');
+                }
+
+                // If there are any errors, go back to form.
+                if (static::$errors) {
+                    return;
+                }
+
+                static::$session = \JAND\Frontend\Includes\SessionManager::login($email, $password);
+
+                if (static::$session) {
+                    header('Location: /landing');
+                    exit();
+                } else {
+                    array_push(static::$errors, 'Incorrect username or password.');
+                }
+            }//end if
+        } catch (\Exception $e) {
             // Log the error here
-            error_log('Error in processLogin: ' . $e->getMessage(), 0);
+            error_log('Error in processLogin: '.$e->getMessage(), 0);
             // Display a generic error message or handle the error accordingly
             array_push(static::$errors, 'An error occurred while processing the login.');
-          }
+        }//end try
+
     }//end processLogin()
 
 

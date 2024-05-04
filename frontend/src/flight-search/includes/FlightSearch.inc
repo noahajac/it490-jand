@@ -13,6 +13,7 @@ namespace JAND\Frontend\FlightSearch\Includes;
 abstract class FlightSearch
 {
 
+
     /**
      * Echoes flight search page.
      *
@@ -23,31 +24,31 @@ abstract class FlightSearch
      */
     private static function echoFlightSearch(array $errors=[], array $itineraries=[])
     {
-      try{
-        $session = \JAND\Frontend\Includes\SessionManager::getSession();
+        try {
+            $session = \JAND\Frontend\Includes\SessionManager::getSession();
 
-        if (!$session) {
-            http_response_code(401);
-            exit();
-        }
+            if (!$session) {
+                http_response_code(401);
+                exit();
+            }
 
-        ?>
+            ?>
 
         <!DOCTYPE html>
         <html lang="en">
 
         <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <?php echo \JAND\Frontend\Includes\Elements\Head::echoHead(); ?>
+            <?php echo \JAND\Frontend\Includes\Elements\Head::echoHead(); ?>
         </head>
 
         <body>
-        <?php echo \JAND\Frontend\Includes\Elements\Nav::echoNav(); ?>
+            <?php echo \JAND\Frontend\Includes\Elements\Nav::echoNav(); ?>
         <main>
-        <?php
-        if (count($itineraries) > 0) {
-            foreach ($itineraries as &$itinerary) {
-                ?>
+            <?php
+            if (count($itineraries) > 0) {
+                foreach ($itineraries as &$itinerary) {
+                    ?>
                     <div class="flight-result">
                     <table class="table-borders">
                         <tr>
@@ -97,7 +98,7 @@ abstract class FlightSearch
                         ?>
                         </tr>
                     </table>
-                    <?php if (!$itinerary->getOneWay()) { ?>
+                        <?php if (!$itinerary->getOneWay()) { ?>
                         <table class="table-borders">
                         <tr>
                             <th colspan="4">Return</th>
@@ -125,22 +126,22 @@ abstract class FlightSearch
                             ?>
                         </tr>
                     </table>
-                        <?php
-                    }//end if
-                    ?>
+                            <?php
+                        }//end if
+                        ?>
                     </div>
-                    <?php
-            }//end foreach
-        } else {
-            ?>
+                        <?php
+                }//end foreach
+            } else {
+                ?>
             <div class="main-container">
         <div class="booking-form">
 
             <h2 class="title-form">Search for Flights</h2>
 
-            <?php foreach ($errors as $error) { ?>
+                <?php foreach ($errors as $error) { ?>
           <p class="error"><?php echo $error; ?></p>
-            <?php } ?>
+                <?php } ?>
 
             <form method="post" id="search">
             <div class="input-group">
@@ -160,13 +161,13 @@ abstract class FlightSearch
                 <div class="input-group">
                     <label for="to">To:</label>
                     <input type="text"
-            <?php
-            $prefilledTo = filter_input(INPUT_GET, 'to', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                <?php
+                $prefilledTo = filter_input(INPUT_GET, 'to', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-            if (!empty($prefilledTo)) {
-                echo 'value="'.$prefilledTo.'"';
-            }
-            ?>
+                if (!empty($prefilledTo)) {
+                    echo 'value="'.$prefilledTo.'"';
+                }
+                ?>
                     id="to-display" placeholder="Going To" required>
                     <input type="hidden" id="to" name="to">
                 </div>
@@ -192,35 +193,36 @@ abstract class FlightSearch
             </form>
             </div>
         </div>
-            <?php
-        }//end if
-        ?>
-        </main>
-        <?php echo \JAND\Frontend\Includes\Elements\Footer::echoFooter(); ?>
-        <script src="./scripts/city-autocomplete.js"></script>
-        <?php
-        if (!empty($prefilledTo)) {
+                <?php
+            }//end if
             ?>
+        </main>
+            <?php echo \JAND\Frontend\Includes\Elements\Footer::echoFooter(); ?>
+        <script src="./scripts/city-autocomplete.js"></script>
+            <?php
+            if (!empty($prefilledTo)) {
+                ?>
         <script>
             if (toInputField)
                 toInputField.dispatchEvent(new Event('change'));
         </script>
-            <?php
-        }
-        ?>
+                <?php
+            }
+            ?>
         </body>
         </html>
 
             <?php
-
-    } catch (\Exception $e){
-      // Log the error here
-            error_log('Error in echoFlightSearch: ' . $e->getMessage(), 0);
+        } catch (\Exception $e) {
+            // Log the error here
+            error_log('Error in echoFlightSearch: '.$e->getMessage(), 0);
             echo '<p>An error occurred while processing the flight search. Please try again later.</p>';
+        }//end try
 
-    }
-  }
-  //end echoFlightSearch()
+    }//end echoFlightSearch()
+
+
+    // end echoFlightSearch()
 
 
         /**
@@ -230,129 +232,129 @@ abstract class FlightSearch
          */
     public static function processFlightSearch()
     {
-      try{
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $errorMsgs = [];
+        try {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $errorMsgs = [];
 
-            $oneWay = filter_input(
-                INPUT_POST,
-                'trip',
-                FILTER_CALLBACK,
-                [
-                    'options' => function ($input) {
-                        if ($input === 'one-way') {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    },
-                ]
-            );
+                $oneWay = filter_input(
+                    INPUT_POST,
+                    'trip',
+                    FILTER_CALLBACK,
+                    [
+                        'options' => function ($input) {
+                            if ($input === 'one-way') {
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        },
+                    ]
+                );
 
-            $origin      = filter_input(INPUT_POST, 'from', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            $destination = filter_input(INPUT_POST, 'to', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            $startDate   = filter_input(
-                INPUT_POST,
-                'departure',
-                FILTER_CALLBACK,
-                [
-                    'options' => [
-                        '\\JAND\\Frontend\\Includes\\DateCallback',
-                        'checkDate',
-                    ],
-                ]
-            );
-            $endDate     = filter_input(
-                INPUT_POST,
-                'return',
-                FILTER_CALLBACK,
-                [
-                    'options' => [
-                        '\\JAND\\Frontend\\Includes\\DateCallback',
-                        'checkDate',
-                    ],
-                ]
-            );
-            $adults      = filter_input(INPUT_POST, 'adults', FILTER_SANITIZE_NUMBER_INT);
-            $children    = filter_input(INPUT_POST, 'children', FILTER_SANITIZE_NUMBER_INT);
+                $origin      = filter_input(INPUT_POST, 'from', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                $destination = filter_input(INPUT_POST, 'to', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                $startDate   = filter_input(
+                    INPUT_POST,
+                    'departure',
+                    FILTER_CALLBACK,
+                    [
+                        'options' => [
+                            '\\JAND\\Frontend\\Includes\\DateCallback',
+                            'checkDate',
+                        ],
+                    ]
+                );
+                $endDate     = filter_input(
+                    INPUT_POST,
+                    'return',
+                    FILTER_CALLBACK,
+                    [
+                        'options' => [
+                            '\\JAND\\Frontend\\Includes\\DateCallback',
+                            'checkDate',
+                        ],
+                    ]
+                );
+                $adults      = filter_input(INPUT_POST, 'adults', FILTER_SANITIZE_NUMBER_INT);
+                $children    = filter_input(INPUT_POST, 'children', FILTER_SANITIZE_NUMBER_INT);
 
-            if (empty($destination)) {
-                array_push($errorMsgs, 'You must input a destination.');
-            }
+                if (empty($destination)) {
+                      array_push($errorMsgs, 'You must input a destination.');
+                }
 
-            if (empty($origin)) {
-                array_push($errorMsgs, 'You must input a destination.');
-            }
+                if (empty($origin)) {
+                    array_push($errorMsgs, 'You must input a destination.');
+                }
 
-            if (empty($adults)) {
-                array_push($errorMsgs, 'You must enter number of adults.');
-            }
+                if (empty($adults)) {
+                    array_push($errorMsgs, 'You must enter number of adults.');
+                }
 
-            if (empty($children)) {
-                $children = 0;
-            }
+                if (empty($children)) {
+                    $children = 0;
+                }
 
-            $request  = new \JAND\Common\Messages\Shared\AirportCitySearchRequest(
-                $destination
-            );
-            $response = \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
+                $request  = new \JAND\Common\Messages\Shared\AirportCitySearchRequest(
+                    $destination
+                );
+                $response = \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
 
-            $destCity = $response->checkCode(strtoupper($destination));
-            if (!$destCity) {
-                array_push($errorMsgs, 'Destination is not valid.');
-            }
+                $destCity = $response->checkCode(strtoupper($destination));
+                if (!$destCity) {
+                      array_push($errorMsgs, 'Destination is not valid.');
+                }
 
-            $request  = new \JAND\Common\Messages\Shared\AirportCitySearchRequest(
-                $origin
-            );
-            $response = \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
+                $request  = new \JAND\Common\Messages\Shared\AirportCitySearchRequest(
+                    $origin
+                );
+                $response = \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
 
-            $originCity = $response->checkCode(strtoupper($origin));
-            if (!$originCity) {
-                array_push($errorMsgs, 'Origin is not valid.');
-            }
+                $originCity = $response->checkCode(strtoupper($origin));
+                if (!$originCity) {
+                      array_push($errorMsgs, 'Origin is not valid.');
+                }
 
-            if (empty($startDate)) {
-                array_push($errorMsgs, 'Start date must be valid.');
-            }
+                if (empty($startDate)) {
+                    array_push($errorMsgs, 'Start date must be valid.');
+                }
 
-            if (empty($endDate)) {
-                array_push($errorMsgs, 'End date must be valid.');
-            }
+                if (empty($endDate)) {
+                    array_push($errorMsgs, 'End date must be valid.');
+                }
 
-            if (count($errorMsgs) > 0) {
-                static::echoFlightSearch($errorMsgs);
-                exit();
-            }
+                if (count($errorMsgs) > 0) {
+                    static::echoFlightSearch($errorMsgs);
+                    exit();
+                }
 
-            $request = new \JAND\Common\Messages\Shared\FlightItinerarySearchRequest(
-                $originCity,
-                $destCity,
-                $startDate,
-                $endDate,
-                $adults,
-                $children,
-                0,
-                $oneWay
-            );
+                $request = new \JAND\Common\Messages\Shared\FlightItinerarySearchRequest(
+                    $originCity,
+                    $destCity,
+                    $startDate,
+                    $endDate,
+                    $adults,
+                    $children,
+                    0,
+                    $oneWay
+                );
 
-            /**
-             * Flight itinerary search response.
-             *
-             * @var \JAND\Common\Messages\Shared\FlightItinerarySearchResponse $response Search response.
-             */
-            $response = \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
+                /**
+                 * Flight itinerary search response.
+                 *
+                 * @var \JAND\Common\Messages\Shared\FlightItinerarySearchResponse $response Search response.
+                 */
+                $response = \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
 
-            static::echoFlightSearch([], $response->getFlightItineraries());
-        } else {
-            static::echoFlightSearch();
-        }//end if
-      } catch (\Exception $e) {
-        // Log the error here
-            error_log('Error in processFlightSearch: ' . $e->getMessage(), 0);
+                static::echoFlightSearch([], $response->getFlightItineraries());
+            } else {
+                static::echoFlightSearch();
+            }//end if
+        } catch (\Exception $e) {
+            // Log the error here
+            error_log('Error in processFlightSearch: '.$e->getMessage(), 0);
             $errorMsgs = ['An error occurred while processing the flight search. Please try again later.'];
             static::echoFlightSearch($errorMsgs);
-      }
+        }//end try
 
     }//end processFlightSearch()
 

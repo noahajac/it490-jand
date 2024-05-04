@@ -2,7 +2,7 @@ nav {
   background-color: #e3f2fd;
 }
 
-.dropdown-item:visited{
+.dropdown-item:visited {
   color: #000;
 }
 
@@ -16,19 +16,23 @@ main {
   color: red;
 }
 
+.input-group>.form-control {
+  width: initial;
+}
+
 table.table-borders th,
 table.table-borders td {
   margin-top: 15px;
   border: .1em solid #D3D3D3;
   padding: .5em;
-  border-radius:10px;
-  border-collapse:collapse;
-  font-weight:bold;
+  border-radius: 10px;
+  border-collapse: collapse;
+  font-weight: bold;
 }
 
-table.table-borders{
-border-radius:15px;
-padding:5px;
+table.table-borders {
+  border-radius: 15px;
+  padding: 5px;
 }
 
 div.flight-result {
@@ -52,7 +56,7 @@ a:hover {
 }
 
 /*user trips page*/
-.trips-container{
+.trips-container {
   margin: 0 auto;
   max-width: 850px;
   margin-top: 50px;
@@ -67,7 +71,7 @@ a:hover {
   padding-bottom: 5px;
 }
 
-#create-new-trip{
+#create-new-trip {
   text-align: center;
   background-color: #e3f2fd;
   max-width: 140px;
@@ -79,7 +83,7 @@ a:hover {
 }
 
 /*user-trips create page*/
-.create-trips-ctr{
+.create-trips-ctr {
   background-color: #ffffff;
   border-radius: 8px;
   max-width: 450px;
@@ -87,19 +91,19 @@ a:hover {
   margin-top: 50px;
 }
 
-.trip-heading{
+.trip-heading {
   padding-top: 20px;
   padding-left: 20px
 }
 
-#create-trip-form table{
+#create-trip-form table {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px;
 }
 
-#create-trip-form input{
+#create-trip-form input {
   padding: 8px;
   margin: 4px;
   width: 100%;
@@ -111,20 +115,20 @@ a:hover {
   margin-right: 15px;
 }
 
-#create-submit{
+#create-submit {
   margin-left: 1px !important;
   background-color: #007bff;
   cursor: pointer !important;
   margin-top: 30px !important;
 }
 
-#delete-trip-btn{
+#delete-trip-btn {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-#delete{
+#delete {
   width: 50%;
   margin-top: -20px;
   margin-bottom: 30px;
@@ -134,18 +138,23 @@ a:hover {
 }
 
 @media screen and (max-width: 650px) {
-  .create-heading, #create-new-trip{
+
+  .create-heading,
+  #create-new-trip {
     text-align: center;
     align-self: center;
   }
-  .trip-heading{
+
+  .trip-heading {
     text-align: center;
     padding-left: 0px;
   }
+
   .trips-container {
     font-size: 80%;
   }
-  .create-trips-ctr{
+
+  .create-trips-ctr {
     font-size: 80%;
   }
 }
@@ -163,12 +172,12 @@ a:hover {
   align-items: center;
 }
 
-.initial-ctr form{
+.initial-ctr form {
   font-size: 90%;
 }
 
-.initial-ctr tr, 
-.initial-ctr th{
+.initial-ctr tr,
+.initial-ctr th {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -176,14 +185,14 @@ a:hover {
   margin-bottom: 5px;
 }
 
-.initial-ctr input{
+.initial-ctr input {
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 4px;
   width: 100%;
 }
 
-.initial-ctr input[type = 'submit']{
+.initial-ctr input[type='submit'] {
   padding: 5px;
   border: 1px solid #000;
   border-radius: 15px;
@@ -191,6 +200,6 @@ a:hover {
   margin-top: 5px;
 }
 
-.initial-ctr input[type = 'submit']:hover{
+.initial-ctr input[type='submit']:hover {
   background-color: #1a42c5;
 }

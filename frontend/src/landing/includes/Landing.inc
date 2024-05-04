@@ -23,49 +23,49 @@ abstract class Landing
      */
     public static function echoLanding()
     {
-      try{
-        ?>
+        try {
+            ?>
 
     <!DOCTYPE html>
     <html lang="en">
 
     <head>
-        <?php echo \JAND\Frontend\Includes\Elements\Head::echoHead(); ?>
+            <?php echo \JAND\Frontend\Includes\Elements\Head::echoHead(); ?>
         <link rel="stylesheet" href="styles/landing.css">
     </head>
 
     <body>
-        <?php echo \JAND\Frontend\Includes\Elements\Nav::echoNav(); ?>
+            <?php echo \JAND\Frontend\Includes\Elements\Nav::echoNav(); ?>
       <main>
         <h1>Welcome to JAND Travel</h1>
-        <?php
-        $session = \JAND\Frontend\Includes\SessionManager::getSession();
+            <?php
+            $session = \JAND\Frontend\Includes\SessionManager::getSession();
 
-        if ($session) {
-            $request = new \JAND\Common\Messages\Frontend\GetRecommendationsRequest(
-                $session->getSessionToken(),
-            );
-            /**
-             * Recommendations from DB.
-             *
-             * @var \JAND\Common\Messages\Frontend\GetRecommendationsResponse $response Reccs from DB.
-             */
-            $response = \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
+            if ($session) {
+                $request = new \JAND\Common\Messages\Frontend\GetRecommendationsRequest(
+                    $session->getSessionToken(),
+                );
+                /**
+                 * Recommendations from DB.
+                 *
+                 * @var \JAND\Common\Messages\Frontend\GetRecommendationsResponse $response Reccs from DB.
+                 */
+                $response = \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
 
-            if (count($response->getPois()) > 0) {
-                ?>
+                if (count($response->getPois()) > 0) {
+                    ?>
         <div class="rec-container">
         <div class="rec">
         <div class="rec">
             <h3 class="rec-heading">Recommendations for You</h3>
             <p>Based off of reviews and your preferences.</p>
             <table>
-            <?php
-                $index = 0;
-                foreach ($response->getPois() as &$poi) {
-                $hide = filter_input(INPUT_POST, 'hide'.strval($index), FILTER_VALIDATE_BOOL);
-                if (!$hide){ 
-            ?>
+                    <?php
+                    $index = 0;
+                    foreach ($response->getPois() as &$poi) {
+                        $hide = filter_input(INPUT_POST, 'hide'.strval($index), FILTER_VALIDATE_BOOL);
+                        if (!$hide) {
+                            ?>
                     <tr>
                     <td><strong><?= $poi->getName(); ?></strong></td>
                     <td>
@@ -78,7 +78,8 @@ abstract class Landing
                                     </td>
                         <td>
                         <form method="post" action="">
-                        <button id="hide<?php echo $index?>" name="hide<?php echo $index?>" value="on" type="submit">Hide</button>
+                        <button id="hide<?php echo $index; ?>" name="hide<?php echo $index; ?>" value="on"
+                        type="submit">Hide</button>
                         </form>
                     </td>
                 </tr>
@@ -99,45 +100,43 @@ abstract class Landing
                             </th>
                         </tr>
                         
-                    <?php
-                        }// end if statement
-                else{
-                        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                            <?php
+                        } else {
+                            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 $request = new \JAND\Common\Messages\Frontend\GetRecommendationsRequest(
-                                $session->getSessionToken(),
-                                new Poi($key, null, [], null)
-                        );
+                                    $session->getSessionToken(),
+                                );
 
-                        $response = \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
-                        }
-                }
-                $index++;
-                }//end foreach
-                ?>
+                                $response = \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
+                            }
+                        }//end if
+
+                        $index++;
+                    }//end foreach
+                    ?>
                 </table>
         </div>
         </div>
-                <?php
-            } else {
-                ?>
+                      <?php
+                } else {
+                    ?>
                                 <p>No recommendations for you at this time.</p>
-                <?php
+                    <?php
+                }//end if
             }//end if
-        }//end if
-        ?>
+            ?>
       </main>
-        <?php echo \JAND\Frontend\Includes\Elements\Footer::echoFooter(); ?>
+            <?php echo \JAND\Frontend\Includes\Elements\Footer::echoFooter(); ?>
     </body>
 
     </html>
-        <?php
-}  catch (/Exception $e){
-  // Log the error here
-        error_log('Error in echoLanding: ' . $e->getMessage(), 0);
+            <?php
+        } catch (\Exception $e) {
+            // Log the error here.
+            error_log('Error in echoLanding: '.$e->getMessage(), 0);
+            echo '<p>An error occurred while loading the landing page.</p>';
+        }//end try
 
-        echo '<p>An error occurred while loading the landing page.</p>';
-
-}
     }//end echoLanding()
 
 
