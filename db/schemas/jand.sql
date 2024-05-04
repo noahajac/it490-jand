@@ -157,6 +157,14 @@ CREATE TABLE `poi` (
     FOREIGN KEY (city) REFERENCES airport_cities(iata_code)
 );
 
+CREATE TABLE `hide_poi` (
+    `poi_id` INT NOT NULL,
+    `user_id` INT NOT NULL,
+    PRIMARY KEY (poi_id, user_id),
+    FOREIGN KEY (poi_id) REFERENCES poi(poi_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
 CREATE TABLE `poi_keywords` (
     `poi_id`    INT NOT NULL,
     `keyword`   VARCHAR(30) NOT NULL,

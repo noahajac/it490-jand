@@ -42,6 +42,15 @@ abstract class Landing
             $session = \JAND\Frontend\Includes\SessionManager::getSession();
 
             if ($session) {
+                $hide = filter_input(INPUT_POST, 'hide', FILTER_VALIDATE_INT);
+                if (isset($hide) && $hide !== false) {
+                    $request = new \JAND\Common\Messages\Frontend\HideRecommendationRequest(
+                        $session->getSessionToken(),
+                        $hide
+                    );
+                    \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
+                }
+
                 $request = new \JAND\Common\Messages\Frontend\GetRecommendationsRequest(
                     $session->getSessionToken(),
                 );
@@ -61,11 +70,8 @@ abstract class Landing
             <p>Based off of reviews and your preferences.</p>
             <table>
                     <?php
-                    $index = 0;
                     foreach ($response->getPois() as &$poi) {
-                        $hide = filter_input(INPUT_POST, 'hide'.strval($index), FILTER_VALIDATE_BOOL);
-                        if (!$hide) {
-                            ?>
+                        ?>
                     <tr>
                     <td><strong><?= $poi->getName(); ?></strong></td>
                     <td>
@@ -77,8 +83,8 @@ abstract class Landing
                                         >Reviews</a>
                                     </td>
                         <td>
-                        <form method="post" action="">
-                        <button id="hide<?php echo $index; ?>" name="hide<?php echo $index; ?>" value="on"
+                        <form method="post">
+                        <button id="hide-<?= $poi->getPoiId(); ?>" name="hide" value="<?= $poi->getPoiId(); ?>"
                         type="submit">Hide</button>
                         </form>
                     </td>
@@ -101,17 +107,6 @@ abstract class Landing
                         </tr>
                         
                             <?php
-                        } else {
-                            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                                $request = new \JAND\Common\Messages\Frontend\GetRecommendationsRequest(
-                                    $session->getSessionToken(),
-                                );
-
-                                $response = \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
-                            }
-                        }//end if
-
-                        $index++;
                     }//end foreach
                     ?>
                 </table>

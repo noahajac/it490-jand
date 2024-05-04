@@ -36,7 +36,9 @@ abstract class GetRecommendationsResponder
 LEFT JOIN poi_reviews r ON p.poi_id=r.poi_id LEFT JOIN 
 (poi_keywords k INNER JOIN user_keyword_preferences u ON k.keyword=u.keyword) 
 ON p.poi_id=k.poi_id INNER JOIN sessions s ON u.user_id=s.user_id 
-AND s.session_token=:sessionToken GROUP BY p.poi_id ORDER BY -k.keyword DESC, -r.rating DESC LIMIT 5'
+AND s.session_token=:sessionToken WHERE p.poi_id NOT IN 
+(SELECT poi_id FROM hide_poi WHERE user_id=u.user_id) 
+GROUP BY p.poi_id ORDER BY -k.keyword DESC, -r.rating DESC LIMIT 5'
         );
         $stmt->execute(['sessionToken' => $sessionToken]);
         $results = $stmt->fetchAll();
