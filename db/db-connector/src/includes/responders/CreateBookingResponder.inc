@@ -112,7 +112,7 @@ ON DUPLICATE KEY UPDATE itinerary_id=:itineraryId'
 
             $flightItinerarySelectStmt = $pdo->prepare(
                 'SELECT * FROM flight_itineraries WHERE 
-AND itinerary_id=:itineraryId'
+itinerary_id=:itineraryId'
             );
             $flightItinerarySelectStmt->execute(
                 ['itineraryId' => $booking->getItineraryId()]
