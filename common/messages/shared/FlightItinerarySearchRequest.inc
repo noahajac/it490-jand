@@ -10,7 +10,7 @@ namespace JAND\Common\Messages\Shared;
 /**
  * Request for a flight itinerary.
  */
-class FlightItinerarySearchRequest extends \JAND\Common\Messages\Request
+class FlightItinerarySearchRequest extends \JAND\Common\Messages\Frontend\SessionRequest
 {
 
     /**
@@ -70,10 +70,25 @@ class FlightItinerarySearchRequest extends \JAND\Common\Messages\Request
      */
     private bool $oneWay;
 
+    /**
+     * Whether price alerts were requested.
+     *
+     * @var boolean $alert Register alert.
+     */
+    private bool $alert;
+
+    /**
+     * User ID.
+     *
+     * @var boolean $userId User ID.
+     */
+    private int $userId;
+
 
     /**
      * Creates a new flight itinerary search request.
      *
+     * @param string                         $sessionToken    Session token.
      * @param \JAND\Common\Trips\AirportCity $tripOrigin      Trip origin.
      * @param \JAND\Common\Trips\AirportCity $tripDestination Trip destination.
      * @param \DateTime                      $startDate       Start date.
@@ -82,8 +97,11 @@ class FlightItinerarySearchRequest extends \JAND\Common\Messages\Request
      * @param integer                        $children        Number of children pax.
      * @param integer                        $infants         Number of infant pax.
      * @param boolean                        $oneWay          Whether trip is one way.
+     * @param boolean                        $alert           Whether price alerts were requested.
+     * @param integer                        $userId          User ID.
      */
     public function __construct(
+        string $sessionToken,
         \JAND\Common\Trips\AirportCity $tripOrigin,
         \JAND\Common\Trips\AirportCity $tripDestination,
         \DateTime $startDate,
@@ -91,8 +109,11 @@ class FlightItinerarySearchRequest extends \JAND\Common\Messages\Request
         int $adults,
         int $children=0,
         int $infants=0,
-        bool $oneWay=false
+        bool $oneWay=false,
+        bool $alert=false,
+        ?int $userId=null
     ) {
+        parent::__construct($sessionToken);
         $this->tripOrigin      = $tripOrigin;
         $this->tripDestination = $tripDestination;
         $this->startDate       = $startDate;
@@ -101,6 +122,8 @@ class FlightItinerarySearchRequest extends \JAND\Common\Messages\Request
         $this->children        = $children;
         $this->infants         = $infants;
         $this->oneWay          = $oneWay;
+        $this->alert           = $alert;
+        $this->userId          = $userId;
 
     }//end __construct()
 
@@ -199,6 +222,30 @@ class FlightItinerarySearchRequest extends \JAND\Common\Messages\Request
         return $this->oneWay;
 
     }//end getOneWay()
+
+
+    /**
+     * Gets if price alerts were requested.
+     *
+     * @return boolean Whether price alerts were requested.
+     */
+    public function getAlert()
+    {
+        return $this->alert;
+
+    }//end getAlert()
+
+
+    /**
+     * Gets user ID.
+     *
+     * @return ?int User ID.
+     */
+    public function getUserId()
+    {
+        return $this->userId;
+
+    }//end getUserId()
 
 
 }//end class

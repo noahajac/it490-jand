@@ -407,7 +407,7 @@ AND NOW() < pulled_on + INTERVAL 1 DAY'
 (:origin, :destination, :startDate, :endDate, :adults, :children, :infants, :oneWay, DEFAULT)  
 ON DUPLICATE KEY UPDATE origin=:origin, destination=:destination, start_date=:startDate, 
 end_date=:endDate, adults=:adults, 
-children=:children, infants=:infants, one_way=:oneWay'
+children=:children, infants=:infants, one_way=:oneWay, pulled_on=NOW()'
             );
 
             $flightQueriesInsertStmt->execute(
@@ -547,6 +547,51 @@ AND f.flight_id=s.flight_id ORDER BY s.position'
                     )
                 );
             }//end foreach
+        }//end if
+
+        if ($request->getAlert() && count($itineraries) > 0) {
+            $lastPrice = $itineraries[0]->getGrandTotal();
+            foreach ($itineraries as &$itinerary) {
+                $totalToTest = $itinerary->getGrandTotal();
+                if ($totalToTest < $lastPrice) {
+                    $lastPrice = $totalToTest;
+                }
+            }
+
+            if (strlen($request->getSessionToken() > 0)) {
+                $userIdStmt = $pdo->prepare('SELECT user_id FROM sessions WHERE session_token=:sessionToken');
+                $userIdStmt->execute(['sessionToken' => $request->getSessionToken()]);
+                $userIdResults = $userIdStmt->fetch();
+                $userIdStmt->closeCursor();
+                $userId = $userIdResults['user_id'];
+            } else {
+                $userId = $request->getUserId();
+            }
+
+            $alertInsertStmt = $pdo->prepare(
+                'INSERT INTO price_alerts VALUES 
+(:userId, :origin, 
+:destination, :startDate, :endDate, :adults, :children, :infants, :oneWay, :lastPrice)  
+ON DUPLICATE KEY UPDATE origin=:origin, destination=:destination, start_date=:startDate, 
+end_date=:endDate, adults=:adults, 
+children=:children, infants=:infants, one_way=:oneWay, last_price=:lastPrice'
+            );
+
+            $alertInsertStmt->execute(
+                [
+                    'userId'      => $userId,
+                    'origin'      => $request->getOrigin()->getCode(),
+                    'destination' => $request->getDestination()->getCode(),
+                    'startDate'   => $request->getStartDate()->format('Y-m-d'),
+                    'endDate'     => $request->getEndDate()->format('Y-m-d'),
+                    'adults'      => $request->getAdults(),
+                    'children'    => $request->getChildren(),
+                    'infants'     => $request->getInfants(),
+                    'oneWay'      => (int) $request->getOneWay(),
+                    'lastPrice'   => $lastPrice,
+                ]
+            );
+            $alertInsertStmt->closeCursor();
         }//end if
 
         return new \JAND\Common\Messages\Shared\FlightItinerarySearchResponse($itineraries);

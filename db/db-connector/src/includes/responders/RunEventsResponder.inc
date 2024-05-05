@@ -9,9 +9,11 @@ namespace JAND\DbConnector\Includes\Responders;
 
 use JAND\Common\Messages\DbConnector\AirlineSearchRequest;
 use JAND\Common\Messages\DbConnector\BookingReminderRequest;
+use JAND\Common\Messages\DbConnector\PriceAlertRequest;
 use JAND\Common\Messages\DbTimer\RunEventsRequest;
 use JAND\Common\Messages\DbTimer\RunEventsResponse;
 use JAND\Common\Messages\Shared\AirportCitySearchRequest;
+use JAND\Common\Messages\Shared\FlightItinerarySearchRequest;
 use JAND\Common\Trips\Airline;
 use JAND\Common\Trips\AirportCity;
 use JAND\Common\Trips\Flight;
@@ -223,6 +225,65 @@ itinerary_id=:itineraryId'
 
 
     /**
+     * Checks for changes to price alerts.
+     *
+     * @param \PDO $pdo DB PDO.
+     *
+     * @return void
+     */
+    private static function checkPriceAlerts(\PDO $pdo)
+    {
+        $getChecksStmt = $pdo->prepare(
+            'SELECT a.*,u.email,u.user_id FROM price_alerts a, users u WHERE 
+a.user_id=u.user_id AND start_date>NOW()'
+        );
+
+        $getChecksStmt->execute();
+
+        $checks = $getChecksStmt->fetchAll();
+
+        $getChecksStmt->closeCursor();
+
+        foreach ($checks as &$check) {
+            $checkRequest = new FlightItinerarySearchRequest(
+                '',
+                new AirportCity($check['origin'], null, null, null, null),
+                new AirportCity($check['destination'], null, null, null, null),
+                new \DateTime($check['start_date']),
+                new \DateTime($check['end_date']),
+                $check['adults'],
+                $check['children'],
+                $check['infants'],
+                (bool) $check['one_way'],
+                true,
+                $check['user_id']
+            );
+
+            $checkResults = FlightItinerarySearchResponder::respondToRequest($checkRequest, $pdo);
+
+            $itineraries = $checkResults->getFlightItineraries();
+
+            $lastPrice        = $itineraries[0]->getGrandTotal();
+            $winningItinerary = $itineraries[0];
+            foreach ($itineraries as &$itinerary) {
+                $totalToTest = $itinerary->getGrandTotal();
+                if ($totalToTest < $lastPrice) {
+                    $lastPrice        = $totalToTest;
+                    $winningItinerary = $itinerary;
+                }
+            }
+
+            if ($lastPrice < $check['last_price']) {
+                $request = new PriceAlertRequest($winningItinerary, $check['email']);
+
+                RabbitClientManager::sendRequest($request);
+            }
+        }//end foreach
+
+    }//end checkPriceAlerts()
+
+
+    /**
      * Runs regularly occuring events.
      *
      * @param RunEventsRequest $request Airport search request.
@@ -233,6 +294,7 @@ itinerary_id=:itineraryId'
     public static function respondToRequest(RunEventsRequest $request, \PDO $pdo)
     {
         static::checkBookings($pdo);
+        static::checkPriceAlerts($pdo);
 
         return new RunEventsResponse();
 

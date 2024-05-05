@@ -7,6 +7,8 @@
 
 namespace JAND\Frontend\FlightSearch\Includes;
 
+use JAND\Common\Trips\AirportCity;
+
 /**
  * Flight search page.
  */
@@ -19,11 +21,29 @@ abstract class FlightSearch
      *
      * @param String[]                             $errors      Errors to show.
      * @param \JAND\Common\Trips\FlightItinerary[] $itineraries Itineraries to show.
+     * @param AirportCity                          $originCity  Searched origin city.
+     * @param AirportCity                          $destCity    Searched destination city.
+     * @param \DateTime                            $startDate   Searched start date.
+     * @param \DateTime                            $endDate     Searched end date.
+     * @param integer                              $adults      Searched adults.
+     * @param integer                              $children    Searched children.
+     * @param boolean                              $oneWay      Whether search was one way.
+     * @param boolean                              $alert       Whether price alert was requested.
      *
      * @return void
      */
-    private static function echoFlightSearch(array $errors=[], array $itineraries=[])
-    {
+    private static function echoFlightSearch(
+        array $errors=[],
+        array $itineraries=[],
+        ?AirportCity $originCity=null,
+        ?AirportCity $destCity=null,
+        ?\DateTime $startDate=null,
+        ?\DateTime $endDate=null,
+        ?int $adults=null,
+        ?int $children=null,
+        ?bool $oneWay=null,
+        ?bool $alert=false
+    ) {
         try {
             $session = \JAND\Frontend\Includes\SessionManager::getSession();
 
@@ -47,6 +67,33 @@ abstract class FlightSearch
         <main>
             <?php
             if (count($itineraries) > 0) {
+                if (!$alert) {
+                    ?>
+                <form method="post">
+                    <input type="hidden" name="trip" value=
+                    <?php
+                    if ($oneWay) {
+                        echo '"one-way"';
+                    } else {
+                        echo '"round-trip"';
+                    }
+                    ?>
+                    >
+                    <input type="hidden" name="from" value="<?= $originCity->getCode(); ?>">
+                    <input type="hidden" name="to" value="<?= $destCity->getCode(); ?>">
+                    <input type="hidden" name="departure" value="<?= $startDate->format('Y-m-d'); ?>">
+                    <input type="hidden" name="return" value="<?= $endDate->format('Y-m-d'); ?>">
+                    <input type="hidden" name="adults" value="<?= $adults; ?>">
+                    <input type="hidden" name="children" value="<?= $children; ?>">
+                    <button type="submit" class="btn-submit" name="alert" value="true">Get Price Alerts</button>
+                </form>
+                    <?php
+                } else {
+                    ?>
+                    <h2>You will be notified if the price drops for this search.</h2>
+                    <?php
+                }//end if
+
                 foreach ($itineraries as &$itinerary) {
                     ?>
                     <div class="flight-result">
@@ -222,14 +269,11 @@ abstract class FlightSearch
     }//end echoFlightSearch()
 
 
-    // end echoFlightSearch()
-
-
-        /**
-         * Runs the flight search page.
-         *
-         * @return void
-         */
+    /**
+     * Runs the flight search page.
+     *
+     * @return void
+     */
     public static function processFlightSearch()
     {
         try {
@@ -250,6 +294,25 @@ abstract class FlightSearch
                         },
                     ]
                 );
+
+                $alert = filter_input(
+                    INPUT_POST,
+                    'alert',
+                    FILTER_CALLBACK,
+                    [
+                        'options' => function ($input) {
+                            if ($input === 'true') {
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        },
+                    ]
+                );
+
+                if (!isset($alert)) {
+                    $alert = false;
+                }
 
                 $origin      = filter_input(INPUT_POST, 'from', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                 $destination = filter_input(INPUT_POST, 'to', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -327,7 +390,14 @@ abstract class FlightSearch
                     exit();
                 }
 
+                $session = \JAND\Frontend\Includes\SessionManager::getSession();
+                if (!$session) {
+                    http_response_code(401);
+                    exit();
+                }
+
                 $request = new \JAND\Common\Messages\Shared\FlightItinerarySearchRequest(
+                    $session->getSessionToken(),
                     $originCity,
                     $destCity,
                     $startDate,
@@ -335,7 +405,8 @@ abstract class FlightSearch
                     $adults,
                     $children,
                     0,
-                    $oneWay
+                    $oneWay,
+                    $alert
                 );
 
                 /**
@@ -345,7 +416,18 @@ abstract class FlightSearch
                  */
                 $response = \JAND\Frontend\Includes\RabbitClientManager::sendRequest($request);
 
-                static::echoFlightSearch([], $response->getFlightItineraries());
+                static::echoFlightSearch(
+                    [],
+                    $response->getFlightItineraries(),
+                    $originCity,
+                    $destCity,
+                    $startDate,
+                    $endDate,
+                    $adults,
+                    $children,
+                    $oneWay,
+                    $alert
+                );
             } else {
                 static::echoFlightSearch();
             }//end if

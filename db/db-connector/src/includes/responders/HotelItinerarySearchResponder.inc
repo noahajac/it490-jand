@@ -225,7 +225,7 @@ AND NOW() < pulled_on + INTERVAL 1 DAY'
             $hotelQueriesInsertStmt = $pdo->prepare(
                 'INSERT INTO hotel_queries VALUES 
 (:city, :checkIn, :checkOut, :adults, DEFAULT)  
-ON DUPLICATE KEY UPDATE city=:city, check_in=:checkIn, check_out=:checkOut, adults=:adults'
+ON DUPLICATE KEY UPDATE city=:city, check_in=:checkIn, check_out=:checkOut, adults=:adults, pulled_on=NOW()'
             );
 
             $hotelQueriesInsertStmt->execute(

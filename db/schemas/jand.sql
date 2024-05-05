@@ -118,6 +118,23 @@ CREATE TABLE `flight_queries` (
     FOREIGN KEY (destination) REFERENCES airport_cities(iata_code)
 );
 
+CREATE TABLE `price_alerts` (
+    `user_id`      INT NOT NULL,
+    `origin`       CHAR(3) NOT NULL,
+    `destination`  CHAR(3) NOT NULL,
+    `start_date`   DATE NOT NULL,
+    `end_date`     DATE NOT NULL,
+    `adults`       INT NOT NULL,
+    `children`     INT NOT NULL DEFAULT 0,
+    `infants`      INT NOT NULL DEFAULT 0,
+    `one_way`      BOOLEAN NOT NULL DEFAULT 0,
+    `last_price`   DECIMAL(10,2) NOT NULL,
+    PRIMARY KEY (user_id, origin, destination, start_date, end_date, adults, children, infants, one_way),
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (origin) REFERENCES airport_cities(iata_code),
+    FOREIGN KEY (destination) REFERENCES airport_cities(iata_code)
+);
+
 CREATE TABLE `hotels` (
     `hotel_id`   INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `hotel_code` CHAR(8) NOT NULL,
