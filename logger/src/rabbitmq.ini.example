@@ -1,4 +1,4 @@
-[logger_logger.server.frontend]
+[logger_logger.server]
 BROKER_HOST = localhost
 BROKER_PORT = 5672
 USER = frontend

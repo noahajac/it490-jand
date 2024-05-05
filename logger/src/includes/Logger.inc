@@ -60,7 +60,7 @@ class Logger
     {
         static::$server = new \JAND\Common\RabbitMq\RabbitMqServer(
             __DIR__.'/../rabbitmq.ini',
-            'logger_logger.server.frontend'
+            'logger_logger.server'
         );
 
         static::$server->processRequests(
