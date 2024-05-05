@@ -84,6 +84,8 @@ class Connector
             return Responders\GetBookingsResponder::respondToRequest($request, static::$pdo);
         } else if ($request instanceof \JAND\Common\Messages\Frontend\HideRecommendationRequest) {
             return Responders\HideRecommendationResponder::respondToRequest($request, static::$pdo);
+        } else if ($request instanceof \JAND\Common\Messages\DbTimer\RunEventsRequest) {
+            return Responders\RunEventsResponder::respondToRequest($request, static::$pdo);
         } else {
             return false;
         }//end if

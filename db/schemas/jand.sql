@@ -225,6 +225,7 @@ CREATE TABLE `hotel_bookings` (
     `user_id` INT NOT NULL,
     `itinerary_id` INT NOT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `notified` BOOLEAN NOT NULL DEFAULT 0,
     PRIMARY KEY (user_id, itinerary_id),
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (itinerary_id) REFERENCES hotel_itineraries(itinerary_id)
@@ -234,6 +235,7 @@ CREATE TABLE `flight_bookings` (
     `user_id` INT NOT NULL,
     `itinerary_id` INT NOT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `notified` BOOLEAN NOT NULL DEFAULT 0,
     PRIMARY KEY (user_id, itinerary_id),
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (itinerary_id) REFERENCES flight_itineraries(itinerary_id)

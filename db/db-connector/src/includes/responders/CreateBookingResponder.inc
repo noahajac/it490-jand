@@ -7,17 +7,14 @@
 
 namespace JAND\DbConnector\Includes\Responders;
 
-use DateTime;
-use JAND\Common\Messages\DbConnector\AirlineSearchRequest;
 use JAND\Common\Messages\Shared\AirportCitySearchRequest;
 use JAND\Common\Messages\Shared\CreateBookingRequest;
 use JAND\Common\Trips\Airline;
-use JAND\Common\Trips\AirlineReview;
 use JAND\Common\Trips\AirportCity;
 use JAND\Common\Trips\Flight;
 use JAND\Common\Trips\FlightItinerary;
 use JAND\Common\Trips\Hotel;
-use JAND\Common\Trips\HotelReview;
+use JAND\DbConnector\Includes\GetSegmentInfo;
 use JAND\DbConnector\Includes\RabbitClientManager;
 
 /**
@@ -25,49 +22,6 @@ use JAND\DbConnector\Includes\RabbitClientManager;
  */
 abstract class CreateBookingResponder
 {
-
-
-    /**
-     * Takes a flight and gets airport and airline info.
-     *
-     * @param Flight $segment Flight from DMZ.
-     * @param \PDO   $pdo     PDO for DB access.
-     *
-     * @return Flight Flight with all information filled.
-     */
-    private static function getSegmentInfo(Flight $segment, \PDO $pdo)
-    {
-        $departAirport  = AirportCitySearchResponder::respondToRequest(
-            new AirportCitySearchRequest(
-                $segment->getDepartAirport()->getCode(),
-            ),
-            $pdo
-        )->getResults()[0];
-        $arrivalAirport = AirportCitySearchResponder::respondToRequest(
-            new AirportCitySearchRequest(
-                $segment->getArrivalAirport()->getCode(),
-            ),
-            $pdo
-        )->getResults()[0];
-        $airline        = AirlineSearchResponder::respondToRequest(
-            new AirlineSearchRequest(
-                $segment->getAirline()->getCode(),
-            ),
-            $pdo
-        )->getResults()[0];
-
-        return new Flight(
-            $segment->getFlightId(),
-            $departAirport,
-            $arrivalAirport,
-            $segment->getDepartTime(),
-            $segment->getArrivalTime(),
-            $airline,
-            $segment->getFlightNo(),
-            $segment->getClassName()
-        );
-
-    }//end getSegmentInfo()
 
 
     /**
@@ -98,7 +52,7 @@ s.session_token=:sessionToken'
             $stmt = $pdo->prepare(
                 'INSERT INTO flight_bookings VALUES 
     ((SELECT user_id FROM sessions WHERE session_token=:sessionToken), 
-    :itineraryId, DEFAULT) 
+    :itineraryId, DEFAULT, DEFAULT) 
 ON DUPLICATE KEY UPDATE itinerary_id=:itineraryId'
             );
 
@@ -137,7 +91,7 @@ AND f.flight_id=s.flight_id ORDER BY s.position'
             foreach ($outboundSegmentSelectResults as &$segment) {
                 array_push(
                     $outboundSegments,
-                    static::getSegmentInfo(
+                    GetSegmentInfo::get(
                         new Flight(
                             $segment['flight_id'],
                             new AirportCity($segment['depart_airport'], null, null, null, null),
@@ -172,7 +126,7 @@ AND f.flight_id=s.flight_id ORDER BY s.position'
                 foreach ($returnSegmentSelectResults as &$segment) {
                     array_push(
                         $returnSegments,
-                        static::getSegmentInfo(
+                        GetSegmentInfo::get(
                             new Flight(
                                 $segment['flight_id'],
                                 new AirportCity($segment['depart_airport'], null, null, null, null, null),
@@ -224,7 +178,7 @@ AND f.flight_id=s.flight_id ORDER BY s.position'
             $stmt = $pdo->prepare(
                 'INSERT INTO hotel_bookings VALUES 
     ((SELECT user_id FROM sessions WHERE session_token=:sessionToken), 
-    :itineraryId, DEFAULT) 
+    :itineraryId, DEFAULT, DEFAULT) 
 ON DUPLICATE KEY UPDATE itinerary_id=:itineraryId'
             );
 

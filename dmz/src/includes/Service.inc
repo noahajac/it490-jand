@@ -43,6 +43,8 @@ class Service
             return Responders\PoiSearchResponder::respondToRequest($request);
         } else if ($request instanceof \JAND\Common\Messages\Shared\CreateBookingRequest) {
             return Responders\CreateBookingResponder::respondToRequest($request);
+        } else if ($request instanceof \JAND\Common\Messages\DbConnector\BookingReminderRequest) {
+            return Responders\BookingReminderResponder::respondToRequest($request);
         } else {
             return false;
         }//end if

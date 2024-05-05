@@ -1,0 +1,10 @@
+[Unit]
+Description=JAND database timer.
+After=network-online.target
+Requires=network-online.target
+
+[Timer]
+OnCalendar=hourly
+
+[Install]
+WantedBy=default.target

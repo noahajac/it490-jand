@@ -1,48 +1,54 @@
 <?php
 /**
- * Contains the responder for a get bookings request.
+ * Runs regularly occuring events.
  *
- * @package JAND\DbConnector\Includes\Responders\GetBookingsResponder
+ * @package JAND\DbConnector\Includes\Responders\RunEventsResponder
  */
 
 namespace JAND\DbConnector\Includes\Responders;
 
+use JAND\Common\Messages\DbConnector\AirlineSearchRequest;
+use JAND\Common\Messages\DbConnector\BookingReminderRequest;
+use JAND\Common\Messages\DbTimer\RunEventsRequest;
+use JAND\Common\Messages\DbTimer\RunEventsResponse;
 use JAND\Common\Messages\Shared\AirportCitySearchRequest;
 use JAND\Common\Trips\Airline;
 use JAND\Common\Trips\AirportCity;
 use JAND\Common\Trips\Flight;
+use JAND\Common\Trips\FlightItinerary;
 use JAND\Common\Trips\Hotel;
 use JAND\DbConnector\Includes\GetSegmentInfo;
+use JAND\DbConnector\Includes\RabbitClientManager;
 
 /**
- * Responds to get booking requests.
+ * Runs regularly occuring events.
  */
-abstract class GetBookingsResponder
+abstract class RunEventsResponder
 {
 
 
     /**
-     * Responds to a get user trips request.
+     * Check for any booking notifications.
      *
-     * @param \JAND\Common\Messages\Frontend\GetBookingsRequest $request Get request.
-     * @param \PDO                                              $pdo     PDO instance.
+     * @param \PDO $pdo DB PDO.
      *
-     * @return \JAND\Common\Messages\Frontend\GetBookingsResponse Response to request.
+     * @return void
      */
-    public static function respondToRequest(\JAND\Common\Messages\Frontend\GetBookingsRequest $request, \PDO $pdo)
+    private static function checkBookings(\PDO $pdo)
     {
-        $sessionToken = $request->getSessionToken();
-
-        $flights = [];
-        $hotels  = [];
+        /**
+         * Reminder requests.
+         *
+         * @var BookingReminderRequest[] $requests Reminder requests.
+         */
+        $requests = [];
 
         $flightItinerarySelectStmt = $pdo->prepare(
-            'SELECT f.* FROM flight_itineraries f, flight_bookings b, sessions s WHERE 
-f.itinerary_id=b.itinerary_id AND s.session_token=:sessionToken AND s.user_id=b.user_id'
+            'SELECT f.*,u.email,u.user_id FROM flight_itineraries f, flight_bookings b, users u WHERE 
+f.itinerary_id=b.itinerary_id AND b.notified=0 AND u.user_id=b.user_id 
+AND DATE_SUB(f.start_date, INTERVAL 1 DAY)<=NOW()'
         );
-        $flightItinerarySelectStmt->execute(
-            ['sessionToken' => $sessionToken]
-        );
+        $flightItinerarySelectStmt->execute();
         $flightItinerarySelectResults = $flightItinerarySelectStmt->fetchAll();
         $flightItinerarySelectStmt->closeCursor();
 
@@ -130,32 +136,35 @@ AND f.flight_id=s.flight_id ORDER BY s.position'
             )->getResults()[0];
 
             array_push(
-                $flights,
-                new \JAND\Common\Trips\FlightItinerary(
-                    $itinerary['itinerary_id'],
-                    $outboundSegments,
-                    $returnSegments,
-                    $origin,
-                    $destination,
-                    new \DateTime($itinerary['start_date']),
-                    new \DateTime($itinerary['end_date']),
-                    $itinerary['total_price'],
-                    $itinerary['adults'],
-                    $itinerary['children'],
-                    $itinerary['infants'],
-                    (bool) $itinerary['one_way']
+                $requests,
+                new BookingReminderRequest(
+                    new \JAND\Common\Trips\FlightItinerary(
+                        $itinerary['itinerary_id'],
+                        $outboundSegments,
+                        $returnSegments,
+                        $origin,
+                        $destination,
+                        new \DateTime($itinerary['start_date']),
+                        new \DateTime($itinerary['end_date']),
+                        $itinerary['total_price'],
+                        $itinerary['adults'],
+                        $itinerary['children'],
+                        $itinerary['infants'],
+                        (bool) $itinerary['one_way']
+                    ),
+                    $itinerary['email'],
+                    $itinerary['user_id']
                 )
             );
         }//end foreach
 
         $hotelItinerarySelectStmt = $pdo->prepare(
-            'SELECT i.*,h.* FROM hotel_itineraries i, hotels h, hotel_bookings b,  sessions s WHERE 
-i.itinerary_id=b.itinerary_id AND s.session_token=:sessionToken AND s.user_id=b.user_id AND 
-h.hotel_id=i.hotel_id'
+            'SELECT i.*,h.*,u.email,u.user_id FROM hotel_itineraries i, hotels h, hotel_bookings b, users u WHERE 
+i.itinerary_id=b.itinerary_id AND  
+h.hotel_id=i.hotel_id AND b.notified=0 AND u.user_id=b.user_id 
+AND DATE_SUB(i.check_in, INTERVAL 1 DAY)<=NOW()'
         );
-        $hotelItinerarySelectStmt->execute(
-            ['sessionToken' => $sessionToken]
-        );
+        $hotelItinerarySelectStmt->execute();
         $hotelItinerarySelectResults = $hotelItinerarySelectStmt->fetchAll();
         $hotelItinerarySelectStmt->closeCursor();
 
@@ -168,19 +177,64 @@ h.hotel_id=i.hotel_id'
             )->getResults()[0];
 
             array_push(
-                $hotels,
-                new \JAND\Common\Trips\HotelItinerary(
-                    $itinerary['itinerary_id'],
-                    new Hotel($itinerary['hotel_id'], $city, $itinerary['hotel_code'], $itinerary['hotel_name']),
-                    new \DateTime($itinerary['check_in']),
-                    new \DateTime($itinerary['check_out']),
-                    $itinerary['total_price'],
-                    $itinerary['adults']
+                $requests,
+                new BookingReminderRequest(
+                    new \JAND\Common\Trips\HotelItinerary(
+                        $itinerary['itinerary_id'],
+                        new Hotel($itinerary['hotel_id'], $city, $itinerary['hotel_code'], $itinerary['hotel_name']),
+                        new \DateTime($itinerary['check_in']),
+                        new \DateTime($itinerary['check_out']),
+                        $itinerary['total_price'],
+                        $itinerary['adults']
+                    ),
+                    $itinerary['email'],
+                    $itinerary['user_id']
                 )
             );
-        }
+        }//end foreach
 
-        return new \JAND\Common\Messages\Frontend\GetBookingsResponse($flights, $hotels);
+        foreach ($requests as &$request) {
+            RabbitClientManager::sendRequest($request);
+
+            $booking = $request->getItinerary();
+
+            if ($booking instanceof FlightItinerary) {
+                $stmt = $pdo->prepare(
+                    'UPDATE flight_bookings SET notified=1 WHERE user_id=:userId AND 
+itinerary_id=:itineraryId'
+                );
+            } else {
+                $stmt = $pdo->prepare(
+                    'UPDATE hotel_bookings SET notified=1 WHERE user_id=:userId AND 
+itinerary_id=:itineraryId'
+                );
+            }
+
+            $stmt->execute(
+                [
+                    'userId'      => $request->getUserId(),
+                    'itineraryId' => $booking->getItineraryId(),
+                ]
+            );
+            $stmt->closeCursor();
+        }//end foreach
+
+    }//end checkBookings()
+
+
+    /**
+     * Runs regularly occuring events.
+     *
+     * @param RunEventsRequest $request Airport search request.
+     * @param \PDO             $pdo     PDO instance.
+     *
+     * @return RunEventsResponse Response to request.
+     */
+    public static function respondToRequest(RunEventsRequest $request, \PDO $pdo)
+    {
+        static::checkBookings($pdo);
+
+        return new RunEventsResponse();
 
     }//end respondToRequest()
 

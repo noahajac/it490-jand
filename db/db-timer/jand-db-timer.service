@@ -1,0 +1,7 @@
+[Unit]
+Description=JAND database timer.
+
+[Service]
+ExecStart=/srv/jand-db-timer/jand-db-timer.php
+User=jand
+Group=jand
