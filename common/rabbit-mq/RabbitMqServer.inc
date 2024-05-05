@@ -197,7 +197,7 @@ class RabbitMqServer
             $params['login']     = $this->user;
             $params['password']  = $this->password;
             $params['vhost']     = $this->vHost;
-            $params['heartbeat'] = 180;
+            $params['heartbeat'] = 60;
             $this->conn          = new \AMQPConnection($params);
             $this->conn->connect();
 

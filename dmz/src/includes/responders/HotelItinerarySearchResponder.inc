@@ -30,6 +30,7 @@ abstract class HotelItinerarySearchResponder
         $requestUrl      = AmadeusManager::getApiUrl().'/v1/reference-data/locations/hotels/by-city';
         $queryParamsData = [
             'cityCode' => $request->getCity()->getCode(),
+            'radius'   => 1,
         ];
 
         $queryParams = http_build_query($queryParamsData);
@@ -43,18 +44,18 @@ abstract class HotelItinerarySearchResponder
         );
 
         $results = json_decode(curl_exec($curl))->data;
+
         curl_close($curl);
 
         $hotelOfferSearches = [];
         $hotelSearchStr     = null;
         $hotelSearchAmount  = 0;
         foreach ($results as &$result) {
-            if ($hotelSearchAmount > 20) {
-                array_push($hotelOfferSearches, $hotelSearchStr);
-                $hotelSearchStr    = null;
-                $hotelSearchAmount = 0;
+            if (count($hotelOfferSearches) > 0) {
+                break;
             }
 
+            // Limit number of hotel searches to improve performance.
             if (empty($hotelSearchStr)) {
                 $hotelSearchStr = $result->hotelId;
             } else {
@@ -62,10 +63,15 @@ abstract class HotelItinerarySearchResponder
             }
 
             $hotelSearchAmount++;
+
+            if ($hotelSearchAmount > 5) {
+                array_push($hotelOfferSearches, $hotelSearchStr);
+                $hotelSearchStr    = null;
+                $hotelSearchAmount = 0;
+            }
         }//end foreach
 
-        array_push($hotelOfferSearches, $hotelSearchStr);
-
+        // array_push($hotelOfferSearches, $hotelSearchStr);
         $offerList = [];
 
         foreach ($hotelOfferSearches as &$hotelOfferSearch) {
@@ -83,9 +89,15 @@ abstract class HotelItinerarySearchResponder
             curl_setopt(
                 $curl,
                 CURLOPT_HTTPHEADER,
-                [AmadeusManager::getAuthorizationHeader()]
+                [
+                    AmadeusManager::getAuthorizationHeader(),
+                    'Content-type: application/vnd.amadeus+json',
+                    'Accept: application/json, text/plain, */*',
+                ]
             );
             $execResults = json_decode(curl_exec($curl));
+
+            echo print_r(curl_getinfo($curl));
 
             if (!isset($execResults->data)) {
                 continue;
