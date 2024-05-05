@@ -111,7 +111,7 @@ class FlightItinerarySearchRequest extends \JAND\Common\Messages\Frontend\Sessio
         int $infants=0,
         bool $oneWay=false,
         bool $alert=false,
-        ?int $userId=null
+        ?int $userId=0
     ) {
         parent::__construct($sessionToken);
         $this->tripOrigin      = $tripOrigin;

@@ -7,6 +7,8 @@
 
 namespace JAND\Frontend\Register\Includes;
 
+use JAND\Frontend\Includes\LogSender;
+
 /**
  * Frontend register page.
  */
@@ -36,6 +38,8 @@ abstract class Register
     private static function processRegistration()
     {
         try {
+            LogSender::sendLog('Received a request for the register page.');
+
             static::$session = \JAND\Frontend\Includes\SessionManager::getSession();
 
             if (static::$session) {
@@ -107,8 +111,7 @@ abstract class Register
                 }
             }//end if
         } catch (\Exception $e) {
-            // Log the error here
-            error_log('Error in processRegistration: '.$e->getMessage(), 0);
+            LogSender::sendLog('Error in processRegistration: '.$e->getMessage());
             array_push(static::$errors, 'An error has occurred while processing the registration.');
         }//end try
 

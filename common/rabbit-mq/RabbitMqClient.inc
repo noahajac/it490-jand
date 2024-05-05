@@ -132,16 +132,21 @@ class RabbitMqClient
     /**
      * Sends a request to RabbitMq.
      *
-     * @param mixed  $message     Message to send.
-     * @param string $contentType Message MIME type.
-     * @param string $routingKey  Routing key.
+     * @param mixed   $message     Message to send.
+     * @param string  $contentType Message MIME type.
+     * @param string  $routingKey  Routing key.
+     * @param boolean $acceptReply Whether to accept replies.
      *
      * @return mixed Message response.
      *
      * @throws RabbitException Exception on timeout.
      */
-    public function sendRequest(mixed $message, string $contentType='text/plain', string $routingKey='*')
-    {
+    public function sendRequest(
+        mixed $message,
+        string $contentType='text/plain',
+        string $routingKey='*',
+        bool $acceptReply=true
+    ) {
         $uid = uniqid();
 
         try {
@@ -159,22 +164,34 @@ class RabbitMqClient
 
             $exchange = new \AMQPExchange($channel);
             $exchange->setName($this->serverExchangeName);
-            $responseQueue = new \AMQPQueue($channel);
-            $responseQueue->setName($this->clientQueuePrefix.'.'.$uid);
-            $responseQueue->setFlags(\AMQP_AUTODELETE);
-            $responseQueue->declareQueue();
-            $responseQueue->bind($this->clientExchangeName, $responseQueue->getName());
+
+            if ($acceptReply) {
+                $responseQueue = new \AMQPQueue($channel);
+                $responseQueue->setName($this->clientQueuePrefix.'.'.$uid);
+                $responseQueue->setFlags(\AMQP_AUTODELETE);
+                $responseQueue->declareQueue();
+                $responseQueue->bind($this->clientExchangeName, $responseQueue->getName());
+            }
+
+            $publishFlags = [
+                'content_type'   => $contentType,
+                'correlation_id' => $uid,
+            ];
+
+            if ($acceptReply) {
+                $publishFlags['reply_to'] = $responseQueue->getName();
+            }
 
             $exchange->publish(
                 $message,
                 $routingKey,
                 \AMQP_NOPARAM,
-                [
-                    'reply_to'       => $responseQueue->getName(),
-                    'content_type'   => $contentType,
-                    'correlation_id' => $uid,
-                ]
+                $publishFlags
             );
+
+            if (!$acceptReply) {
+                return;
+            }
 
             $response       = false;
             $waitIterations = 0;

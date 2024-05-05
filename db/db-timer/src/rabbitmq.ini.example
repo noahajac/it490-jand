@@ -1,7 +1,7 @@
-[db-frontend_db.server]
+[db-frontend_frontend.client]
 BROKER_HOST = localhost
 BROKER_PORT = 5672
-USER = db
+USER = timer
 PASSWORD = password
 VHOST = db-frontend
 CLIENT_EXCHANGE = frontend.client

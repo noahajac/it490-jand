@@ -1,0 +1,14 @@
+[Unit]
+Description=JAND logger service.
+After=network-online.target
+Requires=network-online.target
+
+[Service]
+ExecStart=/srv/jand-logger/jand-logger.php
+User=jand
+Group=jand
+Restart=always
+RestartSec=3s
+
+[Install]
+WantedBy=default.target

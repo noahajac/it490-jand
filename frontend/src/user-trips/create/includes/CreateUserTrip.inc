@@ -7,6 +7,8 @@
 
 namespace JAND\Frontend\UserTrips\Create\Includes;
 
+use JAND\Frontend\Includes\LogSender;
+
 /**
  * User trips creation/update page.
  */
@@ -107,6 +109,8 @@ abstract class CreateUserTrip
     public static function bootstrapCreateUserTrip()
     {
         $session = \JAND\Frontend\Includes\SessionManager::getSession();
+
+        LogSender::sendLog('Received a request for the user trips create/update page.');
 
         if (!$session) {
             http_response_code(401);

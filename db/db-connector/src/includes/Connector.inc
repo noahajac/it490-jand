@@ -38,6 +38,7 @@ class Connector
      */
     private static function requestProcessor(mixed $request)
     {
+        LogSender::sendLog('Received DB request of type: '.get_class($request));
         if ($request instanceof \JAND\Common\Messages\Frontend\LoginRequest) {
             return Responders\LoginResponder::respondToRequest($request, static::$pdo);
         } else if ($request instanceof \JAND\Common\Messages\Frontend\RegisterRequest) {

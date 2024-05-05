@@ -13,6 +13,7 @@ use JAND\Common\Trips\Hotel;
 use JAND\Common\Trips\HotelReview;
 use JAND\Common\Trips\Poi;
 use JAND\Common\Trips\PoiReview;
+use JAND\Frontend\Includes\LogSender;
 
 /**
  * Frontend reviews page.
@@ -177,6 +178,8 @@ abstract class Reviews
      */
     public static function processReviews()
     {
+        LogSender::sendLog('Received a request for the reviews page.');
+
         $type = filter_input(INPUT_GET, 'type');
         $key  = filter_input(INPUT_GET, 'key');
 

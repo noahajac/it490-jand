@@ -7,6 +7,8 @@
 
 namespace JAND\DbConnector\Includes\Responders;
 
+use JAND\DbConnector\Includes\LogSender;
+
 /**
  * Responds to login requests.
  */
@@ -35,7 +37,8 @@ abstract class LoginResponder
             $sessionToken = bin2hex(random_bytes(16));
             // Generate a random token of 32 characters (16 bytes).
             $expirationTime = (time() + 43200);
-            $stmt           = $pdo->prepare(
+            LogSender::sendLog('New login for user: '.$email);
+            $stmt = $pdo->prepare(
                 "INSERT INTO sessions (user_id, session_token, expires_at) VALUES 
 (:userId, :sessionToken, CONVERT_TZ(FROM_UNIXTIME(:expiration), 'UTC', @@session.time_zone))"
             );

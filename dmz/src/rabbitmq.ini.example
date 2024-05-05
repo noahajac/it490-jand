@@ -8,3 +8,14 @@ CLIENT_EXCHANGE = db.client
 SERVER_EXCHANGE = dmz.server
 SERVER_QUEUE = dmz.server
 CLIENT_QUEUE_PREFIX = db.client
+
+[logger_logger.client.dmz]
+BROKER_HOST = localhost
+BROKER_PORT = 5672
+USER = dmz
+PASSWORD = password
+VHOST = logger
+CLIENT_EXCHANGE = 
+SERVER_EXCHANGE = logger.server
+SERVER_QUEUE = 
+CLIENT_QUEUE_PREFIX = 

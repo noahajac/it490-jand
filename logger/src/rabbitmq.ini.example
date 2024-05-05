@@ -1,0 +1,10 @@
+[logger_logger.server.frontend]
+BROKER_HOST = localhost
+BROKER_PORT = 5672
+USER = frontend
+PASSWORD = password
+VHOST = logger
+CLIENT_EXCHANGE = 
+SERVER_EXCHANGE = logger.server
+SERVER_QUEUE = logger.server.frontend
+CLIENT_QUEUE_PREFIX = 

@@ -7,6 +7,8 @@
 
 namespace JAND\Frontend\Bookings\Create\Includes;
 
+use JAND\Frontend\Includes\LogSender;
+
 /**
  * Booking creation page.
  */
@@ -75,6 +77,8 @@ abstract class CreateBooking
      */
     public static function bootstrapCreateUserTrip()
     {
+        LogSender::sendLog('Received a request for the create booking page.');
+
         $session = \JAND\Frontend\Includes\SessionManager::getSession();
 
         if (!$session) {

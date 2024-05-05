@@ -7,6 +7,7 @@
 
 namespace JAND\Frontend\UserPreferences\Includes;
 
+use JAND\Frontend\Includes\LogSender;
 use JAND\Frontend\Includes\SessionManager;
 
 /**
@@ -103,6 +104,8 @@ abstract class UserPreferences
      */
     public static function processUserPreferences()
     {
+        LogSender::sendLog('Received a request for the user preferences page.');
+
         $session = \JAND\Frontend\Includes\SessionManager::getSession();
 
         if (!$session) {

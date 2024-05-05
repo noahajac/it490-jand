@@ -7,7 +7,7 @@
 
 namespace JAND\Frontend\Landing\Includes;
 
-use JAND\Common\Trips\Poi;
+use JAND\Frontend\Includes\LogSender;
 
 /**
  * Main landing page.
@@ -24,6 +24,8 @@ abstract class Landing
     public static function echoLanding()
     {
         try {
+            LogSender::sendLog('Received a request for the landing page.');
+
             ?>
 
     <!DOCTYPE html>
@@ -128,7 +130,7 @@ abstract class Landing
             <?php
         } catch (\Exception $e) {
             // Log the error here.
-            error_log('Error in echoLanding: '.$e->getMessage(), 0);
+            LogSender::sendLog('An error occured in the landing page.');
             echo '<p>An error occurred while loading the landing page.</p>';
         }//end try
 

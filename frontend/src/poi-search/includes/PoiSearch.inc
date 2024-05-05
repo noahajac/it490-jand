@@ -7,6 +7,8 @@
 
 namespace JAND\Frontend\PoiSearch\Includes;
 
+use JAND\Frontend\Includes\LogSender;
+
 /**
  * POI search page.
  */
@@ -138,6 +140,8 @@ abstract class PoiSearch
      */
     public static function processPoiSearch()
     {
+        LogSender::sendLog('Received a request for the POI search page.');
+
         $session = \JAND\Frontend\Includes\SessionManager::getSession();
 
         if (!$session) {

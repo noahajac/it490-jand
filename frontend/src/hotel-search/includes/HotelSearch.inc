@@ -7,6 +7,8 @@
 
 namespace JAND\Frontend\HotelSearch\Includes;
 
+use JAND\Frontend\Includes\LogSender;
+
 /**
  * Hotel search page.
  */
@@ -122,8 +124,7 @@ abstract class HotelSearch
 
             <?php
         } catch (\Exception $e) {
-            // Log the error here.
-            error_log('Error in echoHotelSearch: '.$e->getMessage(), 0);
+            LogSender::sendLog('Error in echoHotelSearch: '.$e->getMessage());
             echo '<p>An error occurred while processing the hotel search. Please try again later.</p>';
         }//end try
 
@@ -138,6 +139,7 @@ abstract class HotelSearch
     public static function processHotelSearch()
     {
         try {
+            LogSender::sendLog('Received a request for the hotel search page.');
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $errorMsgs = [];
 
@@ -216,7 +218,7 @@ abstract class HotelSearch
                 static::echoHotelSearch();
             }//end if
         } catch (\Exception $e) {
-            error_log('Error in processHotelSearch: '.$e->getMessage(), 0);
+            LogSender::sendLog('Error in processHotelSearch: '.$e->getMessage());
             $errorMsgs = ['An error occurred while processing the hotel search. Please try again later.'];
             static::echoHotelSearch($errorMsgs);
         }//end try

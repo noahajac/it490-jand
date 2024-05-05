@@ -8,6 +8,7 @@
 namespace JAND\Frontend\Bookings\Includes;
 
 use JAND\Common\Messages\Frontend\GetBookingsResponse;
+use JAND\Frontend\Includes\LogSender;
 
 /**
  * User trips page.
@@ -23,6 +24,8 @@ abstract class Bookings
      */
     public static function echoBookings()
     {
+        LogSender::sendLog('Received a request for the bookings page.');
+
         $session = \JAND\Frontend\Includes\SessionManager::getSession();
 
         if (!$session) {

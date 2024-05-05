@@ -7,6 +7,7 @@
 
 namespace JAND\DbConnector\Includes;
 
+use JAND\Common\Messages\Logger\LogMessageRequest;
 use JAND\Common\Messages\Request;
 
 /**
@@ -21,6 +22,13 @@ abstract class RabbitClientManager
      * @var ?\JAND\Common\RabbitMq\RabbitMqClient $rabbitMqClient RabbitMq client instance.
      */
     private static ?\JAND\Common\RabbitMq\RabbitMqClient $rabbitMqClient;
+
+    /**
+     * RabbitMq logger client instance.
+     *
+     * @var ?\JAND\Common\RabbitMq\RabbitMqClient $rabbitMqLoggerClient RabbitMq logger client instance.
+     */
+    private static ?\JAND\Common\RabbitMq\RabbitMqClient $rabbitMqLoggerClient;
 
 
     /**
@@ -81,6 +89,64 @@ abstract class RabbitClientManager
         );
 
     }//end sendRequest()
+
+
+    /**
+     * Gets RabbitMq logger client.
+     *
+     * @param boolean $force Force reconnecting.
+     *
+     * @return \JAND\Common\RabbitMq\RabbitMqClient RabbitMq client.
+     */
+    public static function getLoggerClient(bool $force=false)
+    {
+        if (!isset(static::$rabbitMqLoggerClient) || $force) {
+            static::$rabbitMqLoggerClient = new \JAND\Common\RabbitMq\RabbitMqClient(
+                __DIR__.'/../rabbitmq.ini',
+                'logger_logger.client.db'
+            );
+        }
+
+        return static::$rabbitMqLoggerClient;
+
+    }//end getLoggerClient()
+
+
+    /**
+     * Sends a request.
+     *
+     * @param LogMessageRequest $request Log to send.
+     *
+     * @return void
+     */
+    public static function sendLog(LogMessageRequest $request)
+    {
+        try {
+            static::getLoggerClient();
+            $request = static::$rabbitMqLoggerClient->sendRequest(
+                serialize($request),
+                'application/php-serialized',
+                '*',
+                false
+            );
+        } catch (\Throwable $th) {
+            // Try twice.
+            try {
+                static::getLoggerClient(true);
+                $request = static::$rabbitMqLoggerClient->sendRequest(
+                    serialize($request),
+                    'application/php-serialized',
+                    '*',
+                    false
+                );
+            } catch (\Throwable $th) {
+                echo $th;
+                echo 'An error has occured. Try again or contact an administrator if this is reoccuring.';
+                exit();
+            }
+        }//end try
+
+    }//end sendLog()
 
 
 }//end class

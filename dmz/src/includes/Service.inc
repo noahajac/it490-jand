@@ -31,6 +31,8 @@ class Service
      */
     private static function requestProcessor(mixed $request)
     {
+        LogSender::sendLog('Received DMZ request of type: '.get_class($request));
+
         if ($request instanceof \JAND\Common\Messages\Shared\AirportCitySearchRequest) {
             return Responders\AirportCitySearchResponder::respondToRequest($request);
         } else if ($request instanceof \JAND\Common\Messages\Shared\FlightItinerarySearchRequest) {

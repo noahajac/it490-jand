@@ -7,6 +7,8 @@
 
 namespace JAND\Frontend\Api\CheckAirport\Includes;
 
+use JAND\Frontend\Includes\LogSender;
+
 /**
  * Checks airport input.
  */
@@ -21,6 +23,7 @@ abstract class CheckAirport
      */
     public static function processCheckAirport()
     {
+        LogSender::sendLog('Received an API request to check an airport.');
         header('Content-Type: application/json');
         $session = \JAND\Frontend\Includes\SessionManager::getSession();
 

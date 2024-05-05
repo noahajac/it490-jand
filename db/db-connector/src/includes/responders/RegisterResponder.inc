@@ -7,6 +7,8 @@
 
 namespace JAND\DbConnector\Includes\Responders;
 
+use JAND\DbConnector\Includes\LogSender;
+
 /**
  * Responds to register requests.
  */
@@ -43,6 +45,8 @@ VALUES (:email, :password, :firstName, :lastName)'
             ]
         );
         $stmt->closeCursor();
+
+        LogSender::sendLog('New registration: '.$email);
 
         // Generate a session token.
         $sessionToken = bin2hex(random_bytes(16));

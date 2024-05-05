@@ -7,6 +7,8 @@
 
 namespace JAND\Frontend\Logout\Includes;
 
+use JAND\Frontend\Includes\LogSender;
+
 /**
  * Logout frontend page.
  */
@@ -21,6 +23,8 @@ abstract class Logout
      */
     public static function echoLogout()
     {
+        LogSender::sendLog('Received a logout request.');
+
         // Technically this can error, but it shouldn't ever happen.
         if (\JAND\Frontend\Includes\SessionManager::logout()) {
             header('Location: /landing');

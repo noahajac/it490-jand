@@ -8,6 +8,7 @@
 namespace JAND\Frontend\FlightSearch\Includes;
 
 use JAND\Common\Trips\AirportCity;
+use JAND\Frontend\Includes\LogSender;
 
 /**
  * Flight search page.
@@ -261,8 +262,7 @@ abstract class FlightSearch
 
             <?php
         } catch (\Exception $e) {
-            // Log the error here
-            error_log('Error in echoFlightSearch: '.$e->getMessage(), 0);
+            LogSender::sendLog('Error in echoFlightSearch: '.$e->getMessage());
             echo '<p>An error occurred while processing the flight search. Please try again later.</p>';
         }//end try
 
@@ -277,6 +277,8 @@ abstract class FlightSearch
     public static function processFlightSearch()
     {
         try {
+            LogSender::sendLog('Received a request for the flight search page.');
+
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $errorMsgs = [];
 
@@ -432,8 +434,7 @@ abstract class FlightSearch
                 static::echoFlightSearch();
             }//end if
         } catch (\Exception $e) {
-            // Log the error here
-            error_log('Error in processFlightSearch: '.$e->getMessage(), 0);
+            LogSender::sendLog('Error in processFlightSearch: '.$e->getMessage());
             $errorMsgs = ['An error occurred while processing the flight search. Please try again later.'];
             static::echoFlightSearch($errorMsgs);
         }//end try

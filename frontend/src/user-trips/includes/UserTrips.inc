@@ -7,6 +7,8 @@
 
 namespace JAND\Frontend\UserTrips\Includes;
 
+use JAND\Frontend\Includes\LogSender;
+
 /**
  * User trips page.
  */
@@ -22,6 +24,8 @@ abstract class UserTrips
     public static function echoUserTrips()
     {
         $session = \JAND\Frontend\Includes\SessionManager::getSession();
+
+        LogSender::sendLog('Received a request for the user trips page.');
 
         if (!$session) {
             http_response_code(401);
