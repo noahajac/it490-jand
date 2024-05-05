@@ -10,4 +10,6 @@
 /deploy/bundler/src/ssh.ini
 /deploy/installer/src/rabbitmq.ini
 /deploy/installer/src/ssh.ini
+/logger/src/rabbitmq.ini
+/db/db-timer/src/rabbitmq.ini
 /server-ip-config
