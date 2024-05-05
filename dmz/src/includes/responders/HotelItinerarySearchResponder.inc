@@ -71,6 +71,7 @@ abstract class HotelItinerarySearchResponder
             }
         }//end foreach
 
+        // phpcs:ignore Squiz.PHP.CommentedOutCode.Found,Squiz.Commenting.InlineComment.NotCapital,Squiz.Commenting.InlineComment.InvalidEndChar
         // array_push($hotelOfferSearches, $hotelSearchStr);
         $offerList = [];
 
@@ -96,8 +97,6 @@ abstract class HotelItinerarySearchResponder
                 ]
             );
             $execResults = json_decode(curl_exec($curl));
-
-            echo print_r(curl_getinfo($curl));
 
             if (!isset($execResults->data)) {
                 continue;
@@ -132,8 +131,6 @@ abstract class HotelItinerarySearchResponder
                 }//end foreach
             }//end foreach
         }//end foreach
-
-        echo 'Returning results';
 
         return new \JAND\Common\Messages\Shared\HotelItinerarySearchResponse($offerList);
 
